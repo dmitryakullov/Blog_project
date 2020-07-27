@@ -14,6 +14,7 @@ import MainPage from '../MainPage';
 import EnterForm from '../EnterForm';
 import CheckInForm from '../CheckInForm';
 import UserPage from '../UserPage';
+import AdminPage from '../AdminPage';
 
 
 
@@ -27,6 +28,7 @@ export default class App extends Component {
                     <div className='main-background'></div>
                     <section className='main-part'>
                         <Nav/>
+                        <AdminPage/>
                         <Switch>
 
                             <Route exact path='/'>
@@ -44,6 +46,11 @@ export default class App extends Component {
                             <Route path='/checkinform'>
                                 <CheckInForm/>
                             </Route>
+
+                            <Route path='/adminpage' >
+                                <AdminPage/>
+                            </Route>
+
                             <Redirect to="/"/>
                         </Switch>
 

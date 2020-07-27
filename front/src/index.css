@@ -165,6 +165,9 @@ footer {
     margin: 10px 20px;
 }
 
+.admin-page {
+    padding: 20px;
+}
 
 
 
@@ -214,6 +217,3 @@ footer {
     align-items: center;
     padding: 3px;
 }
-
-
-/* #343a40 */

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import pictures from '../../icons/profile.png';
+import usersPicture from '../../icons/profile-picture.png';
 import {Link} from "react-router-dom";
 
 export default class MainPage extends Component {
@@ -37,7 +37,7 @@ export default class MainPage extends Component {
                                             <div className='page-posts-user'>
                                                 <div className='page-posts-ava'>
                                                     <div>
-                                                        <img src={pictures} alt="User's pictures" />
+                                                        <img src={usersPicture} alt="User's pictures" />
                                                     </div>
                                                 </div>
                                                 <span className='page-posts-nick'>{i.nick}</span>
@@ -65,6 +65,8 @@ export default class MainPage extends Component {
                     </div>
 
                     {context}
+
+
                 </div>
             </div>
         )

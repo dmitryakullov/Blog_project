@@ -8,15 +8,14 @@ import {
     useParams,
     Redirect
 } from "react-router-dom";
-import logo from '../../icons/logo.png';
 import Nav from '../Nav';
 import Footer from '../Footer';
 import MainPage from '../MainPage';
+import EnterForm from '../EnterForm';
+import CheckInForm from '../CheckInForm';
+import UserPage from '../UserPage';
 
 
-const Ddd = () => {
-    return <h1>iuygfgeer</h1>;
-}
 
 
 
@@ -29,10 +28,23 @@ export default class App extends Component {
                     <section className='main-part'>
                         <Nav/>
                         <Switch>
+
                             <Route exact path='/'>
                                 <MainPage/>
                             </Route>
 
+                            <Route exact path='/user/:id'>
+                                <UserPage/>
+                            </Route>
+                                
+                            <Route path='/enterform'>
+                                <EnterForm/>
+                            </Route>
+
+                            <Route path='/checkinform'>
+                                <CheckInForm/>
+                            </Route>
+                            <Redirect to="/"/>
                         </Switch>
 
                     </section>

@@ -7,9 +7,6 @@ var jwt = require('jsonwebtoken');
 mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
 
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-
 try {
     mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
 } catch (error) {
@@ -22,6 +19,10 @@ db.on('error', console.error.bind(console, 'connection error:'));
 const config = {
     secret: `Dj=yr456_m9+F.rMM65_-.eug20864G` //тот самый секретный ключ, которым подписывается каждый токен, выдаваемый клиенту
 }
+
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 
 var userSchema = new Schema({
@@ -55,33 +56,99 @@ var Post = mongoose.model('Post', postSchema);
 //     })
 // })();
 
+// (async ()=>{
+//     let getId = await User.findOne({nick: 'Dima3', password: '3234'});
+//     console.log(getId._id)
+// })();
+
+
+app.post('/updatePost', function (req, res) {
+    (async()=>{
+        const {_id, title, text} = req.body;
+
+        if(!_id|| !title || !text || Object.keys(req.body).length !== 3) {
+            res.send(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        
+
+        res.send(JSON.stringify({msg: 'SAVE'}));
+    })()
+});
+
+app.post('/createPost', function (req, res) {
+    (async()=>{
+        const {_id, title, text} = req.body;
+
+        if(!_id|| !title || !text || Object.keys(req.body).length !== 3) {
+            res.send(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        let newPost = await new Post({_id, title, text, active: true});
+        await newPost.save(function (err) {
+            if (err) return console.error(err);
+        })
+        console.log(newPost);
+
+        res.send(JSON.stringify({msg: 'SAVE'}));
+    })()
+});
 
 
 app.post('/checkinform', function (req, res) {
     (async()=>{
         const {nick, email, password} = req.body;
-        // console.log(nick, email, password);
-        let check = await User.find({$or: [{nick:null}, {email}]})
-        if (check.length === 0) {
 
+        if(!nick || !email || !password || Object.keys(req.body).length !== 3) {
+            res.send(JSON.stringify({msg: 'ERROR'}));
         }
-        console.log(JSON.stringify(check));
-        console.log(check.length);
-        res.send('POST request to the homepage');
+
+        let check = await User.find({$or: [{nick}, {email}]});
+
+        if (check.length === 0) {
+            let newUser = await new User({nick, email, password, avatar: false, active: true, admin: false});
+            await newUser.save(function (err) {
+                if (err) return console.error(err);
+            })
+
+            let token = jwt.sign({ nick, password }, config.secret);
+            res.send(JSON.stringify({_id: newUser._id, nick, email, avatar: false, active: true, admin: false , token}));
+        }
+
+        else {
+            res.send(JSON.stringify({msg: 'USER_OR_EMAIL_EXIST'}));
+        }
     })()
 });
 
 
 app.post('/enterform', function (req, res) {
     (async()=>{
-        console.log(req.body);
-        res.send('POST request to the homepage');
+        const {email, password} = req.body;
+
+        if(!email || !password || Object.keys(req.body).length !== 2) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        let check = await User.findOne({email, password});
+        if (check.nick) {
+            let {_id, nick, email, avatar, active, admin} = check;
+
+            let token = jwt.sign({ nick, password }, config.secret);
+            res.send(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
+            
+        } else {
+            res.send(JSON.stringify({msg: 'SOMETHING_WRONG'}));
+        }
     })()
 });
 
 
+
 app.get('/', function (req, res) {
-    res.send(JSON.stringify({msg: 'hello'}));
+    (async ()=>{
+
+    })();
 });
 
 

@@ -29,7 +29,7 @@ var userSchema = new Schema({
     nick:  String,
     email: String,
     password: String,
-    avatar: Boolean,
+    avatar: String,
     active: Boolean,
     admin: Boolean
     }
@@ -49,22 +49,32 @@ var Post = mongoose.model('Post', postSchema);
 
 
 // (async ()=>{
-//     let ans = await new User({nick: 'Dima3', email: 'dima3@gmail.com', password: '3234', avatar: false, active: true, admin: false})
-//     ans.save(function (err) {
-//         if (err) return console.error(err);
-//     })
+//     let ans = await new User({nick: 'Dima', email: 'dima@gmail.com', password: '12345678', avatar: 'false', active: true, admin: true})
+//         await ans.save();
+//     let ans1 = await new User({nick: 'Dima1', email: 'dima1@gmail.com', password: '1234', avatar: 'false', active: true, admin: false})
+//         await ans1.save();
+//     let ans2 = await new User({nick: 'Dima2', email: 'dima2@gmail.com', password: '2234', avatar: 'false', active: true, admin: false})
+//         await ans2.save();
+//     let ans3 = await new User({nick: 'Dima3', email: 'dima3@gmail.com', password: '3234', avatar: 'false', active: true, admin: false})
+//         await ans3.save();
+//     let ans4 = await new User({nick: 'Dima4', email: 'dima4@gmail.com', password: '4234', avatar: 'false', active: true, admin: false})
+//         await ans4.save();
+//     let ans5 = await new User({nick: 'Dima5', email: 'dima5@gmail.com', password: '5234', avatar: 'false', active: true, admin: false})
+//         await ans5.save();
 // })();
 
 // (async ()=>{
-//     let _id= "5f1ff66873a5613088f13fc6";
-//     Post.findByIdAndDelete(_id, function (err, result) { 
-//         if (err){ 
-//             console.log(err) 
-//         } 
-//         else if (result){ 
-//             console.log("Deleted : ", result); 
-//         } else res
-//     }); 
+//     let _id= "5f20809aa3b74d194071a7ca";
+//     let newPost = await new Post({userId: _id, title: 'hello', text: 'world', active: true});
+//         await newPost.save(); 
+//     let newPost1 = await new Post({userId: _id, title: 'hello1', text: 'world1', active: true});
+//         await newPost1.save();
+//     let newPost2 = await new Post({userId: _id, title: 'hello2', text: 'world2', active: true});
+//         await newPost2.save();
+//     let newPost3 = await new Post({userId: _id, title: 'hello3', text: 'world3', active: true});
+//         await newPost3.save();
+//     let newPost4 = await new Post({userId: _id, title: 'hello4', text: 'world4', active: true});
+//         await newPost4.save();
 // })();
 
 // app.get('/user/:id', function (req, res, next) {
@@ -88,8 +98,89 @@ var Post = mongoose.model('Post', postSchema);
 //     })();
 // });
 
+// (async ()=>{
+//     let token = jwt.sign({ "email" : "dima5@gmail.com", "password" : "5234" }, config.secret);
+//     console.log(token)
+// })();
 
-app.post('/deletePost', function (req, res) {
+// (async ()=>{
+//     let posts = await Post.findOne();
+//     console.log(`${posts._id}`.constructor.name);
+
+// })();
+
+
+
+app.post('/getPosts', function (req, res) {
+    (async()=>{
+        const {skip, userId} = req.body;
+
+        if(userId) {
+            let posts = await Post.find({userId}).skip(skip).limit(25);
+            if(posts.length !==0) {
+                res.send(JSON.stringify({postsArr: posts}));
+            }
+        } else {
+            let posts = await Post.find().skip(skip).limit(25);
+
+            if(posts.length !==0) {
+                for(let key in posts) {
+                    let user = posts[key];
+                    user = await User.findById({_id: `${item.userId}`});
+
+                    if (user.nick){
+                        posts[key].nick = user.nick;
+                        posts[key].avatar = user.avatar;
+                        posts[key].active = user.active;
+                    }
+                }
+                res.send(JSON.stringify({postsArr: posts}));
+            }
+        }
+    })()
+});
+
+app.post('/findUser', function (req, res) {
+    (async()=>{
+        const {nick} = req.body;
+
+        if(!nick || Object.keys(req.body).length !== 1) {
+            res.send(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        let user = await User.findOne({nick});
+        if (user.nick) {
+            let {_id, nick, email, avatar, active, admin} = user;
+
+            res.send(JSON.stringify({_id, nick, email, avatar, active, admin}));
+            
+        }
+        
+    })()
+});
+
+app.post('/deleteUser', function (req, res) {
+    (async()=>{
+        const {_id} = req.body;
+
+        if(!_id || Object.keys(req.body).length !== 1) {
+            res.send(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        User.findByIdAndUpdate(_id, { active: false },
+            function(err, result) {
+                if (err) {
+                    res.send(JSON.stringify({msg: 'ERROR'}));
+                } else if (result) {
+                    res.send(JSON.stringify({msg: 'DELETE'}));
+                } else 
+                res.send(JSON.stringify({msg: 'ERROR'}));
+        })
+        
+    })()
+});
+
+app.delete('/deletePost', function (req, res) {
     (async()=>{
         const {_id} = req.body;
 
@@ -157,13 +248,13 @@ app.post('/checkinform', function (req, res) {
         let check = await User.find({$or: [{nick}, {email}]});
 
         if (check.length === 0) {
-            let newUser = await new User({nick, email, password, avatar: false, active: true, admin: false});
+            let newUser = await new User({nick, email, password, avatar: 'false', active: true, admin: false});
             await newUser.save(function (err) {
                 if (err) return console.error(err);
             })
 
             let token = jwt.sign({ nick, password }, config.secret);
-            res.send(JSON.stringify({_id: newUser._id, nick, email, avatar: false, active: true, admin: false , token}));
+            res.send(JSON.stringify({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false , token}));
         }
 
         else {
@@ -181,9 +272,9 @@ app.post('/enterform', function (req, res) {
             res.send(JSON.stringify({msg: 'ERROR'}));
         }
 
-        let check = await User.findOne({email, password});
-        if (check.nick) {
-            let {_id, nick, email, avatar, active, admin} = check;
+        let user = await User.findOne({email, password});
+        if (user.nick) {
+            let {_id, nick, email, avatar, active, admin} = user;
 
             let token = jwt.sign({ nick, password }, config.secret);
             res.send(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
@@ -196,16 +287,29 @@ app.post('/enterform', function (req, res) {
 
 
 
-app.get('/', function (req, res) {
+app.post('/', function (req, res) {
     (async ()=>{
         if (req.headers.authorization) {
             const token = req.headers.authorization.slice('Bearer '.length);
-            var decoded = jwt.verify(token, 'shhhhh');
+            const decoded = jwt.verify(token, config.secret);
+            const {email, password} = decoded;
+
+            let user = await User.findOne({email, password});
+                if (user.nick) {
+                    let {_id, nick, email, avatar, active, admin} = user;
+                    res.send(JSON.stringify({_id, nick, email, avatar, active, admin}));
+                }
         }
+        res.send(JSON.stringify({msg: 'NO_JWT'}));
     })();
 });
 
 
+app.get('/', function (req, res) {
+    res.send('Hello World!');
+});
+
 app.listen(4000, function () {
     console.log('Example app listening on port 4000!');
 });
+

@@ -4,6 +4,8 @@ var app = express();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
+var fs = require('fs');
+
 mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
 
 
@@ -23,6 +25,7 @@ const config = {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 
 var userSchema = new Schema({
@@ -77,26 +80,7 @@ var Post = mongoose.model('Post', postSchema);
 //         await newPost4.save();
 // })();
 
-// app.get('/user/:id', function (req, res, next) {
-//     (async ()=>{
-//         const {_id} = req.params.id;
 
-//         if(!_id) {
-//             res.send(JSON.stringify({msg: 'ERROR'}));
-//         }
-        
-//         let user = await User.findById(_id);
-//         if(user._id) {
-//             let posts = await Post.find({userId});
-            
-//             if (posts.length !==0) {
-//                 res.send(JSON.stringify({nick: user.nick,}));
-//             }
-//         } else
-//         res.send(JSON.stringify({msg: 'ERROR'}));
-
-//     })();
-// });
 
 // (async ()=>{
 //     let token = jwt.sign({ "email" : "dima5@gmail.com", "password" : "5234" }, config.secret);
@@ -111,30 +95,135 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
+// app.post('/deletePicture', (req, res) => {
+//     (async ()=>{
+//         const _id = req.body._id;
+//         if(!_id) {
+//             res.end(JSON.stringify({msg: 'ERROR'}));
+//         }
+
+//         User.findByIdAndUpdate(_id, { avatar: 'false' },
+//             function(err, result) {
+//                 if (err) {
+//                     res.send(JSON.stringify({msg: 'ERROR'}));
+//                 } else if (result) {
+//                     res.send(JSON.stringify({msg: 'DELETE'}));
+//                 } else 
+//                 res.send(JSON.stringify({msg: 'ERROR'}));
+//         })
+//     })();
+// })
+
+// app.post('/uploadPicture/:id', (req, res) => {
+//     (async ()=>{
+//         const _id = req.params.id;
+//         let fileName = Math.random().toString('36')
+//         fileName     = `upload/${fileName}`
+//         let fileStream = fs.createWriteStream('public/' + fileName);
+//         req.pipe(fileStream)
+
+//         // req.on('end', () =>{
+//         //     res.end(fileName)
+//         // })
+//     })();
+// })
+
+
+app.post('/findPosts', function (req, res) {
+    (async()=>{
+        const {find} = req.body;
+        let arr =[];
+
+        if(!find || Object.keys(req.body).length !== 1) {
+            res.send(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        let posts = await Post.find({$or: [
+                                            {title: new RegExp(find, 'i')},
+                                            {text: new RegExp(find, 'i')}
+                                        ]});
+        if (posts.length !==0) {
+            for(let key in posts) {
+                let post = posts[key];
+
+                user = await User.findById({_id: `${post.userId}`});
+
+                if (user.active){
+                    let obj ={
+                        _id: post._id,
+                        title: post.title,
+                        text: post.text,
+                        userId: post.userId,
+                        nick: user.nick,
+                        avatar: user.avatar};
+                        
+                    console.log(obj)
+                    arr.push(obj);
+                }
+            }
+            res.send(JSON.stringify({postsArr: arr}));
+        } else
+        res.end(JSON.stringify({msg: 'ERROR'}));
+
+    })();
+});
+
+
+app.put('/user/:id', function (req, res) {
+    (async ()=>{
+        const _id = req.params.id;
+
+        if(!_id) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+        
+        let user = await User.findById(_id);
+        console.log(user);
+        if(user._id) {
+
+            let {_id, nick, email, avatar, active, admin} = user;
+            res.end(JSON.stringify({_id, nick, email, avatar, active, admin}));
+
+        } else
+        res.end(JSON.stringify({msg: 'ERROR'}));
+
+    })();
+});
+
+
+
 app.post('/getPosts', function (req, res) {
     (async()=>{
         const {skip, userId} = req.body;
+        let arr =[];
 
         if(userId) {
-            let posts = await Post.find({userId}).skip(skip).limit(25);
+            let posts = await Post.find({userId}).skip(skip).limit(20);
             if(posts.length !==0) {
                 res.send(JSON.stringify({postsArr: posts}));
             }
         } else {
-            let posts = await Post.find().skip(skip).limit(25);
+            let posts = await Post.find().skip(skip).limit(20);
 
             if(posts.length !==0) {
                 for(let key in posts) {
-                    let user = posts[key];
-                    user = await User.findById({_id: `${item.userId}`});
+                    let post = posts[key];
+                    
+                    user = await User.findById({_id: `${post.userId}`});
 
-                    if (user.nick){
-                        posts[key].nick = user.nick;
-                        posts[key].avatar = user.avatar;
-                        posts[key].active = user.active;
+                    if (user.active){
+                        let obj ={
+                            _id: post._id,
+                            title: post.title,
+                            text: post.text,
+                            userId: post.userId,
+                            nick: user.nick,
+                            avatar: user.avatar};
+                            
+                        arr.push(obj);
                     }
                 }
-                res.send(JSON.stringify({postsArr: posts}));
+                res.send(JSON.stringify({postsArr: arr}));
             }
         }
     })()
@@ -312,4 +401,3 @@ app.get('/', function (req, res) {
 app.listen(4000, function () {
     console.log('Example app listening on port 4000!');
 });
-

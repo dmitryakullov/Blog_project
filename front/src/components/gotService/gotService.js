@@ -11,7 +11,7 @@ export default class gotService {
         })
         
         if (!res.ok) {
-            console.log(`Could not get data`);
+            throw new Error(`COULD_NOT_GET_DATA`);
         } else{
             return await res.json();
         }
@@ -28,7 +28,7 @@ export default class gotService {
         })
         
         if (!res.ok) {
-            console.log(`Could not get data`);
+            throw new Error(`COULD_NOT_GET_DATA`);
         } else{
             return await res.json();
         }
@@ -45,7 +45,7 @@ export default class gotService {
         })
         
         if (!res.ok) {
-            console.log(`Could not get data`);
+            throw new Error(`COULD_NOT_GET_DATA`);
         } else{
             return await res.json();
         }
@@ -62,7 +62,7 @@ export default class gotService {
         })
         
         if (!res.ok) {
-            console.log(`Could not get data`);
+            throw new Error(`COULD_NOT_GET_DATA`);
         } else{
             return await res.json();
         }
@@ -78,7 +78,7 @@ export default class gotService {
         })
         
         if (!res.ok) {
-            console.log(`Could not get data`);
+            throw new Error(`COULD_NOT_GET_DATA`);
         } else{
             return await res.json();
         }
@@ -94,7 +94,7 @@ export default class gotService {
         })
         
         if (!res.ok) {
-            console.log(`Could not get data`);
+            throw new Error(`COULD_NOT_GET_DATA`);
         } else{
             return await res.json();
         }
@@ -112,7 +112,7 @@ export default class gotService {
         })
         
         if (!res.ok) {
-            console.log(`Could not get data`);
+            throw new Error(`COULD_NOT_GET_DATA`);
         } else{
             return await res.json();
         }
@@ -129,7 +129,7 @@ export default class gotService {
         })
         
         if (!res.ok) {
-            console.log(`Could not get data`);
+            throw new Error(`COULD_NOT_GET_DATA`);
         } else{
             return await res.json();
         }
@@ -147,7 +147,33 @@ export default class gotService {
         })
         
         if (!res.ok) {
-            console.log(`Could not get data`);
+            throw new Error(`COULD_NOT_GET_DATA`);
+        } else{
+            return await res.json();
+        }
+    }
+
+    getUserById = async (id) => {
+        let res = await fetch(`/user/${id}`, {method: "PUT"});
+        if (!res.ok) {
+            throw new Error(`COULD_NOT_GET_DATA`);
+        } else{
+            return await res.json();
+        }
+    }
+    
+
+    findPosts = async (find) => {
+        let res = await fetch("/findPosts", {
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({find})
+        })
+        if (!res.ok) {
+            throw new Error(`COULD_NOT_GET_DATA`);
         } else{
             return await res.json();
         }

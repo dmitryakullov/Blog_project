@@ -28,7 +28,7 @@ export default class App extends Component {
                     <div className='main-background'></div>
                     <section className='main-part'>
                         <Nav/>
-                        <AdminPage/>
+
                         <Switch>
 
                             <Route exact path='/'>

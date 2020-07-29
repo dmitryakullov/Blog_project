@@ -1,7 +1,7 @@
 export default class gotService {
 
     makeCheckIn = async (nick, email, password) => {
-        let res = await fetch("/checkinform", {
+        let res = await fetch("/users/new", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -18,7 +18,7 @@ export default class gotService {
     }
 
     makeEnter = async (email, password) => {
-        let res = await fetch("/enterform", {
+        let res = await fetch("/users/get", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -35,7 +35,7 @@ export default class gotService {
     }
     
     createPost = async (_id, title, text) => {
-        let res = await fetch("/createPost", {
+        let res = await fetch("/posts/new", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -52,7 +52,7 @@ export default class gotService {
     }
     
     updatePost = async (userId, title, text) => {
-        let res = await fetch("/updatePost", {
+        let res = await fetch("/posts/update", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ export default class gotService {
         }
     }
     deletePost = async (_id) => {
-        let res = await fetch("/deletePost", {
+        let res = await fetch("/posts/delete", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -102,7 +102,7 @@ export default class gotService {
 
     
     deleteUser = async (_id) => {
-        let res = await fetch("/deleteUser", {
+        let res = await fetch("/users/delete", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -119,7 +119,7 @@ export default class gotService {
     }
 
     findUser = async (nick) => {
-        let res = await fetch("/findUser", {
+        let res = await fetch("/users/findone", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -137,7 +137,7 @@ export default class gotService {
 
     
     getPosts = async (skip, userId) => {
-        let res = await fetch("/getPosts", {
+        let res = await fetch("/posts/get", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -154,7 +154,7 @@ export default class gotService {
     }
 
     getUserById = async (id) => {
-        let res = await fetch(`/user/${id}`, {method: "PUT"});
+        let res = await fetch(`/users/${id}`, {method: "PUT"});
         if (!res.ok) {
             throw new Error(`COULD_NOT_GET_DATA`);
         } else{
@@ -164,7 +164,7 @@ export default class gotService {
     
 
     findPosts = async (find) => {
-        let res = await fetch("/findPosts", {
+        let res = await fetch("/posts/find", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

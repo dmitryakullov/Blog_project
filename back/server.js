@@ -129,7 +129,7 @@ var Post = mongoose.model('Post', postSchema);
 // })
 
 
-app.post('/findPosts', function (req, res) {
+app.post('/posts/find', function (req, res) {
     (async()=>{
         const {find} = req.body;
         let arr =[];
@@ -169,7 +169,7 @@ app.post('/findPosts', function (req, res) {
 });
 
 
-app.put('/user/:id', function (req, res) {
+app.put('/users/:id', function (req, res) {
     (async ()=>{
         const _id = req.params.id;
 
@@ -192,7 +192,7 @@ app.put('/user/:id', function (req, res) {
 
 
 
-app.post('/getPosts', function (req, res) {
+app.post('/posts/get', function (req, res) {
     (async()=>{
         const {skip, userId} = req.body;
         let arr =[];
@@ -229,7 +229,7 @@ app.post('/getPosts', function (req, res) {
     })()
 });
 
-app.post('/findUser', function (req, res) {
+app.post('/users/findone', function (req, res) {
     (async()=>{
         const {nick} = req.body;
 
@@ -248,7 +248,7 @@ app.post('/findUser', function (req, res) {
     })()
 });
 
-app.post('/deleteUser', function (req, res) {
+app.post('/users/delete', function (req, res) {
     (async()=>{
         const {_id} = req.body;
 
@@ -269,7 +269,7 @@ app.post('/deleteUser', function (req, res) {
     })()
 });
 
-app.delete('/deletePost', function (req, res) {
+app.delete('/posts/delete', function (req, res) {
     (async()=>{
         const {_id} = req.body;
 
@@ -289,7 +289,7 @@ app.delete('/deletePost', function (req, res) {
 });
 
 
-app.post('/updatePost', function (req, res) {
+app.post('/posts/update', function (req, res) {
     (async()=>{
         const {_id, title, text} = req.body;
 
@@ -308,7 +308,7 @@ app.post('/updatePost', function (req, res) {
     })()
 });
 
-app.post('/createPost', function (req, res) {
+app.post('/posts/new', function (req, res) {
     (async()=>{
         const {userId, title, text} = req.body;
 
@@ -326,7 +326,7 @@ app.post('/createPost', function (req, res) {
 });
 
 
-app.post('/checkinform', function (req, res) {
+app.post('/users/new', function (req, res) {
     (async()=>{
         const {nick, email, password} = req.body;
 
@@ -353,7 +353,7 @@ app.post('/checkinform', function (req, res) {
 });
 
 
-app.post('/enterform', function (req, res) {
+app.post('/users/get', function (req, res) {
     (async()=>{
         const {email, password} = req.body;
 

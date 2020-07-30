@@ -67,16 +67,16 @@ var Post = mongoose.model('Post', postSchema);
 // })();
 
 // (async ()=>{
-//     let _id= "5f20809aa3b74d194071a7ca";
-//     let newPost = await new Post({userId: _id, title: 'hello', text: 'world', active: true});
+//     let _id= "5f20809aa3b74d194071a7cd";
+//     let newPost = await new Post({userId: _id, title: 'Yext', text: '"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias', active: true});
 //         await newPost.save(); 
-//     let newPost1 = await new Post({userId: _id, title: 'hello1', text: 'world1', active: true});
+//     let newPost1 = await new Post({userId: _id, title: 'QWE post', text: 'fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
 //         await newPost1.save();
-//     let newPost2 = await new Post({userId: _id, title: 'hello2', text: 'world2', active: true});
+//     let newPost2 = await new Post({userId: _id, title: 'tanc', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.', active: true});
 //         await newPost2.save();
-//     let newPost3 = await new Post({userId: _id, title: 'hello3', text: 'world3', active: true});
+//     let newPost3 = await new Post({userId: _id, title: 'Java script', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.', active: true});
 //         await newPost3.save();
-//     let newPost4 = await new Post({userId: _id, title: 'hello4', text: 'world4', active: true});
+//     let newPost4 = await new Post({userId: _id, title: 'Dad da da da', text: 'fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
 //         await newPost4.save();
 // })();
 
@@ -129,6 +129,22 @@ var Post = mongoose.model('Post', postSchema);
 // })
 
 
+app.put('/posts/count', function (req, res) {
+    (async()=>{
+        Post.count({ active: true }, function (err, count) {
+            if (err) {
+                res.end(JSON.stringify({msg: 'ERROR'}));
+            } else {
+                res.end(JSON.stringify({msg: count}));
+            }
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        });
+    })()
+});
+
+
+
+
 app.post('/posts/find', function (req, res) {
     (async()=>{
         const {find} = req.body;
@@ -147,6 +163,7 @@ app.post('/posts/find', function (req, res) {
                 let post = posts[key];
 
                 user = await User.findById({_id: `${post.userId}`});
+                
 
                 if (user.active){
                     let obj ={
@@ -210,6 +227,7 @@ app.post('/posts/get', function (req, res) {
                     let post = posts[key];
                     
                     user = await User.findById({_id: `${post.userId}`});
+                    console.log((post._id.getTimestamp()))
 
                     if (user.active){
                         let obj ={
@@ -218,7 +236,8 @@ app.post('/posts/get', function (req, res) {
                             text: post.text,
                             userId: post.userId,
                             nick: user.nick,
-                            avatar: user.avatar};
+                            avatar: user.avatar,
+                            time: post._id.getTimestamp()};
                             
                         arr.push(obj);
                     }
@@ -228,6 +247,10 @@ app.post('/posts/get', function (req, res) {
         }
     })()
 });
+
+function getTime(_id) {
+    console.log(Date.parse(post._id.getTimestamp()).getMonth())
+}
 
 app.post('/users/findone', function (req, res) {
     (async()=>{
@@ -257,11 +280,14 @@ app.post('/users/delete', function (req, res) {
         }
 
         User.findByIdAndUpdate(_id, { active: false },
-            function(err, result) {
+            async function(err, result) {
                 if (err) {
                     res.send(JSON.stringify({msg: 'ERROR'}));
                 } else if (result) {
+
+                    const posts = await Person.updateMany({ userId: _id }, { active: false });
                     res.send(JSON.stringify({msg: 'DELETE'}));
+
                 } else 
                 res.send(JSON.stringify({msg: 'ERROR'}));
         })

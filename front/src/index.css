@@ -118,6 +118,7 @@ footer {
     background-color: #fff;
     margin: 10px 0;
     padding: 30px 50px 40px;
+    min-width: 100%;
 }
 
 .page-posts-ava {
@@ -130,6 +131,12 @@ footer {
 .page-posts-user {
     display: flex;
     align-items: center;
+}
+
+.page-posts-time {
+    color: rgb(77, 77, 255);
+    font-size: 14px;
+    float: left;
 }
 
 .page-posts-ava div {

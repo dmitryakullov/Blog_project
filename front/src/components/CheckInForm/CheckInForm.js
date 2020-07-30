@@ -26,7 +26,7 @@ export default class CheckInForm extends Component {
                     </div>
 
                     <div className="form-group">
-                        <label htmlfor="inputText2">Никнейм</label>
+                        <label htmlFor="inputText2">Никнейм</label>
                         <input type="text" className="form-control" id="inputText2"/>
                     </div>
 

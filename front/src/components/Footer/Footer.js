@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Link} from "react-router-dom";
 import logo from '../../icons/logo.png'
 import instagramm from '../../icons/instagram-icon.svg';
@@ -23,7 +23,7 @@ export default function Footer() {
                 </div>
                 <div className="col-6 col-md-3">
                     <div className='footer-right'>
-                        <a href="https://www.instagram.com/akulov__dima/?igshid=s6r1zca5ujoz" target='_blank'>
+                        <a href="https://www.instagram.com/akulov__dima/?igshid=s6r1zca5ujoz" target='_blank' rel="noopener noreferrer">
                             <img src={instagramm} alt='Link to instagramm'/>
                         </a>
                     </div>

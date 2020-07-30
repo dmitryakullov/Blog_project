@@ -178,4 +178,14 @@ export default class gotService {
             return await res.json();
         }
     }
+
+    findAmountPosts = async () => {
+        let res = await fetch("/posts/count",{method: 'PUT'});
+        if (!res.ok) {
+            throw new Error(`COULD_NOT_GET_DATA`);
+        } else{
+            return await res.json();
+        }
+    }
 }
+

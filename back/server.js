@@ -67,7 +67,7 @@ var Post = mongoose.model('Post', postSchema);
 // })();
 
 // (async ()=>{
-//     let _id= "5f20809aa3b74d194071a7cd";
+//     let _id= "5f20809aa3b74d194071a7ca";
 //     let newPost = await new Post({userId: _id, title: 'Yext', text: '"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias', active: true});
 //         await newPost.save(); 
 //     let newPost1 = await new Post({userId: _id, title: 'QWE post', text: 'fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
@@ -215,19 +215,18 @@ app.post('/posts/get', function (req, res) {
         let arr =[];
 
         if(userId) {
-            let posts = await Post.find({userId}).skip(skip).limit(20);
+            let posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
             if(posts.length !==0) {
                 res.send(JSON.stringify({postsArr: posts}));
             }
         } else {
-            let posts = await Post.find().skip(skip).limit(20);
+            let posts = await Post.find().sort({_id:-1}).skip(skip).limit(20).sort({_id:-1});
 
             if(posts.length !==0) {
                 for(let key in posts) {
                     let post = posts[key];
                     
                     user = await User.findById({_id: `${post.userId}`});
-                    console.log((post._id.getTimestamp()))
 
                     if (user.active){
                         let obj ={

@@ -29,6 +29,9 @@ class Profile extends Component {
 export default class Nav extends Component {
     
     render () {
+
+        console.log(this.props)
+
         return (
             <header>
                 <nav className="nav-bar bg-dark">
@@ -40,14 +43,16 @@ export default class Nav extends Component {
                             </div>
                             <span className='nav-logo-text'>ProBird</span>
                         </Link>
+                        
+                        {this.props.ovnerHere ? <Link to={`/user/${this.props.ovnerHere}`} className='react-Link'>
+                                                <Profile/>
+                                            </Link> :
 
-                        <Link to='/enterform' className='react-Link'>
-                            <EnterButton/>
-                        </Link>
+                                            <Link to='/enterform' className='react-Link'>
+                                            <EnterButton/>
+                                            </Link>
+                        }
 
-                        <Link to='/user/id' className='react-Link'>
-                            <Profile/>
-                        </Link>
                     </div>
                 </nav>
             </header>

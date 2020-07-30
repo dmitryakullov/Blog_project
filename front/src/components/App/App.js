@@ -8,6 +8,10 @@ import {
     useParams,
     Redirect
 } from "react-router-dom";
+
+import { connect } from 'react-redux'
+
+
 import Nav from '../Nav';
 import Footer from '../Footer';
 import MainPage from '../MainPage';
@@ -16,18 +20,39 @@ import CheckInForm from '../CheckInForm';
 import UserPage from '../UserPage';
 import AdminPage from '../AdminPage';
 
+import actionsRedux from '../actionsRedux';
+
+
+const mapStateToProps = (state) => state;
 
 
 
 
-export default class App extends Component {
+class App extends Component {
+
+    state = {
+        data: null
+    }
+
+    componentDidMount() {
+        const jwt = localStorage.getItem('superJWT_')
+        if(jwt) {
+
+        }
+        console.log(this.props)
+        
+    }
+
     render() {
+
+        let ovnerId = this.state.data ? this.state.data._id: null;
+
         return(
-            <React.Fragment>
+            <>
                 <div className='wrapper'>
                     <div className='main-background'></div>
                     <section className='main-part'>
-                        <Nav/>
+                        <Nav ovnerHere={ovnerId}/>
 
                         <Switch>
 
@@ -57,7 +82,9 @@ export default class App extends Component {
                     </section>
                     <Footer/>
                 </div>
-            </React.Fragment>
+            </>
         )
     }
 };
+
+export default connect( mapStateToProps, actionsRedux )(App);

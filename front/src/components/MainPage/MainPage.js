@@ -54,6 +54,7 @@ export default class MainPage extends Component {
     }
 
 
+
     componentWillUnmount() {
         window.removeEventListener('scroll', this.handleScroll);
     }
@@ -79,7 +80,7 @@ export default class MainPage extends Component {
                     </div>
                     <hr/>
                     <h2>{i.title}</h2>
-                    <div>{i.text}</div>                
+                    <div>{i.text}</div>              
                 </div>
             </ListItem>}
         );

@@ -67,7 +67,7 @@ var Post = mongoose.model('Post', postSchema);
 // })();
 
 // (async ()=>{
-//     let _id= "5f23ac2c665c69301c8a2365";
+//     let _id= "5f23ac2c665c69301c8a2368";   
 //     let newPost = await new Post({userId: _id, title: 'Java', text: '"At vero eos et accusamus et iusto odio dignissimos ducimus quirsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias', active: true});
 //         await newPost.save(); 
 //     let newPost1 = await new Post({userId: _id, title: 'JavaScript', text: 'Fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
@@ -115,11 +115,11 @@ var Post = mongoose.model('Post', postSchema);
 //         User.findByIdAndUpdate(_id, { avatar: 'false' },
 //             function(err, result) {
 //                 if (err) {
-//                     res.send(JSON.stringify({msg: 'ERROR'}));
+//                     res.end(JSON.stringify({msg: 'ERROR'}));
 //                 } else if (result) {
-//                     res.send(JSON.stringify({msg: 'DELETE'}));
+//                     res.end(JSON.stringify({msg: 'DELETE'}));
 //                 } else 
-//                 res.send(JSON.stringify({msg: 'ERROR'}));
+//                 res.end(JSON.stringify({msg: 'ERROR'}));
 //         })
 //     })();
 // })
@@ -138,19 +138,21 @@ var Post = mongoose.model('Post', postSchema);
 //     })();
 // })
 
+app.get('/*', (req,res) => {
+    res.sendfile(path.join(__dirname, 'index.html'))
+})
+
 
 app.post('/user/findposts', function (req, res) {
     (async()=>{
 
         const {userId, skip, firstTime} = req.body;
-
-        let resObj ={}, postsArr=[];
-
-        if(!userId ) {
-            res.end(JSON.stringify({msg: 'ERROR1'}));
-        }
-
         
+        let resObj ={}, postsArr =[];
+
+        if(!userId) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
 
         if(firstTime === true){
             await Post.count({ userId }, function (err, count) {
@@ -160,6 +162,7 @@ app.post('/user/findposts', function (req, res) {
                     resObj ={...{count}}
                 }
             });
+
             
             let user = await User.findById({_id: userId});
 
@@ -180,7 +183,7 @@ app.post('/user/findposts', function (req, res) {
                 postsArr.push({...post, ...{time: post._id.getTimestamp()}})
                 
             }
-            console.log(postsArr)
+
 
 
             res.end(JSON.stringify({...resObj, ...{postsArr}}));
@@ -214,7 +217,7 @@ app.post('/posts/find', function (req, res) {
         let arr =[];
 
         if(!find || Object.keys(req.body).length !== 1) {
-            res.send(JSON.stringify({msg: 'ERROR'}));
+            res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
         let posts = await Post.find({$or: [
@@ -240,7 +243,7 @@ app.post('/posts/find', function (req, res) {
                     arr.push(obj);
                 }
             }
-            res.send(JSON.stringify({postsArr: arr}));
+            res.end(JSON.stringify({postsArr: arr}));
         } else
         res.end(JSON.stringify({msg: 'ERROR'}));
 
@@ -279,11 +282,11 @@ app.post('/posts/get', function (req, res) {
         if(userId) {
             let posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
             if(posts.length !==0) {
-                res.send(JSON.stringify({postsArr: posts}));
+                res.end(JSON.stringify({postsArr: posts}));
             }
         } else {
             let posts = await Post.find().skip(skip).limit(20).sort({_id:-1});
-            console.log(posts._doc)
+
             if(posts.length !==0) {
                 for(let key in posts) {
                     let post = posts[key];
@@ -307,7 +310,7 @@ app.post('/posts/get', function (req, res) {
                     }
                     
                 }
-                res.send(JSON.stringify({postsArr: arr}));
+                res.end(JSON.stringify({postsArr: arr}));
             }
         }
     })()
@@ -320,14 +323,14 @@ app.post('/users/findone', function (req, res) {
         const {nick} = req.body;
 
         if(!nick || Object.keys(req.body).length !== 1) {
-            res.send(JSON.stringify({msg: 'ERROR'}));
+            res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
         let user = await User.findOne({nick});
         if (user.nick) {
             let {_id, nick, email, avatar, active, admin} = user;
 
-            res.send(JSON.stringify({_id, nick, email, avatar, active, admin}));
+            res.end(JSON.stringify({_id, nick, email, avatar, active, admin}));
             
         }
         
@@ -339,20 +342,20 @@ app.post('/users/delete', function (req, res) {
         const {_id} = req.body;
 
         if(!_id || Object.keys(req.body).length !== 1) {
-            res.send(JSON.stringify({msg: 'ERROR'}));
+            res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
         User.findByIdAndUpdate(_id, { active: false },
             async function(err, result) {
                 if (err) {
-                    res.send(JSON.stringify({msg: 'ERROR'}));
+                    res.end(JSON.stringify({msg: 'ERROR'}));
                 } else if (result) {
 
                     const posts = await Person.updateMany({ userId: _id }, { active: false });
-                    res.send(JSON.stringify({msg: 'DELETE'}));
+                    res.end(JSON.stringify({msg: 'DELETE'}));
 
                 } else 
-                res.send(JSON.stringify({msg: 'ERROR'}));
+                res.end(JSON.stringify({msg: 'ERROR'}));
         })
         
     })()
@@ -363,15 +366,15 @@ app.delete('/posts/delete', function (req, res) {
         const {_id} = req.body;
 
         if(!_id || Object.keys(req.body).length !== 1) {
-            res.send(JSON.stringify({msg: 'ERROR'}));
+            res.end(JSON.stringify({msg: 'ERROR'}));
         }
         Post.findByIdAndDelete(_id, function (err, result) { 
             if (err){ 
-                res.send(JSON.stringify({msg: 'ERROR'}));
+                res.end(JSON.stringify({msg: 'ERROR'}));
             } else if(result){ 
-                res.send(JSON.stringify({msg: 'DELETE'}));
+                res.end(JSON.stringify({msg: 'DELETE'}));
             } 
-            else res.send(JSON.stringify({msg: 'ERROR'}));
+            else res.end(JSON.stringify({msg: 'ERROR'}));
         }) 
         
     })()
@@ -383,16 +386,16 @@ app.post('/posts/update', function (req, res) {
         const {_id, title, text} = req.body;
 
         if(!_id || !title || !text || Object.keys(req.body).length !== 3) {
-            res.send(JSON.stringify({msg: 'ERROR'}));
+            res.end(JSON.stringify({msg: 'ERROR'}));
         }
         Post.findByIdAndUpdate(_id, { title, text },
             function(err, result) {
                 if (err) {
-                    res.send(JSON.stringify({msg: 'ERROR'}));
+                    res.end(JSON.stringify({msg: 'ERROR'}));
                 } else if (result) {
-                    res.send(JSON.stringify({msg: 'SAVE'}));
+                    res.end(JSON.stringify({msg: 'SAVE'}));
                 } else 
-                res.send(JSON.stringify({msg: 'ERROR'}));
+                res.end(JSON.stringify({msg: 'ERROR'}));
         })
     })()
 });
@@ -402,15 +405,15 @@ app.post('/posts/new', function (req, res) {
         const {userId, title, text} = req.body;
 
         if(!userId || !title || !text || Object.keys(req.body).length !== 3) {
-            res.send(JSON.stringify({msg: 'ERROR'}));
+            res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
         let newPost = await new Post({userId, title, text, active: true});
         await newPost.save(function (err) {
-            if (err) res.send(JSON.stringify({msg: 'ERROR'}));
+            if (err) res.end(JSON.stringify({msg: 'ERROR'}));
         })
 
-        res.send(JSON.stringify({msg: 'SAVE'}));
+        res.end(JSON.stringify({msg: 'SAVE'}));
     })()
 });
 
@@ -420,7 +423,7 @@ app.post('/users/new', function (req, res) {
         const {nick, email, password} = req.body;
 
         if(!nick || !email || !password || Object.keys(req.body).length !== 3) {
-            res.send(JSON.stringify({msg: 'ERROR'}));
+            res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
         let check = await User.find({$or: [{nick}, {email}]});
@@ -432,11 +435,11 @@ app.post('/users/new', function (req, res) {
             })
 
             let token = jwt.sign({ email, password }, config.secret);
-            res.send(JSON.stringify({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false , token}));
+            res.end(JSON.stringify({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false , token}));
         }
 
         else {
-            res.send(JSON.stringify({msg: 'USER_OR_EMAIL_EXIST'}));
+            res.end(JSON.stringify({msg: 'USER_OR_EMAIL_EXIST'}));
         }
     })()
 });
@@ -447,19 +450,19 @@ app.post('/users/get', function (req, res) {
         const {email, password} = req.body;
 
         if(!email || !password || Object.keys(req.body).length !== 2) {
-            res.send(JSON.stringify({msg: 'ERROR'}));
+            res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
         let user = await User.findOne({email, password});
 
-        if (user) {
+        if (user && user.active) {
             let {_id, nick, email, avatar, active, admin} = user;
 
             let token = jwt.sign({ email, password }, config.secret);
-            res.send(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
+            res.end(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
             
         } else {
-            res.send(JSON.stringify({msg: 'SOMETHING_WRONG'}));
+            res.end(JSON.stringify({msg: 'SOMETHING_WRONG'}));
         }
     })()
 });
@@ -477,16 +480,16 @@ app.post('/', function (req, res) {
             let user = await User.findOne({email, password});
                 if (user) {
                     let {_id, nick, email, avatar, active, admin} = user;
-                    res.send(JSON.stringify({_id, nick, email, avatar, active, admin}));
+                    res.end(JSON.stringify({_id, nick, email, avatar, active, admin}));
                 }
         }
-        res.send(JSON.stringify({msg: 'NO_JWT'}));
+        res.end(JSON.stringify({msg: 'NO_JWT'}));
     })();
 });
 
 
 app.get('/', function (req, res) {
-    res.send('Hello World!');
+    res.end('Hello World!');
 });
 
 app.listen(4000, function () {

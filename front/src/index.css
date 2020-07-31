@@ -14,6 +14,9 @@ body {
 }
 
 html { height: 100%; }
+header {
+    position: relative;
+}
 
 footer { 
     margin-top: 10px;
@@ -63,6 +66,10 @@ footer {
     border-radius: 100%;
     overflow: hidden;
     padding: 4px;
+}
+
+.edit-posts button {
+    margin: 10px 0 0 20px;
 }
 
 .enter-form-bg {
@@ -123,18 +130,11 @@ footer {
     min-width: 100%;
 }
 
-.page-posts {
+.page-posts, .page-posts-profile  {
     background-color: #fff;
     margin: 10px 0;
-    padding: 30px 50px 40px;
+    padding: 30px 11% 40px;
     min-width: 100%;
-}
-.page-posts-profile {
-    background-color: #fff;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    padding: 30px 40px;
-
 }
 
 
@@ -152,8 +152,8 @@ footer {
 }
 
 .page-posts-time {
-    color: rgb(34, 187, 207);
-    font-size: 14px;
+    color: rgb(56, 209, 28);
+    font-size: 15px;
     float: right;
 }
 

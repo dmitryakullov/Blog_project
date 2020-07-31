@@ -16,6 +16,7 @@ import CheckInForm from '../CheckInForm';
 import UserPage from '../UserPage';
 import AdminPage from '../AdminPage';
 import UserPageOwner from '../UserPageOwner';
+import CreatePost from '../CreatePost';
 
 
 import mapDispatchToProps from '../actionsRedux';
@@ -60,20 +61,24 @@ class App extends Component {
 
                         <Switch>
 
-                            <Route exact path='/'>
-                                <MainPage/>
+                            <Route exact path='/' component={MainPage}>
+                                
                             </Route>
 
                             <Route exact path='/user/:id' render={({match}) => (
                                     <UserPage idU={match}/>
                             )}/>
 
-                            <Route exact path='/owner'>
+                            <Route path='/owner'>
                                 <UserPageOwner/>
                             </Route>
                                 
                             <Route path='/users/get'>
                                 <EnterForm/>
+                            </Route>
+
+                            <Route path='/createpost'>
+                                <CreatePost/>
                             </Route>
 
                             <Route path='/users/new'>
@@ -82,6 +87,10 @@ class App extends Component {
 
                             <Route path='/adminpage' >
                                 <AdminPage/>
+                            </Route>
+
+                            <Route path="*">
+                                <MainPage/>
                             </Route>
 
                             <Redirect to="/"/>

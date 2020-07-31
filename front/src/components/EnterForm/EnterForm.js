@@ -14,7 +14,7 @@ class EnterForm extends Component {
         email: '',
         password: '',
         validate: true,
-        disabled: false
+        disabled: false,
     }
 
     inputEmailChange = (event) => {
@@ -46,6 +46,9 @@ class EnterForm extends Component {
                         const {_id, nick, email, avatar, active, admin} = res
 
                         this.props.putState({data: {_id, nick, email, avatar, active, admin}})
+                        let a = document.getElementById('linkEnterForm');
+                        a.click()
+                        
                     }
                 })
                 .catch(err=> console.log(err))
@@ -61,6 +64,7 @@ class EnterForm extends Component {
 
     render() {
         
+
 
         return (
             <div className='enter-form-bg'>
@@ -113,7 +117,7 @@ class EnterForm extends Component {
                             <button className="btn btn-outline-dark form-btn">Зарегистрироваться</button>
                         </Link>
                     </div>
-
+                    <Link id='linkEnterForm' to="/" ><div></div></Link>;
                 </div>
             </div>
         )

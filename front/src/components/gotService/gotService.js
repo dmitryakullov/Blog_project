@@ -187,6 +187,21 @@ export default class gotService {
             return await res.json();
         }
     }
+    findAmountUsersPosts = async (userId, skip, firstTime) => {
+        let res = await fetch("/user/findposts", {
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({userId, skip,firstTime})
+        })
+        if (!res.ok) {
+            throw new Error(`COULD_NOT_GET_DATA`);
+        } else{
+            return await res.json();
+        }
+    }
 }
 
 

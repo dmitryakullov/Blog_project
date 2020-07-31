@@ -41,7 +41,7 @@ export default class MainPage extends Component {
 
     updateAgain=()=>{
         
-        if (this.state.amountPosts - this.state.skip > -this.addSkip){
+        if (this.state.amountPosts - this.state.skip > (-this.addSkip +1)){
 
             this.gotService.getPosts(this.state.skip)
             .then(res=> this.setState((state)=>({

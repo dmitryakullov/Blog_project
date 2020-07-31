@@ -139,6 +139,59 @@ var Post = mongoose.model('Post', postSchema);
 // })
 
 
+app.post('/user/findposts', function (req, res) {
+    (async()=>{
+
+        const {userId, skip, firstTime} = req.body;
+
+        let resObj ={}, postsArr=[];
+
+        if(!userId ) {
+            res.end(JSON.stringify({msg: 'ERROR1'}));
+        }
+
+        
+
+        if(firstTime === true){
+            await Post.count({ userId }, function (err, count) {
+                if (err) {
+                    res.end(JSON.stringify({msg: 'ERROR2'}));
+                } else {
+                    resObj ={...{count}}
+                }
+            });
+            
+            let user = await User.findById({_id: userId});
+
+            if(user) {
+                let {_id, nick, email, avatar, active, admin} = user;
+
+                resObj = {...resObj, ...{_id, nick, email, avatar, active, admin}}
+            } else {
+                res.end(JSON.stringify({msg: 'ERROR3'}));
+            }
+        }
+
+        let posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
+        if(posts.length !==0) {
+            for (let key in posts) {
+                
+                let post = posts[key];
+                postsArr.push({...post, ...{time: post._id.getTimestamp()}})
+                
+            }
+            console.log(postsArr)
+
+
+            res.end(JSON.stringify({...resObj, ...{postsArr}}));
+        }
+        res.end(JSON.stringify({msg: 'ERROR4'}));
+
+
+    })()
+});
+
+
 app.put('/posts/count', function (req, res) {
     (async()=>{
         Post.count({ active: true }, function (err, count) {
@@ -184,7 +237,6 @@ app.post('/posts/find', function (req, res) {
                         nick: user.nick,
                         avatar: user.avatar};
                         
-                    console.log(obj)
                     arr.push(obj);
                 }
             }
@@ -205,7 +257,7 @@ app.put('/users/:id', function (req, res) {
         }
         
         let user = await User.findById(_id);
-        console.log(user);
+
         if(user._id) {
 
             let {_id, nick, email, avatar, active, admin} = user;
@@ -231,10 +283,11 @@ app.post('/posts/get', function (req, res) {
             }
         } else {
             let posts = await Post.find().skip(skip).limit(20).sort({_id:-1});
-
+            console.log(posts._doc)
             if(posts.length !==0) {
                 for(let key in posts) {
                     let post = posts[key];
+                    
                     
                     if (post.userId){
                         user = await User.findById({_id: `${post.userId}`});
@@ -247,7 +300,7 @@ app.post('/posts/get', function (req, res) {
                                 userId: post.userId,
                                 nick: user.nick,
                                 avatar: user.avatar,
-                                time: post._id.getTimestamp()};
+                                time: post._id.getTimestamp()}
                                 
                             arr.push(obj);
                     }
@@ -260,9 +313,7 @@ app.post('/posts/get', function (req, res) {
     })()
 });
 
-function getTime(_id) {
-    console.log(Date.parse(post._id.getTimestamp()).getMonth())
-}
+
 
 app.post('/users/findone', function (req, res) {
     (async()=>{
@@ -420,7 +471,7 @@ app.post('/', function (req, res) {
         if (req.headers.authorization) {
             const token = req.headers.authorization.slice('Bearer '.length);
             const decoded = jwt.verify(token, config.secret);
-            console.log(decoded)
+
             const {email, password} = decoded;
 
             let user = await User.findOne({email, password});

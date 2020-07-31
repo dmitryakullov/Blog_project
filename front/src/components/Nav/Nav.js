@@ -39,7 +39,7 @@ export default class Nav extends Component {
                             <span className='nav-logo-text'>ProBird</span>
                         </Link>
                         
-                        {this.props.ovnerHere ? <Link to={()=> `/user/${this.props.ovnerHere}`} className='react-Link'>
+                        {this.props.ovnerHere ? <Link to='/owner' className='react-Link'>
                                                     <Profile/>
                                                 </Link> :
 

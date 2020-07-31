@@ -13,8 +13,9 @@ import Footer from '../Footer';
 import MainPage from '../MainPage';
 import EnterForm from '../EnterForm';
 import CheckInForm from '../CheckInForm';
-import UserPage from '../UserPageOwner';
+import UserPage from '../UserPage';
 import AdminPage from '../AdminPage';
+import UserPageOwner from '../UserPageOwner';
 
 
 import mapDispatchToProps from '../actionsRedux';
@@ -47,13 +48,14 @@ class App extends Component {
 
 
     render() {
-        let ovnerId = this.props.data ? this.props.data._id: null;
+        let ovnerId = this.props.data ? true: null;
 
         return(
             <>
                 <div className='wrapper'>
                     <div className='main-background'></div>
                     <section className='main-part'>
+
                         <Nav ovnerHere={ovnerId} />
 
                         <Switch>
@@ -62,9 +64,13 @@ class App extends Component {
                                 <MainPage/>
                             </Route>
 
-                            <Route path='/user/:id' render={({match}) => (
+                            <Route exact path='/user/:id' render={({match}) => (
                                     <UserPage idU={match}/>
                             )}/>
+
+                            <Route exact path='/owner'>
+                                <UserPageOwner/>
+                            </Route>
                                 
                             <Route path='/users/get'>
                                 <EnterForm/>

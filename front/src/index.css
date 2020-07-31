@@ -129,6 +129,15 @@ footer {
     padding: 30px 50px 40px;
     min-width: 100%;
 }
+.page-posts-profile {
+    background-color: #fff;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 30px 40px;
+
+}
+
+
 
 .page-posts-ava {
     border-radius: 100%;
@@ -143,9 +152,9 @@ footer {
 }
 
 .page-posts-time {
-    color: rgb(59, 201, 219);
+    color: rgb(34, 187, 207);
     font-size: 14px;
-    float: left;
+    float: right;
 }
 
 .page-posts-ava div {
@@ -171,15 +180,20 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 64px;
-    height: 64px;
+    max-width: 80px;
+    height: 80px;
     border-radius: 100%;
     overflow: hidden;
     border: 1px solid #000000;
+    margin-right: 20px;
 }
 
 .user-page-info {
+    min-width: 100%;
     margin: 10px 20px;
+}
+.user-page-info button {
+    height: 40px;
 }
 
 .admin-page {

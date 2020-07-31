@@ -1,14 +1,23 @@
-const actionsRedux = {
-    cleanState() {
-        return {
-            type: 'CLEAN_STATE'
-        };
-    },
-    setState(userData) {
-        return {
-            type: 'SET_STATE',
-            userData
-        }
+import { bindActionCreators } from 'redux'
+
+
+const cleanState = () => {
+    return {
+        type: 'CLEAN_STATE'
+    };
+}
+
+const putState = (userData) => {
+    return {
+        type: 'SET_STATE',
+        userData
     }
 }
-export default actionsRedux;
+
+
+const mapDispatchToProps = (dispath) => {
+    return bindActionCreators({cleanState, putState}, dispath)
+}
+
+
+export default mapDispatchToProps;

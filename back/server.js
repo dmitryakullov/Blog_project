@@ -52,32 +52,42 @@ var Post = mongoose.model('Post', postSchema);
 
 
 // (async ()=>{
-//     let ans = await new User({nick: 'Dima', email: 'dima@gmail.com', password: '12345678', avatar: 'false', active: true, admin: true})
+//     let ans = await new User({nick: 'Dima Arulov', email: 'dima@gmail.com', password: '12345678', avatar: 'false', active: true, admin: true})
 //         await ans.save();
-//     let ans1 = await new User({nick: 'Dima1', email: 'dima1@gmail.com', password: '1234', avatar: 'false', active: true, admin: false})
+//     let ans1 = await new User({nick: 'Vasya 123', email: 'vasya@gmail.com', password: '1234', avatar: 'false', active: true, admin: false})
 //         await ans1.save();
-//     let ans2 = await new User({nick: 'Dima2', email: 'dima2@gmail.com', password: '2234', avatar: 'false', active: true, admin: false})
+//     let ans2 = await new User({nick: 'Nikita black', email: 'ktoto@gmail.com', password: '2234', avatar: 'false', active: true, admin: false})
 //         await ans2.save();
-//     let ans3 = await new User({nick: 'Dima3', email: 'dima3@gmail.com', password: '3234', avatar: 'false', active: true, admin: false})
+//     let ans3 = await new User({nick: 'Super Person', email: 'rreett@gmail.com', password: '3234', avatar: 'false', active: true, admin: false})
 //         await ans3.save();
-//     let ans4 = await new User({nick: 'Dima4', email: 'dima4@gmail.com', password: '4234', avatar: 'false', active: true, admin: false})
+//     let ans4 = await new User({nick: 'Cat and Dog', email: 'catdog1@gmail.com', password: '4234', avatar: 'false', active: true, admin: false})
 //         await ans4.save();
-//     let ans5 = await new User({nick: 'Dima5', email: 'dima5@gmail.com', password: '5234', avatar: 'false', active: true, admin: false})
+//     let ans5 = await new User({nick: 'Tanks Player', email: 'tank@gmail.com', password: '5234', avatar: 'false', active: true, admin: false})
 //         await ans5.save();
 // })();
 
 // (async ()=>{
-//     let _id= "5f20809aa3b74d194071a7ca";
-//     let newPost = await new Post({userId: _id, title: 'Yext', text: '"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias', active: true});
+//     let _id= "5f23ac2c665c69301c8a2365";
+//     let newPost = await new Post({userId: _id, title: 'Java', text: '"At vero eos et accusamus et iusto odio dignissimos ducimus quirsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias', active: true});
 //         await newPost.save(); 
-//     let newPost1 = await new Post({userId: _id, title: 'QWE post', text: 'fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
+//     let newPost1 = await new Post({userId: _id, title: 'JavaScript', text: 'Fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
 //         await newPost1.save();
-//     let newPost2 = await new Post({userId: _id, title: 'tanc', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.', active: true});
+//     let newPost2 = await new Post({userId: _id, title: 'Super Game', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue rsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. pleasure rationally encounter consequences that are extremely painful.', active: true});
 //         await newPost2.save();
-//     let newPost3 = await new Post({userId: _id, title: 'Java script', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.', active: true});
+//     let newPost3 = await new Post({userId: _id, title: 'Callback', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.', active: true});
 //         await newPost3.save();
-//     let newPost4 = await new Post({userId: _id, title: 'Dad da da da', text: 'fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
+//     let newPost4 = await new Post({userId: _id, title: 'Yes, it is code', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
 //         await newPost4.save();
+//     let newPost5 = await new Post({userId: _id, title: 'My dog', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
+//         await newPost5.save();
+//     let newPost6 = await new Post({userId: _id, title: 'Super Robot', text: 'Maecenas venenatis eros tortor, id ullamcorper mi hendrerit vel. Nunc aliquet venenatis odio pellentesque tempor. Nunc convallis enim in velit imperdiet, quis maximus ligula ullamcorper. Integer in mauris laoreet, viverra lectus sed, accumsan nunc. Duis ac mi vestibulum, sagittis nisi ut, fringilla velit. Vivamus a lacus ac nibh lacinia placerat non id felis. Etiam nec ante rhoncus, egestas tellus id, interdum tortor.', active: true});
+//         await newPost6.save();
+//     let newPost7 = await new Post({userId: _id, title: 'Maybe yes', text: 'Fuga. Et harum quidem rerumo you how all this mistaken idea ofInteger vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum ve denouncing pleasure  facilis est et expedita distinctio. Nam libero tempore, rsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
+//         await newPost7.save();
+//     let newPost8 = await new Post({userId: _id, title: 'But no', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
+//         await newPost8.save();
+//     let newPost9 = await new Post({userId: _id, title: 'Yes, it is code', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
+//         await newPost9.save();
 // })();
 
 
@@ -220,26 +230,29 @@ app.post('/posts/get', function (req, res) {
                 res.send(JSON.stringify({postsArr: posts}));
             }
         } else {
-            let posts = await Post.find().sort({_id:-1}).skip(skip).limit(20).sort({_id:-1});
+            let posts = await Post.find().skip(skip).limit(20).sort({_id:-1});
 
             if(posts.length !==0) {
                 for(let key in posts) {
                     let post = posts[key];
                     
-                    user = await User.findById({_id: `${post.userId}`});
+                    if (post.userId){
+                        user = await User.findById({_id: `${post.userId}`});
 
-                    if (user.active){
-                        let obj ={
-                            _id: post._id,
-                            title: post.title,
-                            text: post.text,
-                            userId: post.userId,
-                            nick: user.nick,
-                            avatar: user.avatar,
-                            time: post._id.getTimestamp()};
-                            
-                        arr.push(obj);
+                        if (user.active){
+                            let obj ={
+                                _id: post._id,
+                                title: post.title,
+                                text: post.text,
+                                userId: post.userId,
+                                nick: user.nick,
+                                avatar: user.avatar,
+                                time: post._id.getTimestamp()};
+                                
+                            arr.push(obj);
                     }
+                    }
+                    
                 }
                 res.send(JSON.stringify({postsArr: arr}));
             }
@@ -367,7 +380,7 @@ app.post('/users/new', function (req, res) {
                 if (err) return console.error(err);
             })
 
-            let token = jwt.sign({ nick, password }, config.secret);
+            let token = jwt.sign({ email, password }, config.secret);
             res.send(JSON.stringify({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false , token}));
         }
 
@@ -387,10 +400,11 @@ app.post('/users/get', function (req, res) {
         }
 
         let user = await User.findOne({email, password});
-        if (user.nick) {
+
+        if (user) {
             let {_id, nick, email, avatar, active, admin} = user;
 
-            let token = jwt.sign({ nick, password }, config.secret);
+            let token = jwt.sign({ email, password }, config.secret);
             res.send(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
             
         } else {
@@ -406,10 +420,11 @@ app.post('/', function (req, res) {
         if (req.headers.authorization) {
             const token = req.headers.authorization.slice('Bearer '.length);
             const decoded = jwt.verify(token, config.secret);
+            console.log(decoded)
             const {email, password} = decoded;
 
             let user = await User.findOne({email, password});
-                if (user.nick) {
+                if (user) {
                     let {_id, nick, email, avatar, active, admin} = user;
                     res.send(JSON.stringify({_id, nick, email, avatar, active, admin}));
                 }

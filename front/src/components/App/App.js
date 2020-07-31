@@ -1,15 +1,11 @@
 import React, {Component} from 'react';
 import {
-    BrowserRouter as Router,
     Switch,
     Route,
-    Link,
-    useRouteMatch,
-    useParams,
     Redirect
 } from "react-router-dom";
 
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 
 import Nav from '../Nav';
@@ -17,42 +13,48 @@ import Footer from '../Footer';
 import MainPage from '../MainPage';
 import EnterForm from '../EnterForm';
 import CheckInForm from '../CheckInForm';
-import UserPage from '../UserPage';
+import UserPage from '../UserPageOwner';
 import AdminPage from '../AdminPage';
 
-import actionsRedux from '../actionsRedux';
+
+import mapDispatchToProps from '../actionsRedux';
+import gotService from '../gotService/gotService.js';
 
 
-const mapStateToProps = (state) => state;
+
+
+const mapStateToProps = (state) => ({...state});
+
 
 
 
 
 class App extends Component {
+    gotService = new gotService();
 
-    state = {
-        data: null
-    }
+    
 
     componentDidMount() {
         const jwt = localStorage.getItem('superJWT_')
-        if(jwt) {
+        if(jwt && !this.props.data) {
+            
+            this.gotService.getJWT(jwt)
+                .then(res=> this.props.putState({data: res}), err=> console.log(err))
 
-        }
-        console.log(this.props)
-        
+        }   
     }
 
-    render() {
 
-        let ovnerId = this.state.data ? this.state.data._id: null;
+
+    render() {
+        let ovnerId = this.props.data ? this.props.data._id: null;
 
         return(
             <>
                 <div className='wrapper'>
                     <div className='main-background'></div>
                     <section className='main-part'>
-                        <Nav ovnerHere={ovnerId}/>
+                        <Nav ovnerHere={ovnerId} />
 
                         <Switch>
 
@@ -60,15 +62,15 @@ class App extends Component {
                                 <MainPage/>
                             </Route>
 
-                            <Route exact path='/user/:id'>
-                                <UserPage/>
-                            </Route>
+                            <Route path='/user/:id' render={({match}) => (
+                                    <UserPage idU={match}/>
+                            )}/>
                                 
-                            <Route path='/enterform'>
+                            <Route path='/users/get'>
                                 <EnterForm/>
                             </Route>
 
-                            <Route path='/checkinform'>
+                            <Route path='/users/new'>
                                 <CheckInForm/>
                             </Route>
 
@@ -87,4 +89,4 @@ class App extends Component {
     }
 };
 
-export default connect( mapStateToProps, actionsRedux )(App);
+export default connect( mapStateToProps, mapDispatchToProps )(App);

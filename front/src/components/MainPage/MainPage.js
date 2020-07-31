@@ -70,7 +70,7 @@ export default class MainPage extends Component {
                         <div className='page-posts-user'>
                             <div className='page-posts-ava'>
                                 <div>
-                                    <img src={i.avatar == 'false'? usersPicture : i.avatar} alt="User's pictures" />
+                                    <img src={i.avatar === 'false'? usersPicture : i.avatar} alt="User's pictures" />
                                 </div>
                             </div>
                             <span className='page-posts-nick'>{i.nick}</span>
@@ -94,10 +94,10 @@ export default class MainPage extends Component {
 
                     <div className="form-inline w-100">
                         <div className='row w-100'>
-                            <div className='col-10'>
+                            <div className='col-8 col-md-10'>
                             <input className="form-control w-100" placeholder="Поиск" aria-label="Search"/>
                             </div>
-                            <div className='col-2'>
+                            <div className='col-4 col-md-2'>
                             <button className="btn btn-secondary w-100">Найти</button>
                             </div>
                         </div>     

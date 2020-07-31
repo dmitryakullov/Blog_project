@@ -15,11 +15,9 @@ class EnterButton extends Component {
 class Profile extends Component {
     render() {
         return (
-            <Link to='/'>
-                <div className='nav-profile'>
-                    <img src={usersPicture} alt='Profile icon'/>
-                </div>
-            </Link>
+            <div className='nav-profile'>
+                <img src={usersPicture} alt='Profile icon'/>
+            </div>
         )
     }
 }
@@ -27,10 +25,7 @@ class Profile extends Component {
 
 
 export default class Nav extends Component {
-    
     render () {
-
-        console.log(this.props)
 
         return (
             <header>
@@ -44,12 +39,12 @@ export default class Nav extends Component {
                             <span className='nav-logo-text'>ProBird</span>
                         </Link>
                         
-                        {this.props.ovnerHere ? <Link to={`/user/${this.props.ovnerHere}`} className='react-Link'>
-                                                <Profile/>
-                                            </Link> :
+                        {this.props.ovnerHere ? <Link to={()=> `/user/${this.props.ovnerHere}`} className='react-Link'>
+                                                    <Profile/>
+                                                </Link> :
 
-                                            <Link to='/enterform' className='react-Link'>
-                                            <EnterButton/>
+                                            <Link to='/users/get' className='react-Link'>
+                                                <EnterButton/>
                                             </Link>
                         }
 

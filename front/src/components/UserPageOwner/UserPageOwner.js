@@ -29,7 +29,9 @@ class UserPageOwner extends Component {
         skip: 0,
         postsArr: [],
         amountPosts: null,
-        allow: true
+        allow: true,
+        search: '',
+        msg: ''
     }
 
     componentDidMount() {
@@ -124,12 +126,51 @@ class UserPageOwner extends Component {
     }
 
 
+    changeSearch = (e) => {
+        if (e.target.value === '') {
+            this.setState({search: e.target.value, nowSearch: false})
+        } else {
+            this.setState({search: e.target.value})
+        }
+        
+    }
+
+    userSearch = () => {
+        this.gotService.restoreOrDelete(this.state.search)
+            .then(res=> this.setState({msg: res.msg}))
+            .catch(err=> console.log(err));
+    }
 
     render() {
 
         if(!this.props.data) {
             return null;
         }
+
+        if (this.props.data.admin === true) {
+
+            return <div className="container">
+                            <Link exact to="/">
+                                <button disabled={this.state.disabled} 
+                                    onClick={this.logOut} 
+                                    className='btn btn-secondary mb-5'>Выйти</button>
+                            </Link> 
+                <div className="form-inline w-100">
+                <br/>
+                    <div className='row w-100'>
+                        <div className='col-8 col-md-10'>
+                        <input onChange={this.changeSearch} value={this.state.search} className="form-control w-100" placeholder="Поиск" aria-label="Search"/>
+                        </div>
+                        <div className='col-4 col-md-2'>
+                        <button onClick={this.userSearch} className="btn btn-secondary w-100">Найти</button>
+                        </div>
+                    </div>     
+                    </div>
+                    <input value={this.state.msg} className='outside-data'></input>
+                </div>
+
+        }
+
         let data = this.props.data;
         const ava = data.avatar === 'false' ? usersPicture : data.avatar;
 

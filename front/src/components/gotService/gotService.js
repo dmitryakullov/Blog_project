@@ -202,6 +202,24 @@ export default class gotService {
             return await res.json();
         }
     }
+    
+    restoreOrDelete = async (nick) => {
+        let res = await fetch("/user/restore_delete", {
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({nick})
+        })
+        
+        if (!res.ok) {
+            throw new Error(`COULD_NOT_GET_DATA`);
+        } else{
+            return await res.json();
+        }
+    }
+
 }
 
 

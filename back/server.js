@@ -92,17 +92,6 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
-// (async ()=>{
-//     let token = jwt.sign({ "email" : "dima5@gmail.com", "password" : "5234" }, config.secret);
-//     console.log(token)
-// })();
-
-// (async ()=>{
-//     let posts = await Post.findOne();
-//     console.log(`${posts._id}`.constructor.name);
-
-// })();
-
 
 
 // app.post('/deletePicture', (req, res) => {
@@ -207,6 +196,43 @@ app.put('/posts/count', function (req, res) {
 
 
 
+app.post('/user/restore_delete', function (req, res) {
+    (async()=>{
+        const {nick} = req.body;
+
+        if(!nick|| Object.keys(req.body).length !== 1) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        let user = await User.findOne({nick});
+
+        if (user && user.active === true) {
+            User.findOneAndUpdate({nick}, {active: false}, null, function(err, ok) {
+                if (err){ 
+                    res.end(JSON.stringify({msg: 'ERROR'}));
+                } 
+                else{ 
+                    res.end(JSON.stringify({msg: 'DELETE'}));
+                } 
+            }) 
+        } else if (user && user.active === false){
+            User.findOneAndUpdate({nick}, {active: true}, null, function(err, ok) {
+                if (err){ 
+                    res.end(JSON.stringify({msg: 'ERROR'}));
+                } 
+                else{ 
+                    res.end(JSON.stringify({msg: 'RESTORE'}));
+                } 
+            }) 
+        } else
+
+        res.end(JSON.stringify({msg: 'ERROR'}));
+
+    })();
+});
+
+
+
 
 app.post('/posts/find', function (req, res) {
     (async()=>{
@@ -220,7 +246,7 @@ app.post('/posts/find', function (req, res) {
         let posts = await Post.find({$or: [
                                             {title: new RegExp(find, 'i')},
                                             {text: new RegExp(find, 'i')}
-                                        ]});
+                                        ]}).limit(60).sort({_id:-1});
         if (posts.length !==0) {
             for(let key in posts) {
                 let post = posts[key];
@@ -231,6 +257,7 @@ app.post('/posts/find', function (req, res) {
                 if (user.active){
                     let obj ={
                         _id: post._id,
+                        time: post._id.getTimestamp(),
                         title: post.title,
                         text: post.text,
                         userId: post.userId,
@@ -288,10 +315,10 @@ app.post('/posts/get', function (req, res) {
                 for(let key in posts) {
                     let post = posts[key];
                     
-                    
+                    console.log(post.userId)
                     if (post.userId){
                         user = await User.findById({_id: `${post.userId}`});
-
+                        
                         if (user.active){
                             let obj ={
                                 _id: post._id,
@@ -301,6 +328,7 @@ app.post('/posts/get', function (req, res) {
                                 nick: user.nick,
                                 avatar: user.avatar,
                                 time: post._id.getTimestamp()}
+                                console.log(obj)
                                 
                             arr.push(obj);
                     }
@@ -378,24 +406,24 @@ app.delete('/posts/delete', function (req, res) {
 });
 
 
-app.post('/posts/update', function (req, res) {
-    (async()=>{
-        const {_id, title, text} = req.body;
+// app.post('/posts/update', function (req, res) {
+//     (async()=>{
+//         const {_id, title, text} = req.body;
 
-        if(!_id || !title || !text || Object.keys(req.body).length !== 3) {
-            res.end(JSON.stringify({msg: 'ERROR'}));
-        }
-        Post.findByIdAndUpdate(_id, { title, text },
-            function(err, result) {
-                if (err) {
-                    res.end(JSON.stringify({msg: 'ERROR'}));
-                } else if (result) {
-                    res.end(JSON.stringify({msg: 'SAVE'}));
-                } else 
-                res.end(JSON.stringify({msg: 'ERROR'}));
-        })
-    })()
-});
+//         if(!_id || !title || !text || Object.keys(req.body).length !== 3) {
+//             res.end(JSON.stringify({msg: 'ERROR'}));
+//         }
+//         Post.findByIdAndUpdate(_id, { title, text },
+//             function(err, result) {
+//                 if (err) {
+//                     res.end(JSON.stringify({msg: 'ERROR'}));
+//                 } else if (result) {
+//                     res.end(JSON.stringify({msg: 'SAVE'}));
+//                 } else 
+//                 res.end(JSON.stringify({msg: 'ERROR'}));
+//         })
+//     })()
+// });
 
 app.post('/posts/new', function (req, res) {
     (async()=>{

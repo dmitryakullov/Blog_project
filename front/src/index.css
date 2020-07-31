@@ -83,6 +83,15 @@ footer {
     padding: 6px; 
     width: 90%;
 }
+
+.outside-data {
+    height: 40px;
+    width: 200px;
+    font-size: 20px;
+    padding: 3px;
+    margin-top: 10px;
+}
+
 .header-text {
     font-size: 21px;
     margin-left: 30px;

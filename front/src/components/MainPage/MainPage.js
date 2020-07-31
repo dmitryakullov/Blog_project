@@ -26,7 +26,7 @@ export default class MainPage extends Component {
         window.addEventListener('scroll', this.onScrollList);
         this.gotService.findAmountPosts()
             .then(res=> this.setState({amountPosts: res.msg}), err=> console.log(err))
-            .then(()=> this.gotService.getPosts(this.skip))
+            .then(()=> this.gotService.getPosts(this.state.skip))
             .then(res=> this.setState({postsArr: res.postsArr, skip: this.state.skip+this.addSkip}), err=> console.log(err))
     }
 
@@ -68,8 +68,10 @@ export default class MainPage extends Component {
     searchPosts = () => {
         
         if(this.state.search !== '') {
-            console.log('click')
             this.setState(()=>({nowSearch: true}))
+            this.gotService.findPosts(this.state.search)
+                .then(res=> this.setState({searchPostArr: res.postsArr}), err=> console.log(err))
+            
         }
     }
 
@@ -79,6 +81,7 @@ export default class MainPage extends Component {
     }
 
     render() {
+        console.log(this.state.amountPosts)
 
         let mappedArr = this.state.nowSearch ? this.state.searchPostArr : this.state.postsArr;
 

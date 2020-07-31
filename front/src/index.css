@@ -17,7 +17,12 @@ html { height: 100%; }
 header {
     position: relative;
 }
-
+textarea {
+    width: 90%;
+    resize: none;
+    overflow: auto;
+    padding: 10px;
+}
 footer { 
     margin-top: 10px;
     flex-shrink: 0; 
@@ -56,6 +61,36 @@ footer {
     font-size: 30px;
     color: rgb(255, 255, 255);
 }
+.chenge-textarea-btn {
+    margin-left: 30px;
+}
+.chenge-textarea-btn > button {
+    margin: 5px;
+}
+.text-area {
+    width: 100%;
+    margin: 20px 30px;
+}
+
+.create-post-form {
+    padding: 20px 40px;
+}
+
+.save-my-post-btn {
+    margin-left: 20%;
+}
+.super-text-style {
+    padding: 6px; 
+    width: 90%;
+}
+.header-text {
+    font-size: 21px;
+    margin-left: 30px;
+}
+.header-text input {
+    min-width: 400px;
+}
+
 .nav-profile {
     display: flex;
     justify-content: center;

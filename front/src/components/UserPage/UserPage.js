@@ -102,7 +102,9 @@ class UserPage extends Component {
                             <br/>
                             <h2>{(i._doc && i._doc.title ? i._doc.title: i.title)}</h2>
                             <hr/>
-                            <div>{(i._doc && i._doc.text ? i._doc.text: i.text)}</div>  
+                            <div className='superText' 
+                            contentEditable='false' 
+                            dangerouslySetInnerHTML={{ __html: `${(i._doc && i._doc.text ? i._doc.text: i.text)}` }}></div>  
                         </div>            
                     </div>
             </ListItem>}

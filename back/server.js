@@ -122,7 +122,7 @@ var Post = mongoose.model('Post', postSchema);
 //                 res.end(JSON.stringify({msg: 'ERROR'}));
 //         })
 //     })();
-// })
+// }) 
 
 // app.post('/uploadPicture/:id', (req, res) => {
 //     (async ()=>{
@@ -138,9 +138,6 @@ var Post = mongoose.model('Post', postSchema);
 //     })();
 // })
 
-app.get('/*', (req,res) => {
-    res.sendfile(path.join(__dirname, 'index.html'))
-})
 
 
 app.post('/user/findposts', function (req, res) {
@@ -402,15 +399,15 @@ app.post('/posts/update', function (req, res) {
 
 app.post('/posts/new', function (req, res) {
     (async()=>{
-        const {userId, title, text} = req.body;
+        const {_id: userId, title, text} = req.body;
 
         if(!userId || !title || !text || Object.keys(req.body).length !== 3) {
-            res.end(JSON.stringify({msg: 'ERROR'}));
+            res.end(JSON.stringify({msg: 'ERROR1'}));
         }
 
         let newPost = await new Post({userId, title, text, active: true});
         await newPost.save(function (err) {
-            if (err) res.end(JSON.stringify({msg: 'ERROR'}));
+            if (err) res.end(JSON.stringify({msg: 'ERROR2'}));
         })
 
         res.end(JSON.stringify({msg: 'SAVE'}));

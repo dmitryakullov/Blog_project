@@ -147,11 +147,11 @@ class UserPageOwner extends Component {
                                 <br/>
                                 <h2>{(i._doc && i._doc.title ? i._doc.title: i.title)}</h2>
                                 <hr/>
-                                <div>{(i._doc && i._doc.text ? i._doc.text: i.text)}</div>  
+                                <div className='superText' 
+                                contentEditable='false' 
+                                dangerouslySetInnerHTML={{ __html: `${(i._doc && i._doc.text ? i._doc.text: i.text)}` }}></div>  
     
                                 <div className='edit-posts'>
-                                    <button onClick={()=> {}} className='btn btn-outline-primary'>Редактировать</button>
-    
                                     <button onClick={()=>this.deleteMessage((i._doc && i._doc._id ? i._doc._id: i._id))} className='btn btn-outline-danger'>Удалить</button>
                                 </div>
                             </div> 

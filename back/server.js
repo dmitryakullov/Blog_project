@@ -127,7 +127,10 @@ var Post = mongoose.model('Post', postSchema);
 //     })();
 // })
 
-
+// (async ()=> {
+//     let user = await User.find();
+//     console.log(user)
+// })()
 
 app.post('/user/findposts', function (req, res) {
     (async()=>{
@@ -310,12 +313,12 @@ app.post('/posts/get', function (req, res) {
             }
         } else {
             let posts = await Post.find().skip(skip).limit(20).sort({_id:-1});
-
+            console.log(JSON.stringify({posts}, null, 6))
             if(posts.length !==0) {
                 for(let key in posts) {
                     let post = posts[key];
                     
-                    console.log(post.userId)
+                    
                     if (post.userId){
                         user = await User.findById({_id: `${post.userId}`});
                         
@@ -427,7 +430,7 @@ app.delete('/posts/delete', function (req, res) {
 
 app.post('/posts/new', function (req, res) {
     (async()=>{
-        const {_id: userId, title, text} = req.body;
+        const {userId, title, text} = req.body;
 
         if(!userId || !title || !text || Object.keys(req.body).length !== 3) {
             res.end(JSON.stringify({msg: 'ERROR1'}));
@@ -513,9 +516,9 @@ app.post('/', function (req, res) {
 });
 
 
-app.get('/', function (req, res) {
-    res.end('Hello World!');
-});
+// app.get('/', function (req, res) {
+//     res.end('Hello World!');
+// });
 
 app.listen(4000, function () {
     console.log('Example app listening on port 4000!');

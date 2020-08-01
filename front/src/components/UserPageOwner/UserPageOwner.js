@@ -61,7 +61,7 @@ class UserPageOwner extends Component {
                         }, err=> console.log(err))}
                 , 100);
                     }
-                    setTimeout(()=> abc(),200);
+                    setTimeout(()=> abc(),300);
         }
 
         

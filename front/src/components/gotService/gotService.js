@@ -34,14 +34,14 @@ export default class gotService {
         }
     }
     
-    createPost = async (_id, title, text) => {
+    createPost = async (userId, title, text) => {
         let res = await fetch("/posts/new", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({_id, title, text})
+            body: JSON.stringify({userId, title, text})
         })
         
         if (!res.ok) {
@@ -194,7 +194,7 @@ export default class gotService {
             'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({userId, skip,firstTime})
+            body: JSON.stringify({userId, skip, firstTime})
         })
         if (!res.ok) {
             throw new Error(`COULD_NOT_GET_DATA`);

@@ -84,6 +84,40 @@ footer {
     width: 90%;
 }
 
+body .super-text-style *{
+    display: none !important;
+}
+
+
+body .super-text-style b{
+    display: inline !important;
+}
+body .super-text-style br{
+    display: inline !important;
+}
+body .super-text-style i{
+    display: inline !important;
+}
+body .super-text-style ins{
+    display: inline !important;
+}
+body .super-text-style s{
+    display: inline !important;
+}
+body .super-text-style a{
+    display: inline !important;
+}
+body .super-text-style img{
+    display: inline-block !important;
+    width: 100%;
+    padding: 10px;
+}
+
+
+
+
+
+
 .outside-data {
     height: 40px;
     width: 200px;

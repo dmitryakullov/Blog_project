@@ -81,7 +81,6 @@ export default class MainPage extends Component {
     }
 
     render() {
-        console.log(this.state.amountPosts)
 
         let mappedArr = this.state.nowSearch ? this.state.searchPostArr : this.state.postsArr;
 

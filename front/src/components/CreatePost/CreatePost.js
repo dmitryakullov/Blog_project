@@ -16,7 +16,7 @@ class CreatePost extends Component{
     }
 
     title = (e) => {
-        this.setState({title: e.target.value})
+        this.setState(({title: e.target.value}))
     }
     textArea = (e) => {
         this.setState({textArea: e.target.value})
@@ -61,7 +61,7 @@ class CreatePost extends Component{
     render(){
 
         let sendBtn = this.state.title !=='' && this.state.textArea !=='' ? 
-            <Link exact to='/owner'>
+            <Link exact to='/'>
                 <button onClick={this.savePost} className='btn btn-success'>Отправить</button>
             </Link> : null;
         

@@ -210,27 +210,21 @@ app.post('/user/restore_delete', function (req, res) {
         let user = await User.findOne({nick});
 
         if (user && user.active === true) {
-            User.findOneAndUpdate({nick}, {active: false}, null, function(err, ok) {
+            await User.findOneAndRemove({nick}, async function(err, ok) {
                 if (err){ 
                     res.end(JSON.stringify({msg: 'ERROR'}));
                 } 
-                else{ 
-                    res.end(JSON.stringify({msg: 'DELETE'}));
+                else { 
+                    await Post.deleteMany({ 'userId':  ok._id}).then(function(){ 
+                        res.end(JSON.stringify({msg: 'DELETE'}));  // Success 
+                    }).catch(function(error){ 
+                        res.end(JSON.stringify({msg: 'ERROR'})); 
+                    }); 
                 } 
             }) 
-        } else if (user && user.active === false){
-            User.findOneAndUpdate({nick}, {active: true}, null, function(err, ok) {
-                if (err){ 
-                    res.end(JSON.stringify({msg: 'ERROR'}));
-                } 
-                else{ 
-                    res.end(JSON.stringify({msg: 'RESTORE'}));
-                } 
-            }) 
-        } else
-
-        res.end(JSON.stringify({msg: 'ERROR'}));
-
+            
+        } else 
+        res.end(JSON.stringify({msg: 'NOT_FOUND'}));
     })();
 });
 
@@ -304,7 +298,7 @@ app.put('/users/:id', function (req, res) {
 app.post('/posts/get', function (req, res) {
     (async()=>{
         const {skip, userId} = req.body;
-        let arr =[];
+        let arr =[], obj={};
 
         if(userId) {
             let posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
@@ -313,7 +307,7 @@ app.post('/posts/get', function (req, res) {
             }
         } else {
             let posts = await Post.find().skip(skip).limit(20).sort({_id:-1});
-            console.log(JSON.stringify({posts}, null, 6))
+            
             if(posts.length !==0) {
                 for(let key in posts) {
                     let post = posts[key];
@@ -321,9 +315,9 @@ app.post('/posts/get', function (req, res) {
                     
                     if (post.userId){
                         user = await User.findById({_id: `${post.userId}`});
-                        
+                        console.log(JSON.stringify({r:user.active}, null, 6))
                         if (user.active){
-                            let obj ={
+                            obj ={
                                 _id: post._id,
                                 title: post.title,
                                 text: post.text,
@@ -331,7 +325,7 @@ app.post('/posts/get', function (req, res) {
                                 nick: user.nick,
                                 avatar: user.avatar,
                                 time: post._id.getTimestamp()}
-                                console.log(obj)
+                                // console.log(obj)
                                 
                             arr.push(obj);
                     }
@@ -431,14 +425,19 @@ app.delete('/posts/delete', function (req, res) {
 app.post('/posts/new', function (req, res) {
     (async()=>{
         const {userId, title, text} = req.body;
-
+        console.log(userId, title, text)
         if(!userId || !title || !text || Object.keys(req.body).length !== 3) {
             res.end(JSON.stringify({msg: 'ERROR1'}));
         }
 
         let newPost = await new Post({userId, title, text, active: true});
-        await newPost.save(function (err) {
-            if (err) res.end(JSON.stringify({msg: 'ERROR2'}));
+        await newPost.save(function (err, ans) {
+            if (err) {
+                res.end(JSON.stringify({msg: 'ERROR2'}));
+                console.log('Error2')
+            } else {
+                console.log(ans)
+            }
         })
 
         res.end(JSON.stringify({msg: 'SAVE'}));

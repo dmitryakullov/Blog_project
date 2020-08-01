@@ -243,7 +243,7 @@ app.post('/posts/find', function (req, res) {
         let posts = await Post.find({$or: [
                                             {title: new RegExp(find, 'i')},
                                             {text: new RegExp(find, 'i')}
-                                        ]}).limit(60).sort({_id:-1});
+                                        ]}).sort({_id:-1});
         if (posts.length !==0) {
             for(let key in posts) {
                 let post = posts[key];
@@ -315,7 +315,7 @@ app.post('/posts/get', function (req, res) {
                     
                     if (post.userId){
                         user = await User.findById({_id: `${post.userId}`});
-                        console.log(JSON.stringify({r:user.active}, null, 6))
+                        // console.log(JSON.stringify({r:user.active}, null, 6))
                         if (user.active){
                             obj ={
                                 _id: post._id,
@@ -325,7 +325,7 @@ app.post('/posts/get', function (req, res) {
                                 nick: user.nick,
                                 avatar: user.avatar,
                                 time: post._id.getTimestamp()}
-                                // console.log(obj)
+
                                 
                             arr.push(obj);
                     }

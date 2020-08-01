@@ -85,7 +85,7 @@ footer {
 }
 
 body .super-text-style *{
-    display: none !important;
+    display: none;
 }
 
 
@@ -110,7 +110,8 @@ body .super-text-style a{
 body .super-text-style img{
     display: inline-block !important;
     width: 100%;
-    padding: 10px;
+    padding: 30px;
+    max-height: 350px !important;
 }
 
 

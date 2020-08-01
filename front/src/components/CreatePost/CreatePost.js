@@ -47,7 +47,7 @@ class CreatePost extends Component{
     img = () => {
         let href = prompt('Введите src картинки','')
         if (href) {
-            this.setState((state) => ({textArea: state.textArea + `<img src="${href}" alt="something"/>`}))
+            this.setState((state) => ({textArea: state.textArea + `<img src="${href}" target='_blank' alt="something"/>`}))
         }
     }
 

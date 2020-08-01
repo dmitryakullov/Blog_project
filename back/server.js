@@ -4,7 +4,7 @@ var app = express();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
-var fs = require('fs');
+// var fs = require('fs');
 
 mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
 

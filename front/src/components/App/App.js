@@ -14,7 +14,6 @@ import MainPage from '../MainPage';
 import EnterForm from '../EnterForm';
 import CheckInForm from '../CheckInForm';
 import UserPage from '../UserPage';
-import AdminPage from '../AdminPage';
 import UserPageOwner from '../UserPageOwner';
 import CreatePost from '../CreatePost';
 
@@ -83,10 +82,6 @@ class App extends Component {
 
                             <Route path='/users/new'>
                                 <CheckInForm/>
-                            </Route>
-
-                            <Route path='/adminpage' >
-                                <AdminPage/>
                             </Route>
 
                             <Route path="*">

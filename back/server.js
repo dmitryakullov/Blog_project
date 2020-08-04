@@ -51,86 +51,41 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
-// (async ()=>{
-//     let ans = await new User({nick: 'Dima Arulov', email: 'dima@gmail.com', password: '12345678', avatar: 'false', active: true, admin: true})
-//         await ans.save();
-//     let ans1 = await new User({nick: 'Vasya 123', email: 'vasya@gmail.com', password: '1234', avatar: 'false', active: true, admin: false})
-//         await ans1.save();
-//     let ans2 = await new User({nick: 'Nikita black', email: 'ktoto@gmail.com', password: '2234', avatar: 'false', active: true, admin: false})
-//         await ans2.save();
-//     let ans3 = await new User({nick: 'Super Person', email: 'rreett@gmail.com', password: '3234', avatar: 'false', active: true, admin: false})
-//         await ans3.save();
-//     let ans4 = await new User({nick: 'Cat and Dog', email: 'catdog1@gmail.com', password: '4234', avatar: 'false', active: true, admin: false})
-//         await ans4.save();
-//     let ans5 = await new User({nick: 'Tanks Player', email: 'tank@gmail.com', password: '5234', avatar: 'false', active: true, admin: false})
-//         await ans5.save();
-// })();
 
-// (async ()=>{
-//     let _id= "5f23ac2c665c69301c8a2368";   
-//     let newPost = await new Post({userId: _id, title: 'Java', text: '"At vero eos et accusamus et iusto odio dignissimos ducimus quirsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias', active: true});
-//         await newPost.save(); 
-//     let newPost1 = await new Post({userId: _id, title: 'JavaScript', text: 'Fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
-//         await newPost1.save();
-//     let newPost2 = await new Post({userId: _id, title: 'Super Game', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue rsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. pleasure rationally encounter consequences that are extremely painful.', active: true});
-//         await newPost2.save();
-//     let newPost3 = await new Post({userId: _id, title: 'Callback', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.', active: true});
-//         await newPost3.save();
-//     let newPost4 = await new Post({userId: _id, title: 'Yes, it is code', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
-//         await newPost4.save();
-//     let newPost5 = await new Post({userId: _id, title: 'My dog', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
-//         await newPost5.save();
-//     let newPost6 = await new Post({userId: _id, title: 'Super Robot', text: 'Maecenas venenatis eros tortor, id ullamcorper mi hendrerit vel. Nunc aliquet venenatis odio pellentesque tempor. Nunc convallis enim in velit imperdiet, quis maximus ligula ullamcorper. Integer in mauris laoreet, viverra lectus sed, accumsan nunc. Duis ac mi vestibulum, sagittis nisi ut, fringilla velit. Vivamus a lacus ac nibh lacinia placerat non id felis. Etiam nec ante rhoncus, egestas tellus id, interdum tortor.', active: true});
-//         await newPost6.save();
-//     let newPost7 = await new Post({userId: _id, title: 'Maybe yes', text: 'Fuga. Et harum quidem rerumo you how all this mistaken idea ofInteger vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum ve denouncing pleasure  facilis est et expedita distinctio. Nam libero tempore, rsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
-//         await newPost7.save();
-//     let newPost8 = await new Post({userId: _id, title: 'But no', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
-//         await newPost8.save();
-//     let newPost9 = await new Post({userId: _id, title: 'Yes, it is code', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
-//         await newPost9.save();
-// })();
+app.post('/deletePicture', (req, res) => {
+    (async ()=>{
+        const _id = req.body._id;
+        if(!_id) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        User.findByIdAndUpdate(_id, { avatar: 'false' },
+            function(err, result) {
+                if (err) {
+                    res.end(JSON.stringify({msg: 'ERROR'}));
+                } else if (result) {
+                    res.end(JSON.stringify({msg: 'DELETE'}));
+                } else 
+                res.end(JSON.stringify({msg: 'ERROR'}));
+        })
+    })();
+}) 
+
+app.post('/uploadPicture/:id', (req, res) => {
+    (async ()=>{
+        const _id = req.params.id;
+        let fileName = Math.random().toString('36')
+        fileName     = `upload/${fileName}`
+        let fileStream = fs.createWriteStream('public/' + fileName);
+        req.pipe(fileStream)
+
+        // req.on('end', () =>{
+        //     res.end(fileName)
+        // })
+    })();
+})
 
 
-
-
-
-// app.post('/deletePicture', (req, res) => {
-//     (async ()=>{
-//         const _id = req.body._id;
-//         if(!_id) {
-//             res.end(JSON.stringify({msg: 'ERROR'}));
-//         }
-
-//         User.findByIdAndUpdate(_id, { avatar: 'false' },
-//             function(err, result) {
-//                 if (err) {
-//                     res.end(JSON.stringify({msg: 'ERROR'}));
-//                 } else if (result) {
-//                     res.end(JSON.stringify({msg: 'DELETE'}));
-//                 } else 
-//                 res.end(JSON.stringify({msg: 'ERROR'}));
-//         })
-//     })();
-// }) 
-
-// app.post('/uploadPicture/:id', (req, res) => {
-//     (async ()=>{
-//         const _id = req.params.id;
-//         let fileName = Math.random().toString('36')
-//         fileName     = `upload/${fileName}`
-//         let fileStream = fs.createWriteStream('public/' + fileName);
-//         req.pipe(fileStream)
-
-//         // req.on('end', () =>{
-//         //     res.end(fileName)
-//         // })
-//     })();
-// })
-
-// (async ()=> {
-//     let user = await User.find();
-//     console.log(user)
-// })()
 
 app.post('/user/findposts', function (req, res) {
     (async()=>{
@@ -403,24 +358,24 @@ app.delete('/posts/delete', function (req, res) {
 });
 
 
-// app.post('/posts/update', function (req, res) {
-//     (async()=>{
-//         const {_id, title, text} = req.body;
+app.post('/posts/update', function (req, res) {
+    (async()=>{
+        const {_id, title, text} = req.body;
 
-//         if(!_id || !title || !text || Object.keys(req.body).length !== 3) {
-//             res.end(JSON.stringify({msg: 'ERROR'}));
-//         }
-//         Post.findByIdAndUpdate(_id, { title, text },
-//             function(err, result) {
-//                 if (err) {
-//                     res.end(JSON.stringify({msg: 'ERROR'}));
-//                 } else if (result) {
-//                     res.end(JSON.stringify({msg: 'SAVE'}));
-//                 } else 
-//                 res.end(JSON.stringify({msg: 'ERROR'}));
-//         })
-//     })()
-// });
+        if(!_id || !title || !text || Object.keys(req.body).length !== 3) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+        Post.findByIdAndUpdate(_id, { title, text },
+            function(err, result) {
+                if (err) {
+                    res.end(JSON.stringify({msg: 'ERROR'}));
+                } else if (result) {
+                    res.end(JSON.stringify({msg: 'SAVE'}));
+                } else 
+                res.end(JSON.stringify({msg: 'ERROR'}));
+        })
+    })()
+});
 
 app.post('/posts/new', function (req, res) {
     (async()=>{
@@ -522,3 +477,54 @@ app.post('/', function (req, res) {
 app.listen(4000, function () {
     console.log('Example app listening on port 4000!');
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+// (async ()=>{
+//     let ans = await new User({nick: 'Dima Arulov', email: 'dima@gmail.com', password: '12345678', avatar: 'false', active: true, admin: true})
+//         await ans.save();
+//     let ans1 = await new User({nick: 'Vasya 123', email: 'vasya@gmail.com', password: '1234', avatar: 'false', active: true, admin: false})
+//         await ans1.save();
+//     let ans2 = await new User({nick: 'Nikita black', email: 'ktoto@gmail.com', password: '2234', avatar: 'false', active: true, admin: false})
+//         await ans2.save();
+//     let ans3 = await new User({nick: 'Super Person', email: 'rreett@gmail.com', password: '3234', avatar: 'false', active: true, admin: false})
+//         await ans3.save();
+//     let ans4 = await new User({nick: 'Cat and Dog', email: 'catdog1@gmail.com', password: '4234', avatar: 'false', active: true, admin: false})
+//         await ans4.save();
+//     let ans5 = await new User({nick: 'Tanks Player', email: 'tank@gmail.com', password: '5234', avatar: 'false', active: true, admin: false})
+//         await ans5.save();
+// })();
+
+// (async ()=>{
+//     let _id= "5f23ac2c665c69301c8a2368";   
+//     let newPost = await new Post({userId: _id, title: 'Java', text: '"At vero eos et accusamus et iusto odio dignissimos ducimus quirsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias', active: true});
+//         await newPost.save(); 
+//     let newPost1 = await new Post({userId: _id, title: 'JavaScript', text: 'Fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
+//         await newPost1.save();
+//     let newPost2 = await new Post({userId: _id, title: 'Super Game', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue rsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. pleasure rationally encounter consequences that are extremely painful.', active: true});
+//         await newPost2.save();
+//     let newPost3 = await new Post({userId: _id, title: 'Callback', text: '"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.', active: true});
+//         await newPost3.save();
+//     let newPost4 = await new Post({userId: _id, title: 'Yes, it is code', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
+//         await newPost4.save();
+//     let newPost5 = await new Post({userId: _id, title: 'My dog', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
+//         await newPost5.save();
+//     let newPost6 = await new Post({userId: _id, title: 'Super Robot', text: 'Maecenas venenatis eros tortor, id ullamcorper mi hendrerit vel. Nunc aliquet venenatis odio pellentesque tempor. Nunc convallis enim in velit imperdiet, quis maximus ligula ullamcorper. Integer in mauris laoreet, viverra lectus sed, accumsan nunc. Duis ac mi vestibulum, sagittis nisi ut, fringilla velit. Vivamus a lacus ac nibh lacinia placerat non id felis. Etiam nec ante rhoncus, egestas tellus id, interdum tortor.', active: true});
+//         await newPost6.save();
+//     let newPost7 = await new Post({userId: _id, title: 'Maybe yes', text: 'Fuga. Et harum quidem rerumo you how all this mistaken idea ofInteger vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum ve denouncing pleasure  facilis est et expedita distinctio. Nam libero tempore, rsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});
+//         await newPost7.save();
+//     let newPost8 = await new Post({userId: _id, title: 'But no', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
+//         await newPost8.save();
+//     let newPost9 = await new Post({userId: _id, title: 'Yes, it is code', text: 'Integer vel metus imperdiet, cursus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec.', active: true});
+//         await newPost9.save();
+// })();

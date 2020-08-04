@@ -130,7 +130,7 @@ class UserPage extends Component {
                                 </div>
                                 
                             </div>
-                            <hr/>
+                            
                         </div>
                     </div>
                 </div>

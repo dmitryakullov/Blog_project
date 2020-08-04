@@ -32,6 +32,8 @@ footer {
 }
 
 
+
+
 .main-background {
     min-height: 100%;
     min-width: 100%;
@@ -68,7 +70,6 @@ footer {
     margin: 5px;
 }
 .text-area {
-    width: 100%;
     margin: 20px 30px;
 }
 
@@ -87,8 +88,6 @@ footer {
 body .super-text-style *{
     display: none;
 }
-
-
 body .super-text-style b{
     display: inline !important;
 }
@@ -260,6 +259,7 @@ body .super-text-style img{
     justify-content: center;
     align-items: center;
     max-width: 80px;
+    min-width: 80px;
     height: 80px;
     border-radius: 100%;
     overflow: hidden;

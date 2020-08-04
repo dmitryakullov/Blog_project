@@ -67,8 +67,7 @@ class CheckInForm extends Component {
                         localStorage.setItem('superJWT_', res.token);
                         const {_id, nick, email, avatar, active, admin} = res
                         this.props.putState({data: {_id, nick, email, avatar, active, admin}})
-                        let a = document.getElementById('linkCheckIn');
-                        a.click()
+                        window.location = "/";
                     }
                 })
                 .catch(err=> console.log(err))
@@ -142,7 +141,6 @@ class CheckInForm extends Component {
                     </div>
 
                 </div>
-                <Link id='linkCheckIn' to="/" ><div></div></Link>
             </div>
         )
     }

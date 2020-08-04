@@ -23,7 +23,6 @@ import gotService from '../gotService/gotService.js';
 
 
 
-
 const mapStateToProps = (state) => ({...state});
 
 
@@ -60,8 +59,8 @@ class App extends Component {
 
                         <Switch>
 
-                            <Route exact path='/' component={MainPage}>
-                                
+                            <Route exact path='/'>
+                                <MainPage/>
                             </Route>
 
                             <Route exact path='/user/:id' render={({match}) => (

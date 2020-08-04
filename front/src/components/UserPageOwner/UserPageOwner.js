@@ -250,10 +250,7 @@ class UserPageOwner extends Component {
 }
 
 class ListItem extends Component{
-
-    
     render(){
-        
         return (
             <>
                 {this.props.children}
@@ -261,8 +258,6 @@ class ListItem extends Component{
         )
     }
 }
-
-
 
 
 function getSuperId() {

@@ -7,6 +7,8 @@ import gotService from '../gotService/gotService.js';
 import WarnMessage from '../WarnMessage';
 
 
+const mapStateToProps = (state) => ({...state});
+
 class EnterForm extends Component {
     gotService = new gotService();
 
@@ -32,6 +34,8 @@ class EnterForm extends Component {
     }
 
     registerUser =() => {
+        
+        
         var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
         if (this.state.password.length >= 4 && reg.test(this.state.email)) {
@@ -44,15 +48,12 @@ class EnterForm extends Component {
                     } else {
                         localStorage.setItem('superJWT_', res.token);
                         const {_id, nick, email, avatar, active, admin} = res
-
-                        this.props.putState({data: {_id, nick, email, avatar, active, admin}})
-                        let a = document.getElementById('linkEnterForm');
-                        a.click()
                         
+                        this.props.putState({data: {_id, nick, email, avatar, active, admin}});
+                        window.location = "/";
                     }
                 })
                 .catch(err=> console.log(err))
-
         } else {
             this.setState({validate: false})
         }
@@ -64,7 +65,7 @@ class EnterForm extends Component {
 
     render() {
         
-
+        console.log(this.props)
 
         return (
             <div className='enter-form-bg'>
@@ -117,11 +118,10 @@ class EnterForm extends Component {
                             <button className="btn btn-outline-dark form-btn">Зарегистрироваться</button>
                         </Link>
                     </div>
-                    <Link id='linkEnterForm' to="/" ><div></div></Link>;
                 </div>
             </div>
         )
     }
 }
 
-export default connect( null, mapDispatchToProps )(EnterForm);
+export default connect( mapStateToProps, mapDispatchToProps )(EnterForm);

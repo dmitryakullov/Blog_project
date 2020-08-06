@@ -7,7 +7,7 @@ import gotService from '../gotService/gotService.js';
 import WarnMessage from '../WarnMessage';
 
 
-const mapStateToProps = (state) => ({...state});
+const mapStateToProps = (store) => ({...store});
 
 class EnterForm extends Component {
     gotService = new gotService();
@@ -49,7 +49,7 @@ class EnterForm extends Component {
                         localStorage.setItem('superJWT_', res.token);
                         const {_id, nick, email, avatar, active, admin} = res
                         
-                        this.props.putState({data: {_id, nick, email, avatar, active, admin}});
+                        this.props.putStore({data: {_id, nick, email, avatar, active, admin}});
                         window.location = "/";
                     }
                 })

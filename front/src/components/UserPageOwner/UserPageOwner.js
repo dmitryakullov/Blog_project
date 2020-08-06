@@ -11,7 +11,7 @@ import withUnmounted from '@ishawnwang/withunmounted';
 
 
 
-const mapStateToProps = (state) => ({...state});
+const mapStateToProps = (store) => ({...store});
 
 
 
@@ -122,7 +122,7 @@ class UserPageOwner extends Component {
         
         localStorage.removeItem('superJWT_');
 
-        this.props.cleanState();
+        this.props.cleanStore();
     }
 
 

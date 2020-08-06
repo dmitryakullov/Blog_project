@@ -1,13 +1,13 @@
 import { bindActionCreators } from 'redux'
 
 
-const cleanState = () => {
+const cleanStore = () => {
     return {
         type: 'CLEAN_STATE'
     };
 }
 
-const putState = (userData) => {
+const putStore = (userData) => {
     return {
         type: 'SET_STATE',
         userData
@@ -16,7 +16,7 @@ const putState = (userData) => {
 
 
 const mapDispatchToProps = (dispath) => {
-    return bindActionCreators({cleanState, putState}, dispath)
+    return bindActionCreators({cleanStore, putStore}, dispath)
 }
 
 

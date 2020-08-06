@@ -4,7 +4,7 @@ import gotService from '../gotService/gotService.js';
 import { connect } from 'react-redux';
 
 
-const mapStateToProps = (state) => ({...state});
+const mapStateToProps = (stpre) => ({...stpre});
 
 
 class CreatePost extends Component{

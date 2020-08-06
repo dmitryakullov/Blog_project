@@ -6,7 +6,7 @@ import gotService from '../gotService/gotService.js';
 import gotTime from '../gotTime/gotTime';
 import withUnmounted from '@ishawnwang/withunmounted';
 
-const mapStateToProps = (state) => ({...state});
+const mapStateToProps = (store) => ({...store});
 
 
 

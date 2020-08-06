@@ -23,7 +23,7 @@ import gotService from '../gotService/gotService.js';
 
 
 
-const mapStateToProps = (state) => ({...state});
+const mapStateToProps = (store) => ({...store});
 
 
 
@@ -39,7 +39,7 @@ class App extends Component {
         if(jwt && !this.props.data) {
             
             this.gotService.getJWT(jwt)
-                .then(res=> this.props.putState({data: res}), err=> console.log(err))
+                .then(res=> this.props.putStore({data: res}), err=> console.log(err))
 
         }   
     }

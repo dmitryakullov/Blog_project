@@ -19,7 +19,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 
 const config = {
-    secret: `Dj=yr456_m9+F.rMM65_-.eug20864G` //тот самый секретный ключ, которым подписывается каждый токен, выдаваемый клиенту
+    secret: `Dj=yr456_m9+F.rMM65_-.eug20864G*$sv#&hWQ-^:;&8328649cDR`
 }
 
 
@@ -51,39 +51,39 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
+// app.post('/deletePicture', (req, res) => {
+//     (async ()=>{
+//         const _id = req.body._id;
+//         if(!_id) {
+//             res.end(JSON.stringify({msg: 'ERROR'}));
+//         }
 
-app.post('/deletePicture', (req, res) => {
-    (async ()=>{
-        const _id = req.body._id;
-        if(!_id) {
-            res.end(JSON.stringify({msg: 'ERROR'}));
-        }
+//         User.findByIdAndUpdate(_id, { avatar: 'false' },
+//             function(err, result) {
+//                 if (err) {
+//                     res.end(JSON.stringify({msg: 'ERROR'}));
+//                 } else if (result) {
+//                     res.end(JSON.stringify({msg: 'DELETE'}));
+//                 } else 
+//                 res.end(JSON.stringify({msg: 'ERROR'}));
+//         })
+//     })();
+// }) 
 
-        User.findByIdAndUpdate(_id, { avatar: 'false' },
-            function(err, result) {
-                if (err) {
-                    res.end(JSON.stringify({msg: 'ERROR'}));
-                } else if (result) {
-                    res.end(JSON.stringify({msg: 'DELETE'}));
-                } else 
-                res.end(JSON.stringify({msg: 'ERROR'}));
-        })
-    })();
-}) 
+// app.post('/uploadPicture/:id', (req, res) => {
+//     (async ()=>{
+//         const _id = req.params.id;
+//         let fileName = Math.random().toString('36')
+//         fileName     = `upload/${fileName}`
+//         let fileStream = fs.createWriteStream('public/' + fileName);
+//         req.pipe(fileStream)
 
-app.post('/uploadPicture/:id', (req, res) => {
-    (async ()=>{
-        const _id = req.params.id;
-        let fileName = Math.random().toString('36')
-        fileName     = `upload/${fileName}`
-        let fileStream = fs.createWriteStream('public/' + fileName);
-        req.pipe(fileStream)
+//         // req.on('end', () =>{
+//         //     res.end(fileName)
+//         // })
+//     })();
+// })
 
-        // req.on('end', () =>{
-        //     res.end(fileName)
-        // })
-    })();
-})
 
 
 
@@ -416,7 +416,7 @@ app.post('/users/new', function (req, res) {
                 if (err) return console.error(err);
             })
 
-            let token = jwt.sign({ email, password }, config.secret);
+            let token = jwt.sign({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false}, config.secret);
             res.end(JSON.stringify({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false , token}));
         }
 
@@ -440,7 +440,7 @@ app.post('/users/get', function (req, res) {
         if (user && user.active) {
             let {_id, nick, email, avatar, active, admin} = user;
 
-            let token = jwt.sign({ email, password }, config.secret);
+            let token = jwt.sign({ _id, nick, email, avatar, active, admin }, config.secret);
             res.end(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
             
         } else {
@@ -455,12 +455,19 @@ app.post('/', function (req, res) {
     (async ()=>{
         if (req.headers.authorization) {
             const token = req.headers.authorization.slice('Bearer '.length);
-            const decoded = jwt.verify(token, config.secret);
+            let decoded;
+            try {
+                decoded = jwt.verify(token, config.secret);
+            } catch(err) {
+                console.log('\n\nWRONG__JWT\n\n');
+                res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+            }
+            
 
-            const {email, password} = decoded;
+            const {nick, email} = decoded;
 
-            let user = await User.findOne({email, password});
-                if (user) {
+            let user = await User.findOne({nick, email});
+                if (user && user.active) {
                     let {_id, nick, email, avatar, active, admin} = user;
                     res.end(JSON.stringify({_id, nick, email, avatar, active, admin}));
                 }

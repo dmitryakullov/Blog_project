@@ -87,7 +87,7 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
-app.post('/user/findposts', function (req, res) {
+app.post('/user/findposts', function (req, res) {          //Use
     (async()=>{
 
         const {userId, skip, firstTime} = req.body;
@@ -139,7 +139,7 @@ app.post('/user/findposts', function (req, res) {
 });
 
 
-app.put('/posts/count', function (req, res) {
+app.put('/posts/count', function (req, res) {               //Use
     (async()=>{
         Post.count({ active: true }, function (err, count) {
             if (err) {
@@ -250,7 +250,7 @@ app.put('/users/:id', function (req, res) {
 
 
 
-app.post('/posts/get', function (req, res) {
+app.post('/posts/get', function (req, res) {        //Use
     (async()=>{
         const {skip, userId} = req.body;
         let arr =[], obj={};
@@ -400,7 +400,7 @@ app.post('/posts/new', function (req, res) {
 });
 
 
-app.post('/users/new', function (req, res) {
+app.post('/users/new', function (req, res) {        //Use
     (async()=>{
         const {nick, email, password} = req.body;
 
@@ -427,7 +427,7 @@ app.post('/users/new', function (req, res) {
 });
 
 
-app.post('/users/get', function (req, res) {
+app.post('/users/get', function (req, res) {        //Use
     (async()=>{
         const {email, password} = req.body;
 
@@ -451,7 +451,7 @@ app.post('/users/get', function (req, res) {
 
 
 
-app.post('/', function (req, res) {
+app.post('/', function (req, res) {                 //Use
     (async ()=>{
         if (req.headers.authorization) {
             const token = req.headers.authorization.slice('Bearer '.length);

@@ -4,9 +4,7 @@ import {
     Route,
     Redirect
 } from "react-router-dom";
-
 import { connect } from 'react-redux';
-
 
 import Nav from '../Nav';
 import Footer from '../Footer';
@@ -32,16 +30,24 @@ const mapStateToProps = (store) => ({...store});
 class App extends Component {
     gotService = new gotService();
 
-    
 
-    componentDidMount() {
+
+
+    getUserByJWT = () => {
         const jwt = localStorage.getItem('superJWT_')
         if(jwt && !this.props.data) {
-            
+
             this.gotService.getJWT(jwt)
                 .then(res=> this.props.putStore({data: res}), err=> console.log(err))
+        } 
+    }
 
-        }   
+
+    componentDidMount() {
+        this.getUserByJWT();
+    }
+    componentDidUpdate() {
+        this.getUserByJWT();
     }
 
 

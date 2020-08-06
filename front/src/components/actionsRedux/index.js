@@ -9,10 +9,11 @@ const cleanStore = () => {
 
 const putStore = (userData) => {
     return {
-        type: 'SET_STATE',
+        type: 'PUT_STATE',
         userData
     }
 }
+
 
 
 const mapDispatchToProps = (dispath) => {

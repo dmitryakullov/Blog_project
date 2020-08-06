@@ -5,6 +5,9 @@ import usersPicture from '../../icons/profile-picture.png';
 import gotService from '../gotService/gotService.js';
 import gotTime from '../gotTime/gotTime';
 import withUnmounted from '@ishawnwang/withunmounted';
+import mapDispatchToProps from '../actionsRedux';
+
+
 
 const mapStateToProps = (store) => ({...store});
 
@@ -15,11 +18,6 @@ class UserPage extends Component {
     gotService = new gotService();
     hasUnmounted = false;
 
-    constructor(){
-        super();
-        this.addSkip =20;
-        
-    }
 
     state = {
         postsArr: [],
@@ -41,7 +39,7 @@ class UserPage extends Component {
                         postsArr: res.postsArr,
                         user: {avatar: res.avatar, admin: res.admin, email: res.email, nick: res.nick},
                         amountPosts: res.count,
-                        skip: state.skip + this.addSkip
+                        skip: state.skip + this.props.addSkip
                     }))  
                 }, err=> console.log(err))
         }
@@ -60,7 +58,7 @@ class UserPage extends Component {
 
     updateAgain=()=>{
         
-        if (this.state.amountPosts - this.state.skip > (-this.addSkip +1)){
+        if (this.state.amountPosts - this.state.skip > (-this.props.addSkip +1)){
 
             this.gotService.findAmountUsersPosts(this.props.idU.params.id, this.state.skip)
                 .then(res=> 
@@ -69,7 +67,7 @@ class UserPage extends Component {
                     return {...item._doc, ...{time}}
                 });
                     return this.setState((state)=>({
-                    skip: state.skip + this.addSkip,
+                    skip: state.skip + this.props.addSkip,
                     postsArr: [...state.postsArr, ... arr],
                     allow: true
                 }))}
@@ -86,6 +84,7 @@ class UserPage extends Component {
 
 
     render() {
+        console.log(this.props)
         
         if (!this.state.user.nick) {
             return null;
@@ -157,4 +156,4 @@ function getSuperId() {
 }
 
 
-export default connect( mapStateToProps )(withUnmounted(UserPage));
+export default connect( mapStateToProps, mapDispatchToProps )(withUnmounted(UserPage));

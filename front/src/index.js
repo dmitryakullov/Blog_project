@@ -11,14 +11,20 @@ import { Provider } from 'react-redux';
 
 
 
+const initialState = {
+	data: null,
+	addSkip: 20,
+}
 
+const reducer = (state = initialState, action) => {
 
-const reducer = (state = {}, action) => {
 	if (action.type === 'CLEAN_STATE') {
 		return {...state, ...{data: null}}
-	} else if (action.type === 'SET_STATE'){
+	}
+	else if (action.type === 'SET_STATE'){
 		return  {...state, ...{data: action.userData}}
-	} else
+	}
+	else
 		return state;
 }
 

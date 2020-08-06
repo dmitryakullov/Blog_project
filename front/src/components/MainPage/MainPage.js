@@ -1,33 +1,39 @@
 
 import React, {Component} from 'react';
-import usersPicture from '../../icons/profile-picture.png';
 import {Link} from "react-router-dom";
+import { connect } from 'react-redux';
+
+import usersPicture from '../../icons/profile-picture.png';
 import gotService from '../gotService/gotService.js';
 import gotTime from '../gotTime/gotTime'
+import mapDispatchToProps from '../actionsRedux';
 
-export default class MainPage extends Component {
+
+
+const mapStateToProps = (store) => ({...store});
+
+
+class MainPage extends Component {
     gotService = new gotService();
 
-    constructor(){
-        super();
-        this.addSkip =20;
-    }
 
     state = {
-        postsArr: [],
-        searchPostArr: [],
+        postsArr: [],//da
+        searchPostArr: [],//da
         nowSearch: false,
-        skip: 0,
-        amountPosts: null,
+        skip: 0,//da
+        amountPosts: null,//da
         allow: true,
         search: ''
     }
+
     componentDidMount() {
         window.addEventListener('scroll', this.onScrollList);
+        
         this.gotService.findAmountPosts()
             .then(res=> this.setState({amountPosts: res.msg}), err=> console.log(err))
             .then(()=> this.gotService.getPosts(this.state.skip))
-            .then(res=> this.setState({postsArr: res.postsArr, skip: this.state.skip+this.addSkip}), err=> console.log(err))
+            .then(res=> this.setState({postsArr: res.postsArr, skip: this.state.skip + this.props.addSkip}), err=> console.log(err))
     }
 
     onScrollList = (event) => {
@@ -44,11 +50,11 @@ export default class MainPage extends Component {
 
     updateAgain=()=>{
         
-        if (this.state.amountPosts - this.state.skip > (-this.addSkip +1)){
+        if (this.state.amountPosts - this.state.skip > (-this.props.addSkip +1)){
 
             this.gotService.getPosts(this.state.skip)
             .then(res=> this.setState((state)=>({
-                skip: state.skip + this.addSkip,
+                skip: state.skip + this.props.addSkip,
                 postsArr: [...state.postsArr, ... res.postsArr],
                 allow: true
             })))
@@ -136,6 +142,12 @@ export default class MainPage extends Component {
         )
     }
 }
+
+
+
+
+
+
 class ListItem extends Component{
     render(){
         return (
@@ -148,3 +160,8 @@ class ListItem extends Component{
 function getSuperId() {
     return ''+ Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
 }
+
+
+
+
+export default connect( mapStateToProps, mapDispatchToProps )(MainPage);

@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import {Link} from "react-router-dom";
 
 import usersPicture from '../../icons/profile-picture.png';
-import mapDispatchToProps from '../actionsRedux';
 import gotTime from '../gotTime/gotTime';
 import gotService from '../gotService/gotService.js';
 import withUnmounted from '@ishawnwang/withunmounted';
-
+import mapDispatchToProps from '../actionsRedux';
 
 
 const mapStateToProps = (store) => ({...store});
@@ -19,10 +18,6 @@ class UserPageOwner extends Component {
     gotService = new gotService();
     hasUnmounted = false;
 
-    constructor(){
-        super();
-        this.addSkip =20;
-    }
 
     state = {
         disabled: false,
@@ -56,7 +51,7 @@ class UserPageOwner extends Component {
                                 postsArr: res.postsArr,
                                 user: {avatar: res.avatar, admin: res.admin, email: res.email, nick: res.nick},
                                 amountPosts: res.count,
-                                skip: state.skip + this.addSkip
+                                skip: state.skip + this.props.addSkip
                             }))  
                         }, err=> console.log(err))}
                 , 100);
@@ -83,7 +78,7 @@ class UserPageOwner extends Component {
 
     updateAgain=()=>{
         
-        if (this.state.amountPosts - this.state.skip > (-this.addSkip +1)){
+        if (this.state.amountPosts - this.state.skip > (-this.props.addSkip +1)){
 
 
             setTimeout(()=>this.gotService.findAmountUsersPosts(this.props.data._id)
@@ -93,7 +88,7 @@ class UserPageOwner extends Component {
                 return {...item._doc, ...{time}}
             });
                 return this.setState((state)=>({
-                skip: state.skip + this.addSkip,
+                skip: state.skip + this.props.addSkip,
                 postsArr: [...state.postsArr, ... arr],
                 allow: true
             })) }

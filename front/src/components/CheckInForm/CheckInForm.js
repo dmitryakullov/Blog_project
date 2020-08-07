@@ -65,8 +65,8 @@ class CheckInForm extends Component {
 
                     } else {
                         localStorage.setItem('superJWT_', res.token);
-                        const {_id, nick, email, avatar, active, admin} = res
-                        this.props.putStore({data: {_id, nick, email, avatar, active, admin}})
+                        
+                        this.props.putStore(res)
                         window.location = "/";
                     }
                 })

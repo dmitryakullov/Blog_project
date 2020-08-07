@@ -13,11 +13,17 @@ const putStore = (userData) => {
         userData
     }
 }
+const putMainPageStore = (mainPageStore) => {
+    return {
+        type: 'PUT_MAIN_PAGE_STATE',
+        mainPageStore
+    }
+}
 
 
 
 const mapDispatchToProps = (dispath) => {
-    return bindActionCreators({cleanStore, putStore}, dispath)
+    return bindActionCreators({cleanStore, putStore, putMainPageStore}, dispath)
 }
 
 

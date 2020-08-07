@@ -13,58 +13,65 @@ import mapDispatchToProps from '../actionsRedux';
 const mapStateToProps = (store) => ({...store});
 
 
+
 class MainPage extends Component {
     gotService = new gotService();
 
 
     state = {
-        postsArr: [],//da
-        searchPostArr: [],//da
         nowSearch: false,
-        skip: 0,//da
-        amountPosts: null,//da
         allow: true,
         search: ''
     }
 
     componentDidMount() {
         window.addEventListener('scroll', this.onScrollList);
-        
+        let amountPosts;
+        const mainPageProps = this.props.mainPage;
+
         this.gotService.findAmountPosts()
-            .then(res=> this.setState({amountPosts: res.msg}), err=> console.log(err))
-            .then(()=> this.gotService.getPosts(this.state.skip))
-            .then(res=> this.setState({postsArr: res.postsArr, skip: this.state.skip + this.props.addSkip}), err=> console.log(err))
+            .then(res=> {amountPosts = res.msg}, err=> console.log(err))
+            .then(()=> this.gotService.getPosts(mainPageProps.skip))
+            .then(res=> this.props.putMainPageStore({
+                postsArr: res.postsArr,
+                skip: mainPageProps.skip + this.props.addSkip,
+                amountPosts,
+                searchPostArr: []
+            }), err=> console.log(err))
+
     }
 
     onScrollList = (event) => {
-
         let scrollBottom = event.target.scrollingElement.scrollTop + 
             event.target.scrollingElement.offsetHeight > event.target.scrollingElement.scrollHeight/100*85;
             
         if (scrollBottom && this.state.allow) {
             this.setState({allow: false})
             this.updateAgain()
-            
         }
     }
 
     updateAgain=()=>{
+        const mainPageProps = this.props.mainPage;
         
-        if (this.state.amountPosts - this.state.skip > (-this.props.addSkip +1)){
+        if (mainPageProps.amountPosts - mainPageProps.skip > (-this.props.addSkip +1)){
 
-            this.gotService.getPosts(this.state.skip)
-            .then(res=> this.setState((state)=>({
-                skip: state.skip + this.props.addSkip,
-                postsArr: [...state.postsArr, ... res.postsArr],
-                allow: true
-            })))
+            this.gotService.getPosts(mainPageProps.skip)
+            .then(res=> {
+                this.props.putMainPageStore({
+                    skip: mainPageProps.skip + this.props.addSkip,
+                    postsArr: [...mainPageProps.postsArr, ... res.postsArr],
+                });
+                this.setState({allow: true})
+            })
             .catch(err=> console.log(err));
         }
     }
 
     changeSearch = (e) => {
         if (e.target.value === '') {
-            this.setState({search: e.target.value, nowSearch: false})
+            this.setState({search: e.target.value, nowSearch: false});
+            this.props.putMainPageStore({searchPostArr: []})
         } else {
             this.setState({search: e.target.value})
         }
@@ -75,8 +82,9 @@ class MainPage extends Component {
         
         if(this.state.search !== '') {
             this.setState(()=>({nowSearch: true}))
+
             this.gotService.findPosts(this.state.search)
-                .then(res=> this.setState({searchPostArr: res.postsArr}), err=> console.log(err))
+                .then(res=> this.props.putMainPageStore({searchPostArr: res.postsArr}), err=> console.log(err))
             
         }
     }
@@ -87,8 +95,11 @@ class MainPage extends Component {
     }
 
     render() {
+        const mainPageProps = this.props.mainPage;
 
-        let mappedArr = this.state.nowSearch ? this.state.searchPostArr : this.state.postsArr;
+        let mappedArr = this.state.nowSearch ? mainPageProps.searchPostArr : mainPageProps.postsArr;
+
+        if (!mappedArr) {return null}
 
         let context = mappedArr.map(i => {
 

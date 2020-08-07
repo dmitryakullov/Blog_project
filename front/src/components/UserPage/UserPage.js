@@ -20,10 +20,10 @@ class UserPage extends Component {
 
 
     state = {
-        postsArr: [],
-        skip: 0,
-        user: {},
-        amountPosts: null,
+        postsArr: [],//da
+        skip: 0,//da
+        user: {},//da
+        amountPosts: null,//da
         allow: true
     }
 
@@ -84,7 +84,6 @@ class UserPage extends Component {
 
 
     render() {
-        console.log(this.props)
         
         if (!this.state.user.nick) {
             return null;

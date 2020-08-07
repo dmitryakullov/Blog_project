@@ -186,7 +186,7 @@ app.post('/user/restore_delete', function (req, res) {
 
 
 
-app.post('/posts/find', function (req, res) {
+app.post('/posts/find', function (req, res) { //Use
     (async()=>{
         const {find} = req.body;
         let arr =[];
@@ -465,11 +465,12 @@ app.post('/', function (req, res) {                 //Use
             
 
             const {nick, email} = decoded;
-
+            
             let user = await User.findOne({nick, email});
                 if (user && user.active) {
                     let {_id, nick, email, avatar, active, admin} = user;
-                    res.end(JSON.stringify({_id, nick, email, avatar, active, admin}));
+
+                    res.end(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
                 }
         }
         res.end(JSON.stringify({msg: 'NO_JWT'}));

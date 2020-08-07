@@ -30,15 +30,14 @@ const mapStateToProps = (store) => ({...store});
 class App extends Component {
     gotService = new gotService();
 
-
-
-
+    
     getUserByJWT = () => {
         const jwt = localStorage.getItem('superJWT_')
+
         if(jwt && !this.props.data) {
 
             this.gotService.getJWT(jwt)
-                .then(res=> this.props.putStore({data: res}), err=> console.log(err))
+                .then(res=> this.props.putStore(res), err=> console.log(err))
         } 
     }
 

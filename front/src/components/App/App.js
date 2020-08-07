@@ -51,6 +51,7 @@ class App extends Component {
 
 
 
+
     render() {
         let ovnerId = this.props.data ? true: null;
 

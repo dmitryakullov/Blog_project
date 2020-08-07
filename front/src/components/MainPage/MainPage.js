@@ -27,14 +27,14 @@ class MainPage extends Component {
     componentDidMount() {
         window.addEventListener('scroll', this.onScrollList);
         let amountPosts;
-        const mainPageProps = this.props.mainPage;
+        const props = this.props.mainPage;
 
         this.gotService.findAmountPosts()
             .then(res=> {amountPosts = res.msg}, err=> console.log(err))
-            .then(()=> this.gotService.getPosts(mainPageProps.skip))
+            .then(()=> this.gotService.getPosts(props.skip))
             .then(res=> this.props.putMainPageStore({
                 postsArr: res.postsArr,
-                skip: mainPageProps.skip + this.props.addSkip,
+                skip: props.skip + this.props.addSkip,
                 amountPosts,
                 searchPostArr: []
             }), err=> console.log(err))
@@ -52,15 +52,15 @@ class MainPage extends Component {
     }
 
     updateAgain=()=>{
-        const mainPageProps = this.props.mainPage;
+        const props = this.props.mainPage;
         
-        if (mainPageProps.amountPosts - mainPageProps.skip > (-this.props.addSkip +1)){
+        if (props.amountPosts - props.skip > (-this.props.addSkip +1)){
 
-            this.gotService.getPosts(mainPageProps.skip)
+            this.gotService.getPosts(props.skip)
             .then(res=> {
                 this.props.putMainPageStore({
-                    skip: mainPageProps.skip + this.props.addSkip,
-                    postsArr: [...mainPageProps.postsArr, ... res.postsArr],
+                    skip: props.skip + this.props.addSkip,
+                    postsArr: [...props.postsArr, ... res.postsArr],
                 });
                 this.setState({allow: true})
             })
@@ -71,7 +71,7 @@ class MainPage extends Component {
     changeSearch = (e) => {
         if (e.target.value === '') {
             this.setState({search: e.target.value, nowSearch: false});
-            this.props.putMainPageStore({searchPostArr: []})
+            this.props.putMainPageStore({searchPostArr: null})
         } else {
             this.setState({search: e.target.value})
         }
@@ -91,39 +91,46 @@ class MainPage extends Component {
 
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('scroll', this.onScrollList);
+
+        this.props.putMainPageStore({
+            postsArr: [],
+            skip: 0,
+            amountPosts: null,
+            searchPostArr: []
+        })
     }
 
     render() {
-        const mainPageProps = this.props.mainPage;
+        const props = this.props.mainPage;
 
-        let mappedArr = this.state.nowSearch ? mainPageProps.searchPostArr : mainPageProps.postsArr;
+        let mappedArr = this.state.nowSearch ? props.searchPostArr : props.postsArr;
 
         if (!mappedArr) {return null}
 
         let context = mappedArr.map(i => {
 
             return <ListItem key={getSuperId()}>
-                <div className='page-posts'>
-                    <div className='d-flex justify-content-between'>
-                    <Link to={`/user/${i.userId}`} className='react-Link'>
-                        <div className='page-posts-user'>
-                            <div className='page-posts-ava'>
-                                <div>
-                                    <img src={i.avatar === 'false'? usersPicture : i.avatar} alt="User's pictures" />
+                    <div className='page-posts'>
+                        <div className='d-flex justify-content-between'>
+                        <Link to={`/user/${i.userId}`} className='react-Link'>
+                            <div className='page-posts-user'>
+                                <div className='page-posts-ava'>
+                                    <div>
+                                        <img src={i.avatar === 'false'? usersPicture : i.avatar} alt="User's pictures" />
+                                    </div>
                                 </div>
+                                <span className='page-posts-nick'>{i.nick}</span>
                             </div>
-                            <span className='page-posts-nick'>{i.nick}</span>
+                        </Link>
+                        <pre className='page-posts-time'>{gotTime(i.time)}</pre>
                         </div>
-                    </Link>
-                    <pre className='page-posts-time'>{gotTime(i.time)}</pre>
+                        <hr/>
+                        <h2>{i.title}</h2>
+                        <div className='superText' 
+                            contentEditable='false' 
+                            dangerouslySetInnerHTML={{ __html: `${i.text}` }}></div>              
                     </div>
-                    <hr/>
-                    <h2>{i.title}</h2>
-                    <div className='superText' 
-                        contentEditable='false' 
-                        dangerouslySetInnerHTML={{ __html: `${i.text}` }}></div>              
-                </div>
             </ListItem>}
         );
 

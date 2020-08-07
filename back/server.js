@@ -87,7 +87,7 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
-app.post('/user/findposts', function (req, res) {          //Use
+app.post('/user/findposts', function (req, res) {    //Use
     (async()=>{
 
         const {userId, skip, firstTime} = req.body;
@@ -114,27 +114,28 @@ app.post('/user/findposts', function (req, res) {          //Use
                 let {_id, nick, email, avatar, active, admin} = user;
 
                 resObj = {...resObj, ...{_id, nick, email, avatar, active, admin}}
+                
             } else {
                 res.end(JSON.stringify({msg: 'ERROR3'}));
             }
         }
 
+
+
         let posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
+        
         if(posts.length !==0) {
-            for (let key in posts) {
+            for (let post of posts) {
+
+                const {_id, userId, title, text, active} = post
+                let obj = { _id, userId, title, text, active, time: post._id.getTimestamp() }
                 
-                let post = posts[key];
-                postsArr.push({...post, ...{time: post._id.getTimestamp()}})
-                
+                postsArr.push(obj)
             }
-
-
-
+            
             res.end(JSON.stringify({...resObj, ...{postsArr}}));
         }
         res.end(JSON.stringify({msg: 'ERROR4'}));
-
-
     })()
 });
 
@@ -514,7 +515,7 @@ app.listen(4000, function () {
 // })();
 
 // (async ()=>{
-//     let _id= "5f23ac2c665c69301c8a2368";   
+//     let _id= "5f23ac2c665c69301c8a2367";   
 //     let newPost = await new Post({userId: _id, title: 'Java', text: '"At vero eos et accusamus et iusto odio dignissimos ducimus quirsus mi at, aliquam mauris. Integer tortor ipsum, bibendum nec odio eu, aliquam interdum odio. Nunc urna magna, volutpat vitae dignissim sed, euismod in elit. Nam nibh lacus, vestibulum vel nulla porttitor, aliquam fringilla enim. Sed tristique justo quis odio facilisis, at porttitor dui suscipit. Proin suscipit mattis urna vitae bibendum. Maecenas aliquam quam vel ex hendrerit mattis. Etiam lorem est, ullamcorper et placerat quis, venenatis vitae odio. Vestibulum vestibulum placerat leo, in hendrerit nisi semper nec. blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias', active: true});
 //         await newPost.save(); 
 //     let newPost1 = await new Post({userId: _id, title: 'JavaScript', text: 'Fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minu', active: true});

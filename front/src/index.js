@@ -21,7 +21,10 @@ const initialState = {
 		amountPosts: null,
 	},
 	userPage: {
-		
+		postsArr: [],
+        skip: 0,
+        user: {},
+        amountPosts: null
 	}
 }
 
@@ -35,6 +38,9 @@ const reducer = (state = initialState, action) => {
 	}
 	else if (action.type === 'PUT_MAIN_PAGE_STATE'){
 		return  {...state, ...{mainPage: {...state.mainPage, ...action.mainPageStore}}}
+	}
+	else if (action.type === 'PUT_USER_PAGE_STATE'){
+		return  {...state, ...{userPage: {...state.userPage, ...action.userPageStore}}}
 	}
 	else
 		return state;

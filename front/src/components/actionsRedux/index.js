@@ -25,6 +25,12 @@ const putUserPageStore = (userPageStore) => {
         userPageStore
     }
 }
+const putOwnerPageStore = (ownerPageStore) => {
+    return {
+        type: 'PUT_OWNER_PAGE_STATE',
+        ownerPageStore
+    }
+}
 
 
 
@@ -33,7 +39,8 @@ const mapDispatchToProps = (dispath) => {
                         cleanStore,
                         putStore,
                         putMainPageStore,
-                        putUserPageStore
+                        putUserPageStore,
+                        putOwnerPageStore
                     }, dispath)
 }
 

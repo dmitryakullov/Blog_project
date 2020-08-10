@@ -25,6 +25,11 @@ const initialState = {
         skip: 0,
         user: {},
         amountPosts: null
+	},
+	ownerPage: {
+        skip: 0,
+        postsArr: [],
+        amountPosts: null
 	}
 }
 
@@ -42,16 +47,18 @@ const reducer = (state = initialState, action) => {
 	else if (action.type === 'PUT_USER_PAGE_STATE'){
 		return  {...state, ...{userPage: {...state.userPage, ...action.userPageStore}}}
 	}
+	else if (action.type === 'PUT_OWNER_PAGE_STATE'){
+		return  {...state, ...{ownerPage: {...state.ownerPage, ...action.ownerPageStore}}}
+	}
 	else
 		return state;
 }
 
 
-
-
-
-
 const store = createStore(reducer, applyMiddleware(thunk));
+
+
+
 
 ReactDOM.render(
 	<Provider store={store}>

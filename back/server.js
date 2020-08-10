@@ -94,7 +94,7 @@ app.post('/user/findposts', function (req, res) {    //Use
         
         let resObj ={}, postsArr =[];
 
-        if(!userId) {
+        if(!userId || !skip) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 

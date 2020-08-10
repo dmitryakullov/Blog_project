@@ -6,7 +6,6 @@ import {Link} from "react-router-dom";
 import usersPicture from '../../icons/profile-picture.png';
 import gotTime from '../gotTime/gotTime';
 import gotService from '../gotService/gotService.js';
-import withUnmounted from '@ishawnwang/withunmounted';
 import mapDispatchToProps from '../actionsRedux';
 
 
@@ -16,50 +15,39 @@ const mapStateToProps = (store) => ({...store});
 
 class UserPageOwner extends Component {
     gotService = new gotService();
-    hasUnmounted = false;
 
 
     state = {
+        skip: 0,//da
+        postsArr: [],//da
+        amountPosts: null,//da
         disabled: false,
-        skip: 0,
-        postsArr: [],
-        amountPosts: null,
         allow: true,
-        search: '',
-        msg: ''
+        search: ''
+    }
+
+    getPostsFirst = () => {
+        const props = this.props.ownerPage;
+
+        let interval = setInterval(()=>{
+            if(this.props.data) {
+                clearInterval(interval)
+
+                this.gotService.findAmountUsersPosts(this.props.data._id, props.skip, true)
+                .then(res=> this.props.putOwnerPageStore({
+                                            postsArr: res.postsArr,
+                                            amountPosts: res.count,
+                                            skip: props.skip + this.props.addSkip
+                                }) , err=> console.log(err))
+            }
+        }, 10);
     }
 
     componentDidMount() {
-        if(this.state.link) {
-            return;
-        }
         window.addEventListener('scroll', this.onScrollList);
-
-
-        const  abc =()=> {
-
-            
-            this.gotService.findAmountUsersPosts(this.props.data._id, this.state.skip, true)
-            .then(res=>{
-    
-                setTimeout(()=> 
-                    {
-                        if (this.hasUnmounted) {
-                            return;
-                            }
-                                this.setState((state)=>({
-                                postsArr: res.postsArr,
-                                user: {avatar: res.avatar, admin: res.admin, email: res.email, nick: res.nick},
-                                amountPosts: res.count,
-                                skip: state.skip + this.props.addSkip
-                            }))  
-                        }, err=> console.log(err))}
-                , 100);
-                    }
-                    setTimeout(()=> abc(),300);
-        }
-
         
+        getPostsFirst();
+    }
 
 
 
@@ -76,27 +64,25 @@ class UserPageOwner extends Component {
         }
     }
 
+
+
     updateAgain=()=>{
+        const props = this.props.ownerPage;
         
-        if (this.state.amountPosts - this.state.skip > (-this.props.addSkip +1)){
+        if (props.amountPosts - props.skip > (-this.props.addSkip +1)){
 
-
-            setTimeout(()=>this.gotService.findAmountUsersPosts(this.props.data._id)
-            .then(res=> 
-            {let arr = res.postsArr.map(item => {
-                let time = item.time
-                return {...item._doc, ...{time}}
-            });
-                return this.setState((state)=>({
-                skip: state.skip + this.props.addSkip,
-                postsArr: [...state.postsArr, ... arr],
-                allow: true
-            })) }
-        )
-        .catch(err=> console.log(err)),100)
-
+            this.gotService.findAmountUsersPosts(this.props.data._id, props.skip)
+                    .then(res=> {
+                        this.props.putOwnerPageStore({
+                            skip: props.skip + this.props.addSkip,
+                            postsArr: [...props.postsArr, ...res.postsArr]
+                        })
+                        this.setState({ allow: true })
+                })
+                .catch(err=> console.log(err))
         }
     }
+
 
     deleteMessage = (_id) => {
         
@@ -114,9 +100,7 @@ class UserPageOwner extends Component {
 
 
     logOut = () => {
-        
         localStorage.removeItem('superJWT_');
-
         this.props.cleanStore();
     }
 
@@ -136,14 +120,23 @@ class UserPageOwner extends Component {
             .catch(err=> console.log(err));
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.onScrollList);
+        this.props.putOwnerPageStore({
+            skip: 0,
+            postsArr: [],
+            amountPosts: null
+        });
+    }
+
     render() {
+        const props = this.props.ownerPage;
 
         if(!this.props.data) {
             return null;
         }
 
         if (this.props.data.admin === true) {
-
             return <div className="container">
                             <Link exact to="/">
                                 <button disabled={this.state.disabled} 
@@ -163,38 +156,38 @@ class UserPageOwner extends Component {
                     </div>
                     <input value={this.state.msg} className='outside-data'></input>
                 </div>
-
         }
+
+
+
+
+
 
         let data = this.props.data;
         const ava = data.avatar === 'false' ? usersPicture : data.avatar;
 
         let context;
 
-        if (!this.state.postsArr) {            
-            context = null;
-        } else {
-            context  = this.state.postsArr.map(i => {
 
+        context  = props.postsArr.map(i => {
                 return <ListItem  key={getSuperId()}>
                     <div className='p-0 container'>
                             <div className='page-posts-profile'>
-                                <pre className='page-posts-time'>{gotTime(i._doc && i._doc.time ? i._doc.time: i.time)}</pre>
+                                <pre className='page-posts-time'>{gotTime(i.time)}</pre>
                                 <br/>
-                                <h2>{(i._doc && i._doc.title ? i._doc.title: i.title)}</h2>
+                                <h2>{(i.title)}</h2>
                                 <hr/>
                                 <div className='superText' 
                                 contentEditable='false' 
-                                dangerouslySetInnerHTML={{ __html: `${(i._doc && i._doc.text ? i._doc.text: i.text)}` }}></div>  
+                                dangerouslySetInnerHTML={{ __html: `${(i.text)}` }}></div>  
     
                                 <div className='edit-posts'>
-                                    <button onClick={()=>this.deleteMessage((i._doc && i._doc._id ? i._doc._id: i._id))} className='btn btn-outline-danger'>Удалить</button>
+                                    <button onClick={()=>this.deleteMessage((i._id))} className='btn btn-outline-danger'>Удалить</button>
                                 </div>
                             </div> 
                         </div>
                 </ListItem>}
                 );
-        }
 
         
 
@@ -213,7 +206,7 @@ class UserPageOwner extends Component {
                             <div>
                                 <h4 className="mt-0">{data.nick}</h4>
                                 <div>Email: <i>{data.email}</i></div>
-                                <div>Посты: <b>{this.state.amountPosts}</b></div>
+                                <div>Посты: <b>{props.amountPosts}</b></div>
                             </div>
                             
                         </div>
@@ -258,4 +251,4 @@ class ListItem extends Component{
 function getSuperId() {
     return ''+ Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
 }
-export default connect( mapStateToProps, mapDispatchToProps )(withUnmounted(UserPageOwner));
+export default connect( mapStateToProps, mapDispatchToProps )(UserPageOwner);

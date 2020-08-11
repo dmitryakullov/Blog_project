@@ -1,7 +1,7 @@
 
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 
 import usersPicture from '../../icons/profile-picture.png';
 import gotTime from '../gotTime/gotTime';
@@ -18,17 +18,21 @@ class UserPageOwner extends Component {
 
 
     state = {
-        skip: 0,//da
-        postsArr: [],//da
-        amountPosts: null,//da
         disabled: false,
         allow: true,
-        search: ''
+        search: '',
+        toCreatePost: false
+    }
+
+
+    componentDidMount() {
+        window.addEventListener('scroll', this.onScrollList); 
+        this.getPostsFirst();
     }
 
     getPostsFirst = () => {
         const props = this.props.ownerPage;
-
+        
         let interval = setInterval(()=>{
             if(this.props.data) {
                 clearInterval(interval)
@@ -42,13 +46,6 @@ class UserPageOwner extends Component {
             }
         }, 10);
     }
-
-    componentDidMount() {
-        window.addEventListener('scroll', this.onScrollList);
-        
-        getPostsFirst();
-    }
-
 
 
 
@@ -84,17 +81,34 @@ class UserPageOwner extends Component {
     }
 
 
-    deleteMessage = (_id) => {
-        
-        this.gotService.deletePost(_id)
-        .then(() => {
-                let arr = this.state.postsArr.filter(i => (i._doc && i._doc._id ?
-                                                                    !(i._doc._id === _id) : 
-                                                                    !(i._id === _id)))
-                this.setState((state)=>({postsArr: arr, amountPosts: state.amountPosts - 1}))
+    changeMessage = (_id, title, text) => {
+        console.log(_id, title, text)
+        if(_id && title && text) {
+            this.props.putInfoPost({_id, title, text});
+            this.setState({toCreatePost: true})
+        } else {
+            console.log('Something go wrong')
+        }
+    }
 
+
+    deleteMessage = (_id) => {
+        const data = this.props.data
+        
+        this.gotService.deletePost(_id, data._id, data.token)
+        .then(res => {
+                console.log({res})
+                if (res.msg === 'DELETE') {
+                    let arr = this.props.ownerPage.postsArr.filter(i => (i._id !== _id))
+                    
+                    this.props.putOwnerPageStore({
+                        postsArr: arr, 
+                        amountPosts: this.props.ownerPage.amountPosts - 1})
+                } else {
+                    console.log('ERROR')
+                }
         })
-            .catch(err=> console.log(err));
+        .catch(err=> console.log(err));
     }
 
 
@@ -130,6 +144,11 @@ class UserPageOwner extends Component {
     }
 
     render() {
+
+        if (this.state.toCreatePost) {
+            return <Redirect to="/createpost"/>
+        }
+
         const props = this.props.ownerPage;
 
         if(!this.props.data) {
@@ -166,10 +185,10 @@ class UserPageOwner extends Component {
         let data = this.props.data;
         const ava = data.avatar === 'false' ? usersPicture : data.avatar;
 
+
         let context;
-
-
-        context  = props.postsArr.map(i => {
+        if (props.postsArr) {
+            context = props.postsArr.map(i => {
                 return <ListItem  key={getSuperId()}>
                     <div className='p-0 container'>
                             <div className='page-posts-profile'>
@@ -182,14 +201,17 @@ class UserPageOwner extends Component {
                                 dangerouslySetInnerHTML={{ __html: `${(i.text)}` }}></div>  
     
                                 <div className='edit-posts'>
-                                    <button onClick={()=>this.deleteMessage((i._id))} className='btn btn-outline-danger'>Удалить</button>
+                                    <button onClick={()=>this.changeMessage(i._id, i.title, i.text)} className='btn btn-outline-primary'>Изменить</button>
+                                    <button onClick={()=>this.deleteMessage(i._id)} className='btn btn-outline-danger'>Удалить</button>
                                 </div>
                             </div> 
                         </div>
                 </ListItem>}
                 );
+        } else {
+            context = null;
+        }
 
-        
 
 
         return (
@@ -237,6 +259,8 @@ class UserPageOwner extends Component {
     }
 }
 
+
+
 class ListItem extends Component{
     render(){
         return (
@@ -247,8 +271,8 @@ class ListItem extends Component{
     }
 }
 
-
 function getSuperId() {
     return ''+ Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
 }
+
 export default connect( mapStateToProps, mapDispatchToProps )(UserPageOwner);

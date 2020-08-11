@@ -30,6 +30,11 @@ const initialState = {
         skip: 0,
         postsArr: [],
         amountPosts: null
+	},
+	post: {
+		_id: null,
+		title: null,
+		text: null
 	}
 }
 
@@ -49,6 +54,9 @@ const reducer = (state = initialState, action) => {
 	}
 	else if (action.type === 'PUT_OWNER_PAGE_STATE'){
 		return  {...state, ...{ownerPage: {...state.ownerPage, ...action.ownerPageStore}}}
+	}
+	else if (action.type === 'PUT_POST_INFO'){
+		return  {...state, ...{post: {...state.post, ...action.postInfo}}}
 	}
 	else
 		return state;

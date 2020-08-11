@@ -31,6 +31,12 @@ const putOwnerPageStore = (ownerPageStore) => {
         ownerPageStore
     }
 }
+const putInfoPost = (postInfo) => {
+    return {
+        type: 'PUT_POST_INFO',
+        postInfo
+    }
+}
 
 
 
@@ -40,7 +46,8 @@ const mapDispatchToProps = (dispath) => {
                         putStore,
                         putMainPageStore,
                         putUserPageStore,
-                        putOwnerPageStore
+                        putOwnerPageStore,
+                        putInfoPost
                     }, dispath)
 }
 

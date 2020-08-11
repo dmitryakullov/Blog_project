@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import gotService from '../gotService/gotService.js';
 import { connect } from 'react-redux';
+import mapDispatchToProps from '../actionsRedux';
 
 
 const mapStateToProps = (stpre) => ({...stpre});
@@ -42,8 +43,6 @@ class CreatePost extends Component{
                 this.setState((state) => ({textArea: state.textArea + `<a href="${href}"></a>`}))
             }
         }
-
-    
     img = () => {
         let href = prompt('Введите src картинки','')
         if (href) {
@@ -55,6 +54,10 @@ class CreatePost extends Component{
     savePost = () => {
         this.gotService.createPost(this.props.data._id, this.state.title, this.state.textArea) 
         .then(res=> console.log(res), err=> console.log(err))
+    }
+
+    componentWillUnmount() {
+        this.props.putInfoPost({_id: null, title: null, text: null});
     }
 
     
@@ -122,4 +125,4 @@ class CreatePost extends Component{
 }
 
 
-export default connect( mapStateToProps )(CreatePost);
+export default connect( mapStateToProps, mapDispatchToProps )(CreatePost);

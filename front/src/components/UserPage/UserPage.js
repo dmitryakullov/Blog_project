@@ -18,7 +18,6 @@ class UserPage extends Component {
 
 
     state = {
-
         allow: true
     }
 

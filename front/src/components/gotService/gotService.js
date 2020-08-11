@@ -67,14 +67,14 @@ export default class gotService {
             return await res.json();
         }
     }
-    deletePost = async (_id) => {
+    deletePost = async (_id, userId, token) => {
         let res = await fetch("/posts/delete", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
             method: "DELETE",
-            body: JSON.stringify({_id})
+            body: JSON.stringify({_id, userId, token})
         })
         
         if (!res.ok) {

@@ -91,10 +91,10 @@ app.post('/user/findposts', function (req, res) {    //Use
     (async()=>{
 
         const {userId, skip, firstTime} = req.body;
-        
+
         let resObj ={}, postsArr =[];
 
-        if(!userId || !skip) {
+        if(!userId) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
@@ -132,7 +132,7 @@ app.post('/user/findposts', function (req, res) {    //Use
                 
                 postsArr.push(obj)
             }
-            
+
             res.end(JSON.stringify({...resObj, ...{postsArr}}));
         }
         res.end(JSON.stringify({msg: 'ERROR4'}));
@@ -172,7 +172,7 @@ app.post('/user/restore_delete', function (req, res) {
                 } 
                 else { 
                     await Post.deleteMany({ 'userId':  ok._id}).then(function(){ 
-                        res.end(JSON.stringify({msg: 'DELETE'}));  // Success 
+                        res.end(JSON.stringify({msg: 'DELETE'}));  
                     }).catch(function(error){ 
                         res.end(JSON.stringify({msg: 'ERROR'})); 
                     }); 
@@ -339,22 +339,33 @@ app.post('/users/delete', function (req, res) {
     })()
 });
 
-app.delete('/posts/delete', function (req, res) {
+app.delete('/posts/delete', function (req, res) { //Use
     (async()=>{
-        const {_id} = req.body;
+        const {_id, userId, token} = req.body;
 
-        if(!_id || Object.keys(req.body).length !== 1) {
+        if(!_id || !token || !userId || Object.keys(req.body).length !== 3) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
-        Post.findByIdAndDelete(_id, function (err, result) { 
-            if (err){ 
-                res.end(JSON.stringify({msg: 'ERROR'}));
-            } else if(result){ 
-                res.end(JSON.stringify({msg: 'DELETE'}));
-            } 
-            else res.end(JSON.stringify({msg: 'ERROR'}));
-        }) 
-        
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
+
+
+        if (userId === decoded._id) {
+            Post.findByIdAndDelete(_id, function (err, result) { 
+                if (err){ 
+                    res.end(JSON.stringify({msg: 'ERROR1'}));
+                } else if(result){ 
+                    res.end(JSON.stringify({msg: 'DELETE'}));
+                }
+            }) 
+        } else {
+            res.end(JSON.stringify({msg: 'ERROR2'}));
+        }
     })()
 });
 
@@ -456,11 +467,11 @@ app.post('/', function (req, res) {                 //Use
     (async ()=>{
         if (req.headers.authorization) {
             const token = req.headers.authorization.slice('Bearer '.length);
+
             let decoded;
             try {
                 decoded = jwt.verify(token, config.secret);
             } catch(err) {
-                console.log('\n\nWRONG__JWT\n\n');
                 res.end(JSON.stringify({msg: 'WRONG_JWT'}));
             }
             

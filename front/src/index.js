@@ -16,7 +16,6 @@ const initialState = {
 	addSkip: 20,
 	mainPage: {
 		postsArr: [],
-        searchPostArr: [],
         skip: 0,
 		amountPosts: null,
 	},
@@ -33,8 +32,12 @@ const initialState = {
 	},
 	post: {
 		_id: null,
-		title: null,
-		text: null
+		title: '',
+		text: ''
+	},
+	search: {
+		postsArr: [],
+		usersArr: []
 	}
 }
 
@@ -57,6 +60,9 @@ const reducer = (state = initialState, action) => {
 	}
 	else if (action.type === 'PUT_POST_INFO'){
 		return  {...state, ...{post: {...state.post, ...action.postInfo}}}
+	}
+	else if (action.type === 'PUT_SEARCH_INFO'){
+		return  {...state, ...{search: {...state.search, ...action.searchInfo}}}
 	}
 	else
 		return state;

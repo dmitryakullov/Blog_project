@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import gotService from '../gotService/gotService.js';
 import { connect } from 'react-redux';
 import mapDispatchToProps from '../actionsRedux';
@@ -15,6 +15,14 @@ class CreatePost extends Component{
         title: '',
         textArea: ''
     }
+
+    componentDidMount() {
+        setTimeout(()=>{
+            let props = this.props.post;
+            this.setState({title: props.title, textArea: props.text})
+        }, 100);
+    }
+
 
     title = (e) => {
         this.setState(({title: e.target.value}))
@@ -52,20 +60,38 @@ class CreatePost extends Component{
 
 
     savePost = () => {
-        this.gotService.createPost(this.props.data._id, this.state.title, this.state.textArea) 
-        .then(res=> console.log(res), err=> console.log(err))
+        const propsPost = this.props.post;
+        const props = this.props.data;
+
+        if (propsPost._id && propsPost.title && propsPost.text) {
+
+            this.gotService.updatePost(props.token, props._id, propsPost._id, this.state.title, this.state.textArea) 
+            .then(res=> console.log(res), err=> console.log(err))
+        } 
+        else {
+            this.gotService.createPost(props.token, props._id, this.state.title, this.state.textArea) 
+            .then(res=> console.log(res), err=> console.log(err))
+        }
     }
 
+
+
     componentWillUnmount() {
-        this.props.putInfoPost({_id: null, title: null, text: null});
+        this.props.putInfoPost({_id: null, title: '', text: ''});
     }
 
     
     render(){
+        if (!this.props.data || !this.props.data.token) {
+            return <Redirect to="/"/>
+        }
+
+        const propsPost = this.props.post;
+        let btnText = propsPost._id && propsPost.title && propsPost.text ? 'Сохранить изменения' : 'Сохранить новый пост';
 
         let sendBtn = this.state.title !=='' && this.state.textArea !=='' ? 
-            <Link exact to='/owner'>
-                <button onClick={this.savePost} className='btn btn-success'>Отправить</button>
+            <Link to='/owner'>
+                <button onClick={this.savePost} className='btn btn-success'>{btnText}</button>
             </Link> : null;
         
         return (

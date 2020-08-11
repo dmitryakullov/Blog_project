@@ -8,7 +8,6 @@ import gotTime from '../gotTime/gotTime';
 import gotService from '../gotService/gotService.js';
 import mapDispatchToProps from '../actionsRedux';
 
-
 const mapStateToProps = (store) => ({...store});
 
 
@@ -82,7 +81,6 @@ class UserPageOwner extends Component {
 
 
     changeMessage = (_id, title, text) => {
-        console.log(_id, title, text)
         if(_id && title && text) {
             this.props.putInfoPost({_id, title, text});
             this.setState({toCreatePost: true})
@@ -144,6 +142,9 @@ class UserPageOwner extends Component {
     }
 
     render() {
+        if(!this.props.data) {
+            return <Redirect to="/"/>
+        }
 
         if (this.state.toCreatePost) {
             return <Redirect to="/createpost"/>
@@ -151,13 +152,9 @@ class UserPageOwner extends Component {
 
         const props = this.props.ownerPage;
 
-        if(!this.props.data) {
-            return null;
-        }
-
         if (this.props.data.admin === true) {
             return <div className="container">
-                            <Link exact to="/">
+                            <Link to="/">
                                 <button disabled={this.state.disabled} 
                                     onClick={this.logOut} 
                                     className='btn btn-secondary mb-5'>Выйти</button>
@@ -233,11 +230,11 @@ class UserPageOwner extends Component {
                             
                         </div>
                         <div>
-                        <Link exact to="/createpost">
+                        <Link to="/createpost">
                             <button className='btn btn-primary mr-4'>Создать пост</button>
                         </Link>
 
-                            <Link exact to="/">
+                            <Link to="/">
                                 <button disabled={this.state.disabled} 
                                     onClick={this.logOut} 
                                     className='btn btn-secondary'>Выйти</button>

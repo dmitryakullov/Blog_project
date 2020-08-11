@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import logo from '../../icons/logo.png'
+import searchIcon from '../../icons/search.png';
 import usersPicture from '../../icons/profile-picture.png';
 
 
@@ -39,15 +40,22 @@ export default class Nav extends Component {
                             <span className='nav-logo-text'>ProBird</span>
                         </Link>
                         
-                        {this.props.ovnerHere ? <Link to='/owner' className='react-Link'>
-                                                    <Profile/>
-                                                </Link> :
+                        <div className='d-flex'>
+                            <Link  to='/searching' className='react-Link'>
+                                <div className='search-icon d-flex justify-content-center align-items-center'>
+                                    <img src={searchIcon} alt='search icon'/>
+                                </div>
+                            </Link>
 
-                                            <Link to='/users/get' className='react-Link'>
-                                                <EnterButton/>
-                                            </Link>
-                        }
+                            {this.props.ovnerHere ? <Link to='/owner' className='react-Link'>
+                                                        <Profile/>
+                                                    </Link> :
 
+                                                <Link to='/users/get' className='react-Link'>
+                                                    <EnterButton/>
+                                                </Link>
+                            }
+                        </div>
                     </div>
                 </nav>
             </header>

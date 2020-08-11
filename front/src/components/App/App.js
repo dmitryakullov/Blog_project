@@ -14,7 +14,7 @@ import CheckInForm from '../CheckInForm';
 import UserPage from '../UserPage';
 import UserPageOwner from '../UserPageOwner';
 import CreatePost from '../CreatePost';
-
+import SearchInfo from '../SearchInfo';
 
 import mapDispatchToProps from '../actionsRedux';
 import gotService from '../gotService/gotService.js';
@@ -67,6 +67,10 @@ class App extends Component {
 
                             <Route exact path='/'>
                                 <MainPage/>
+                            </Route>
+
+                            <Route exact path='/searching'>
+                                <SearchInfo/>
                             </Route>
 
                             <Route exact path='/user/:id' render={({match}) => (

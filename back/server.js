@@ -370,44 +370,69 @@ app.delete('/posts/delete', function (req, res) { //Use
 });
 
 
-app.post('/posts/update', function (req, res) {
+app.post('/posts/update', function (req, res) { //Use
     (async()=>{
-        const {_id, title, text} = req.body;
+        const {token, userId, _id, title, text} = req.body;
 
-        if(!_id || !title || !text || Object.keys(req.body).length !== 3) {
+        if(!userId || !token || !_id || !title || !text || Object.keys(req.body).length !== 5) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
-        Post.findByIdAndUpdate(_id, { title, text },
-            function(err, result) {
-                if (err) {
-                    res.end(JSON.stringify({msg: 'ERROR'}));
-                } else if (result) {
-                    res.end(JSON.stringify({msg: 'SAVE'}));
-                } else 
-                res.end(JSON.stringify({msg: 'ERROR'}));
-        })
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
+
+        if (userId === decoded._id) {
+            Post.findByIdAndUpdate(_id, { title, text },
+                function(err, result) {
+                    if (err) {
+                        res.end(JSON.stringify({msg: 'ERROR1'}));
+                    } else if (result) {
+                        res.end(JSON.stringify({msg: 'SAVE'}));
+                    } else 
+                    res.end(JSON.stringify({msg: 'ERROR2'}));
+            })
+        } else {
+            res.end(JSON.stringify({msg: 'ERROR3'}));
+        }
+
     })()
 });
 
-app.post('/posts/new', function (req, res) {
+app.post('/posts/new', function (req, res) {    //Use
     (async()=>{
-        const {userId, title, text} = req.body;
-        console.log(userId, title, text)
-        if(!userId || !title || !text || Object.keys(req.body).length !== 3) {
+        const {token, userId, title, text} = req.body;
+
+        if(!token || !userId || !title || !text || Object.keys(req.body).length !== 4) {
             res.end(JSON.stringify({msg: 'ERROR1'}));
         }
 
-        let newPost = await new Post({userId, title, text, active: true});
-        await newPost.save(function (err, ans) {
-            if (err) {
-                res.end(JSON.stringify({msg: 'ERROR2'}));
-                console.log('Error2')
-            } else {
-                console.log(ans)
-            }
-        })
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
 
-        res.end(JSON.stringify({msg: 'SAVE'}));
+        if (decoded._id === userId) {
+            let newPost = await new Post({userId, title, text, active: true});
+            await newPost.save(function (err, ans) {
+                if (err) {
+                    res.end(JSON.stringify({msg: 'ERROR2'}));
+                    console.log('Error2')
+                } else {
+                    res.end(JSON.stringify({msg: 'SAVE'}));
+                }
+            })
+        } else {
+            res.end(JSON.stringify({msg: 'ERROR3'}));
+        }
+
+
+        
     })()
 });
 

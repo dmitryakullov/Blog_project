@@ -1,6 +1,6 @@
 export default class gotService {
 
-    makeCheckIn = async (nick, email, password) => {
+    makeCheckIn = async (nick, email, password) => {  //Use
         let res = await fetch("/users/new", {
             headers: {
             'Accept': 'application/json',
@@ -17,7 +17,7 @@ export default class gotService {
         }
     }
 
-    makeEnter = async (email, password) => {
+    makeEnter = async (email, password) => {  //Use
         let res = await fetch("/users/get", {
             headers: {
             'Accept': 'application/json',
@@ -34,14 +34,14 @@ export default class gotService {
         }
     }
     
-    createPost = async (userId, title, text) => {
+    createPost = async (token, userId, title, text) => {  //Use
         let res = await fetch("/posts/new", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({userId, title, text})
+            body: JSON.stringify({token, userId, title, text})
         })
         
         if (!res.ok) {
@@ -51,14 +51,14 @@ export default class gotService {
         }
     }
     
-    updatePost = async (userId, title, text) => {
+    updatePost = async (token, userId, _id, title, text) => {  //Use
         let res = await fetch("/posts/update", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({userId, title, text})
+            body: JSON.stringify({token, userId, _id, title, text})
         })
         
         if (!res.ok) {
@@ -67,7 +67,7 @@ export default class gotService {
             return await res.json();
         }
     }
-    deletePost = async (_id, userId, token) => {
+    deletePost = async (_id, userId, token) => {  //Use
         let res = await fetch("/posts/delete", {
             headers: {
             'Accept': 'application/json',
@@ -85,7 +85,7 @@ export default class gotService {
     }
 
 
-    getJWT = async (JWT) => {
+    getJWT = async (JWT) => {  //Use
         let res = await fetch("/", {
             method: "POST",
             headers: {
@@ -136,7 +136,7 @@ export default class gotService {
     }
 
     
-    getPosts = async (skip, userId) => {
+    getPosts = async (skip, userId) => {    //Use
         let res = await fetch("/posts/get", {
             headers: {
             'Accept': 'application/json',
@@ -163,7 +163,7 @@ export default class gotService {
     }
     
 
-    findPosts = async (find) => {
+    findPosts = async (find) => {   //Use
         let res = await fetch("/posts/find", {
             headers: {
             'Accept': 'application/json',
@@ -179,7 +179,7 @@ export default class gotService {
         }
     }
 
-    findAmountPosts = async () => {
+    findAmountPosts = async () => {  //Use
         let res = await fetch("/posts/count",{method: 'PUT'});
         if (!res.ok) {
             throw new Error(`COULD_NOT_GET_DATA`);
@@ -187,7 +187,7 @@ export default class gotService {
             return await res.json();
         }
     }
-    findAmountUsersPosts = async (userId, skip, firstTime) => {
+    findAmountUsersPosts = async (userId, skip, firstTime) => { //Use
         let res = await fetch("/user/findposts", {
             headers: {
             'Accept': 'application/json',

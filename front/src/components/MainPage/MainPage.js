@@ -19,9 +19,7 @@ class MainPage extends Component {
 
 
     state = {
-        nowSearch: false,
-        allow: true,
-        search: ''
+        allow: true
     }
 
     componentDidMount() {
@@ -35,8 +33,7 @@ class MainPage extends Component {
             .then(res=> this.props.putMainPageStore({
                 postsArr: res.postsArr,
                 skip: props.skip + this.props.addSkip,
-                amountPosts,
-                searchPostArr: []
+                amountPosts
             }), err=> console.log(err))
 
     }
@@ -68,26 +65,6 @@ class MainPage extends Component {
         }
     }
 
-    changeSearch = (e) => {
-        if (e.target.value === '') {
-            this.setState({search: e.target.value, nowSearch: false});
-            this.props.putMainPageStore({searchPostArr: null})
-        } else {
-            this.setState({search: e.target.value})
-        }
-        
-    }
-
-    searchPosts = () => {
-        
-        if(this.state.search !== '') {
-            this.setState(()=>({nowSearch: true}))
-
-            this.gotService.findPosts(this.state.search)
-                .then(res=> this.props.putMainPageStore({searchPostArr: res.postsArr}), err=> console.log(err))
-            
-        }
-    }
 
 
     componentWillUnmount() {
@@ -96,19 +73,17 @@ class MainPage extends Component {
         this.props.putMainPageStore({
             postsArr: [],
             skip: 0,
-            amountPosts: null,
-            searchPostArr: []
+            amountPosts: null
         })
     }
 
     render() {
         const props = this.props.mainPage;
 
-        let mappedArr = this.state.nowSearch ? props.searchPostArr : props.postsArr;
 
-        if (!mappedArr) {return null}
+        if (!props.postsArr) {return null}
 
-        let context = mappedArr.map(i => {
+        let context = props.postsArr.map(i => {
 
             return <ListItem key={getSuperId()}>
                     <div className='page-posts'>
@@ -141,19 +116,7 @@ class MainPage extends Component {
             <div className='container'>
                 <div onScroll={event => this.onScrollList(event)} className='d-flex flex-column align-items-center'>
 
-                    <div className="form-inline w-100">
-                        <div className='row w-100'>
-                            <div className='col-8 col-md-10'>
-                            <input onChange={this.changeSearch} value={this.state.search} className="form-control w-100" placeholder="Поиск" aria-label="Search"/>
-                            </div>
-                            <div className='col-4 col-md-2'>
-                            <button onClick={this.searchPosts} className="btn btn-secondary w-100">Найти</button>
-                            </div>
-                        </div>     
-                    </div>
-
                     {context}
-
 
                 </div>
             </div>

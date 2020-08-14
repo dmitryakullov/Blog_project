@@ -36,8 +36,8 @@ const initialState = {
 		text: ''
 	},
 	search: {
-		postsArr: [],
-		usersArr: []
+		postsArr: null,
+		usersArr: null
 	}
 }
 

@@ -163,8 +163,8 @@ export default class gotService {
     }
     
 
-    findPosts = async (find) => {   //Use
-        let res = await fetch("/posts/find", {
+    findUsersAndPosts = async (find) => {   //Use
+        let res = await fetch("/posts&users/find", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

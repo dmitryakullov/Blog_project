@@ -178,6 +178,13 @@ body .super-text-style img{
     position: relative;
     z-index: 500;
 }
+.nothing-find {
+    text-align: center;
+    margin-top: 36px;
+    font-size: 30px;
+    color: #52595f;
+    font-weight: bold;
+}
 
 .btn-change {
     min-width: 50%;

@@ -129,15 +129,9 @@ class MainPage extends Component {
 
 
 
-class ListItem extends Component{
-    render(){
-        return (
-            <>
-                {this.props.children}
-            </>
-        )
-    }
-}
+const ListItem = (p) => <>{p.children}</>;
+
+
 function getSuperId() {
     return ''+ Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
 }

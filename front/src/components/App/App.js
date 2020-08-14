@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { useEffect } from 'react';
 import {
     Switch,
     Route,
@@ -17,7 +17,7 @@ import CreatePost from '../CreatePost';
 import SearchInfo from '../SearchInfo';
 
 import mapDispatchToProps from '../actionsRedux';
-import gotService from '../gotService/gotService.js';
+import gotServices from '../gotService/gotService.js';
 
 
 
@@ -27,85 +27,215 @@ const mapStateToProps = (store) => ({...store});
 
 
 
-class App extends Component {
-    gotService = new gotService();
+function App(props) {
+    const gotService = new gotServices();
 
-    
-    getUserByJWT = () => {
+
+    useEffect(()=>{
         const jwt = localStorage.getItem('superJWT_')
 
-        if(jwt && !this.props.data) {
-
-            this.gotService.getJWT(jwt)
-                .then(res=> this.props.putStore(res), err=> console.log(err))
+        if(jwt && !props.data) {
+            gotService.getJWT(jwt)
+                .then(res=> props.putStore(res), err=> console.log(err))
         } 
-    }
+    })
 
 
-    componentDidMount() {
-        this.getUserByJWT();
-    }
-    componentDidUpdate() {
-        this.getUserByJWT();
-    }
+    let ovnerId = props.data ? true : null;
 
+    return(
+        <>
+            <div className='wrapper'>
+                <div className='main-background'></div>
+                <section className='main-part'>
 
+                    <Nav ovnerHere={ovnerId} />
 
+                    <Switch>
 
-    render() {
-        let ovnerId = this.props.data ? true: null;
+                        <Route exact path='/'>
+                            <MainPage/>
+                        </Route>
 
-        return(
-            <>
-                <div className='wrapper'>
-                    <div className='main-background'></div>
-                    <section className='main-part'>
+                        <Route exact path='/searching'>
+                            <SearchInfo/>
+                        </Route>
 
-                        <Nav ovnerHere={ovnerId} />
+                        <Route exact path='/user/:id' render={({match}) => (
+                                <UserPage idU={match}/>
+                        )}/>
 
-                        <Switch>
+                        <Route path='/owner'>
+                            <UserPageOwner/>
+                        </Route>
+                            
+                        <Route path='/users/get'>
+                            <EnterForm/>
+                        </Route>
 
-                            <Route exact path='/'>
-                                <MainPage/>
-                            </Route>
+                        <Route path='/createpost'>
+                            <CreatePost/>
+                        </Route>
 
-                            <Route exact path='/searching'>
-                                <SearchInfo/>
-                            </Route>
+                        <Route path='/users/new'>
+                            <CheckInForm/>
+                        </Route>
 
-                            <Route exact path='/user/:id' render={({match}) => (
-                                    <UserPage idU={match}/>
-                            )}/>
+                        <Route path="*">
+                            <MainPage/>
+                        </Route>
 
-                            <Route path='/owner'>
-                                <UserPageOwner/>
-                            </Route>
-                                
-                            <Route path='/users/get'>
-                                <EnterForm/>
-                            </Route>
+                        <Redirect to="/"/>
+                    </Switch>
 
-                            <Route path='/createpost'>
-                                <CreatePost/>
-                            </Route>
+                </section>
+                <Footer/>
+            </div>
+        </>
+    )
 
-                            <Route path='/users/new'>
-                                <CheckInForm/>
-                            </Route>
-
-                            <Route path="*">
-                                <MainPage/>
-                            </Route>
-
-                            <Redirect to="/"/>
-                        </Switch>
-
-                    </section>
-                    <Footer/>
-                </div>
-            </>
-        )
-    }
 };
 
 export default connect( mapStateToProps, mapDispatchToProps )(App);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// class App extends Component {
+//     gotService = new gotService();
+
+    
+//     getUserByJWT = () => {
+//         const jwt = localStorage.getItem('superJWT_')
+
+//         if(jwt && !this.props.data) {
+
+//             this.gotService.getJWT(jwt)
+//                 .then(res=> this.props.putStore(res), err=> console.log(err))
+//         } 
+//     }
+
+
+//     componentDidMount() {
+//         this.getUserByJWT();
+//     }
+//     componentDidUpdate() {
+//         this.getUserByJWT();
+//     }
+
+
+
+
+//     render() {
+//         let ovnerId = this.props.data ? true: null;
+
+//         return(
+//             <>
+//                 <div className='wrapper'>
+//                     <div className='main-background'></div>
+//                     <section className='main-part'>
+
+//                         <Nav ovnerHere={ovnerId} />
+
+//                         <Switch>
+
+//                             <Route exact path='/'>
+//                                 <MainPage/>
+//                             </Route>
+
+//                             <Route exact path='/searching'>
+//                                 <SearchInfo/>
+//                             </Route>
+
+//                             <Route exact path='/user/:id' render={({match}) => (
+//                                     <UserPage idU={match}/>
+//                             )}/>
+
+//                             <Route path='/owner'>
+//                                 <UserPageOwner/>
+//                             </Route>
+                                
+//                             <Route path='/users/get'>
+//                                 <EnterForm/>
+//                             </Route>
+
+//                             <Route path='/createpost'>
+//                                 <CreatePost/>
+//                             </Route>
+
+//                             <Route path='/users/new'>
+//                                 <CheckInForm/>
+//                             </Route>
+
+//                             <Route path="*">
+//                                 <MainPage/>
+//                             </Route>
+
+//                             <Redirect to="/"/>
+//                         </Switch>
+
+//                     </section>
+//                     <Footer/>
+//                 </div>
+//             </>
+//         )
+//     }
+// };
+
+// export default connect( mapStateToProps, mapDispatchToProps )(App);

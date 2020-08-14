@@ -187,22 +187,29 @@ app.post('/user/restore_delete', function (req, res) {
 
 
 
-app.post('/posts/find', function (req, res) { //Use
+app.post('/posts&users/find', function (req, res) { //Use
     (async()=>{
         const {find} = req.body;
-        let arr =[];
+        let postsArr = [], usersArr = [];
 
         if(!find || Object.keys(req.body).length !== 1) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
-        let posts = await Post.find({$or: [
+        const users = await User.find({nick: new RegExp(find, 'i'), admin: false}).limit(50);
+        if (users.length !== 0) {
+            for (let user of users) {
+                const {_id, nick, avatar} = user;
+                usersArr.push({_id, nick, avatar})
+            }
+        }
+
+        const posts = await Post.find({$or: [
                                             {title: new RegExp(find, 'i')},
                                             {text: new RegExp(find, 'i')}
-                                        ]}).sort({_id:-1});
+                                        ]}).sort({_id:-1}).limit(60);
         if (posts.length !==0) {
-            for(let key in posts) {
-                let post = posts[key];
+            for(let post of posts) {
 
                 user = await User.findById({_id: `${post.userId}`});
                 
@@ -217,12 +224,11 @@ app.post('/posts/find', function (req, res) { //Use
                         nick: user.nick,
                         avatar: user.avatar};
                         
-                    arr.push(obj);
+                        postsArr.push(obj);
                 }
             }
-            res.end(JSON.stringify({postsArr: arr}));
-        } else
-        res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+        res.end(JSON.stringify({postsArr, usersArr}));
 
     })();
 });

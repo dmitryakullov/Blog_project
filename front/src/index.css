@@ -179,6 +179,20 @@ body .super-text-style img{
     z-index: 500;
 }
 
+.btn-change {
+    min-width: 50%;
+    margin: 20px 0;
+    border-radius: 0 !important;
+}
+
+.search-inp-btn-width input{
+    min-width: 76%;
+    margin-right: 10px;
+}
+.search-inp-btn-width button{
+    min-width: 24%;
+}
+
 .my-enter-form {
     width: 400px;
     height: 472px;

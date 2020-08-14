@@ -6,7 +6,6 @@ const cleanStore = () => {
         type: 'CLEAN_STATE'
     };
 }
-
 const putStore = (userData) => {
     return {
         type: 'PUT_STATE',

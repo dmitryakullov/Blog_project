@@ -59,9 +59,7 @@ function SearchInfo (props) {
     } else {
 
         if(postsArr.length === 0) {
-            posts = (<>
-                        <div className='nothing-find'>Ничего не найдено :(</div>
-                    </>)
+            posts = (<><div className='nothing-find'>Ничего не найдено :(</div></>)
         } else {
             posts = postsArr.map(i => {
 
@@ -91,9 +89,7 @@ function SearchInfo (props) {
         }
 
         if(usersArr.length === 0) {
-            users = (<>
-                        <div className='nothing-find'>Ничего не найдено :(</div>
-                    </>)
+            users = (<><div className='nothing-find'>Ничего не найдено :(</div></>)
         } else {
             users = usersArr.map(i=> 
                 <div key={i._id} className='page-posts'>

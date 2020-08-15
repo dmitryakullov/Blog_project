@@ -358,7 +358,6 @@ app.post('/user/find', function (req, res) {        //Use
         let postsArr = [];
 
         if (decoded.admin === true) {
-
             if (skip === 0 && nickOrEmail) {
                 const user = await User.findOne({$or: [{nick: nickOrEmail}, {email: nickOrEmail}], admin: false});
                 if (!user || user.admin) {
@@ -371,8 +370,8 @@ app.post('/user/find', function (req, res) {        //Use
                     if (posts.length !== 0) {
                         for (let post of posts) {
 
-                            const {_id, userId, title, text, active} = post
-                            const obj = { _id, userId, title, text, active, time: _id.getTimestamp() }
+                            const {_id, userId, title, text} = post
+                            const obj = { _id, userId, title, text, time: _id.getTimestamp() }
                             
                             postsArr.push(obj)
                         }
@@ -380,8 +379,21 @@ app.post('/user/find', function (req, res) {        //Use
                     res.end(JSON.stringify({_id, nick, email, avatar, postsArr}));
                 }
             }
-            else if(skip > 0) {
+            else if(skip > 0 && userId) {
+                const posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
 
+                if (posts.length !== 0) {
+                    for (let post of posts) {
+
+                        const {_id, userId, title, text} = post
+                        const obj = { _id, userId, title, text, time: _id.getTimestamp() }
+                        
+                        postsArr.push(obj)
+                    }
+                }
+                res.end(JSON.stringify({postsArr}));
+            } else {
+                res.end(JSON.stringify({msg: 'ERROR2'}));
             }
 
         } 

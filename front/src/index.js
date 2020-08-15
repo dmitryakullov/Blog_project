@@ -40,9 +40,11 @@ const initialState = {
 		usersArr: null
 	},
 	adminInfo: {
+		status: true,
 		skip: 0,
 		user: {},
-		postsArr: []
+		postsArr: [],
+		amountPosts: null
 	}
 }
 

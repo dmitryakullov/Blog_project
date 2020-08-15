@@ -156,7 +156,7 @@ class UserPageOwner extends Component {
                         <Link to="/">
                             <button
                                 onClick={this.logOut} 
-                                className='btn btn-danger mb-1'>Выйти
+                                className='btn btn-danger mb-3'>Выйти
                             </button>
                         </Link> 
                         <AdminPage/>

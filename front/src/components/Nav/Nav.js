@@ -5,28 +5,37 @@ import searchIcon from '../../icons/search.png';
 import usersPicture from '../../icons/profile-picture.png';
 
 
-class EnterButton extends Component {
-    render() {
-        return (
-            <button className='btn btn-outline-success'>Войти</button>
-        )
-    }
-}
-
-class Profile extends Component {
-    render() {
-        return (
-            <div className='nav-profile'>
-                <img src={usersPicture} alt='Profile icon'/>
-            </div>
-        )
-    }
-}
-
 
 
 export default class Nav extends Component {
     render () {
+        const data = this.props.owner;
+        let content;
+
+        if (!data) {
+            content = <Link to='/users/get' className='react-Link'>
+                        <button className='btn btn-outline-success'>Войти</button>
+                    </Link>;
+
+        } else if (data.admin) {
+            const ava = data.avatar === 'false' ? usersPicture : data.avatar;
+
+            content = <Link to='/adminpage' className='react-Link'>
+                        <div className='nav-profile'>
+                            <img src={ava} alt='Profile icon'/>
+                        </div>
+                    </Link>
+        } else if (data._id) {
+            const ava = data.avatar === 'false' ? usersPicture : data.avatar;
+
+            content = <Link to='/owner' className='react-Link'>
+                        <div className='nav-profile'>
+                            <img src={ava} alt='Profile icon'/>
+                        </div>
+                    </Link>
+        } else {
+            content = null;
+        }
 
         return (
             <header>
@@ -47,14 +56,8 @@ export default class Nav extends Component {
                                 </div>
                             </Link>
 
-                            {this.props.ovnerHere ? <Link to='/owner' className='react-Link'>
-                                                        <Profile/>
-                                                    </Link> :
+                            {content}
 
-                                                <Link to='/users/get' className='react-Link'>
-                                                    <EnterButton/>
-                                                </Link>
-                            }
                         </div>
                     </div>
                 </nav>

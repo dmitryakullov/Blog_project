@@ -87,6 +87,8 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
+
+
 app.post('/user/findposts', function (req, res) {    //Use
     (async()=>{
 
@@ -349,12 +351,17 @@ app.post('/user/find', function (req, res) {        //Use
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
+
         let decoded;
         try {
             decoded = jwt.verify(token, config.secret);
         } catch(err) {
             res.end(JSON.stringify({msg: 'WRONG_JWT'}));
         }
+
+
+
+
         let postsArr = [];
 
         if (decoded.admin === true) {
@@ -365,6 +372,9 @@ app.post('/user/find', function (req, res) {        //Use
                 } 
                 else {
                     const {_id, nick, email, avatar} = user; 
+
+                    let amountPosts= await Post.count({ userId: _id })
+
                     const posts = await Post.find({userId: _id}).skip(skip).limit(20).sort({_id:-1});
 
                     if (posts.length !== 0) {
@@ -376,7 +386,7 @@ app.post('/user/find', function (req, res) {        //Use
                             postsArr.push(obj)
                         }
                     }
-                    res.end(JSON.stringify({_id, nick, email, avatar, postsArr}));
+                    res.end(JSON.stringify({_id, nick, email, avatar, amountPosts, postsArr}));
                 }
             }
             else if(skip > 0 && userId) {
@@ -429,9 +439,9 @@ app.post('/users/delete', function (req, res) {
 
 app.delete('/posts/delete', function (req, res) { //Use
     (async()=>{
-        const {_id, userId, token} = req.body;
+        const {_id, token, userId} = req.body;
 
-        if(!_id || !token || !userId || Object.keys(req.body).length !== 3) {
+        if(!_id || !token) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
@@ -443,7 +453,7 @@ app.delete('/posts/delete', function (req, res) { //Use
         }
 
 
-        if (userId === decoded._id) {
+        if (decoded.admin || userId === decoded._id) {
             Post.findByIdAndDelete(_id, function (err, result) { 
                 if (err){ 
                     res.end(JSON.stringify({msg: 'ERROR1'}));

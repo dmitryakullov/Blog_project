@@ -15,6 +15,7 @@ import UserPage from '../UserPage';
 import UserPageOwner from '../UserPageOwner';
 import CreatePost from '../CreatePost';
 import SearchInfo from '../SearchInfo';
+import AdminPage from '../AdminPage';
 
 import mapDispatchToProps from '../actionsRedux';
 import gotServices from '../gotService/gotService.js';
@@ -41,7 +42,6 @@ function App(props) {
     })
 
 
-    let ovnerId = props.data ? true : null;
 
     return(
         <>
@@ -49,7 +49,7 @@ function App(props) {
                 <div className='main-background'></div>
                 <section className='main-part'>
 
-                    <Nav ovnerHere={ovnerId} />
+                    <Nav owner={props.data} />
 
                     <Switch>
 
@@ -67,6 +67,10 @@ function App(props) {
 
                         <Route path='/owner'>
                             <UserPageOwner/>
+                        </Route>
+
+                        <Route path='/adminpage'>
+                            <AdminPage/>
                         </Route>
                             
                         <Route path='/users/get'>

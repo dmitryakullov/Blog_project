@@ -37,6 +37,7 @@ class UserPage extends Component {
 
 
     onScrollList = (event) => {
+        if(!event.target.scrollingElement) return;
 
         let scrollBottom = event.target.scrollingElement.scrollTop + 
             event.target.scrollingElement.offsetHeight > event.target.scrollingElement.scrollHeight/100*85;

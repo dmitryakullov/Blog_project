@@ -14,9 +14,9 @@ const mapStateToProps = (store) => ({...store});
 const AdminPage = (props) => {
     let gotService = new gotServices();
 
-
     const [searchText, setSearchText] = useState('');
     const [allow, setAllow] = useState(true);
+
 
     useEffect(()=>{
         window.addEventListener('scroll', onScrollList);
@@ -28,18 +28,18 @@ const AdminPage = (props) => {
     },[])
 
 
-    async function search() {
+    function search() {
         if(searchText !== '') {
 
             gotService.findUser(0, props.data.token, null, searchText)
                 .then(res=> {
-                    const {_id, nick, email, avatar, postsArr} = res
+                    const {_id, nick, email, avatar, amountPosts, postsArr} = res
                     if (_id && nick && email && avatar && postsArr) {
                         props.putInfoAdmin({
                             skip: props.addSkip,
                             user: {_id, nick, email, avatar},
                             postsArr,
-                            amountPosts: postsArr.length,
+                            amountPosts,
                             status: true
                         })
                     } else {
@@ -52,23 +52,123 @@ const AdminPage = (props) => {
     }
 
 
-    const onScrollList = (event) => {
+    function onScrollList(event) {
+        
+        if(!event.target.scrollingElement) return;
 
         let scrollBottom = event.target.scrollingElement.scrollTop + 
             event.target.scrollingElement.offsetHeight > event.target.scrollingElement.scrollHeight/100*85;
-            
+
         if (scrollBottom && allow) {
-            // this.setState({allow: false})
-            // this.updateAgain()
+            setAllow(false)
         }
     }
 
-    
+    useEffect(()=> {
+        if (!allow) {
+            updateAgain();
+        }
+    })
 
+    const updateAgain = () => {
+        const adminInfo = props.adminInfo;
+
+        if (adminInfo.amountPosts - adminInfo.skip > (-props.addSkip +1)){ /////???????????????????????????
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+
+            gotService.findUser(adminInfo.skip, props.data.token, adminInfo.user._id)
+            .then(res=> {
+                console.log(res)
+                props.putInfoAdmin({
+                    skip: adminInfo.user.skip + props.addSkip,
+                    postsArr: [...adminInfo.postsArr, ... res.postsArr],
+                });
+                setAllow(true);
+            })
+            .catch(err=> console.log(err));
+        }
+    }
+
+
+    const deleteMessage = (_id) => {
+        
+        gotService.deletePost(_id, props.data.token)
+        .then(res => {
+                console.log({res});
+
+                if (res.msg === 'DELETE') {
+                    const arr = props.adminInfo.postsArr.filter(i => (i._id !== _id))
+                    
+                    props.putInfoAdmin({
+                        postsArr: arr, 
+                        amountPosts: props.adminInfo.amountPosts - 1})
+                } else {
+                    console.log('ERROR')
+                }
+        })
+        .catch(err=> console.log(err));
+    }
+
+    const  logOut = () => {
+        localStorage.removeItem('superJWT_');
+        props.cleanStore();
+    }
+
+
+    if (!props.data) {
+        return <Redirect to="/"/>
+    } else if (!props.data.admin) {
+        return <Redirect to="/"/>
+    }
 
 
     const userProps = props.adminInfo;
-    let user, message = null;
+    let user, posts, message = null;
 
     if (!userProps.user._id) {
         user = null;
@@ -93,14 +193,44 @@ const AdminPage = (props) => {
                 </>)
     }
 
+    posts = userProps.postsArr.map(i => {
+        return <ListItem  key={getSuperId()}>
+                    <div className='p-0 container'>
+                        <div className='page-posts-profile'>
+                            <pre className='page-posts-time'>{gotTime(i.time)}</pre>
+                            <br/>
+                            <h2>{(i.title)}</h2>
+                            <hr/>
+                            <div className='superText' 
+                            contentEditable='false' 
+                            dangerouslySetInnerHTML={{ __html: `${(i.text)}` }}></div>  
+
+                            <div className='edit-posts'>
+                                <button onClick={()=>deleteMessage(i._id)} className='btn btn-outline-danger'>Удалить</button>
+                            </div>
+                        </div> 
+                    </div>
+                </ListItem>}
+        );
+
+
+
     if (!userProps.status) {
-        user = null;
+        user = posts = null;
         message = (<><div className='nothing-find'>Ничего не найдено :(</div></>)
     }
 
 
     return (
-        <div onScroll={event => onScrollList(event)}>
+
+        <div onScroll={event => onScrollList(event)} className="container">
+            <Link to="/">
+                <button
+                    onClick={()=> logOut()} 
+                    className='btn btn-danger mb-3'>Выйти
+                </button>
+            </Link> 
+
             <div className="form-inline w-100 mb-3">
                 <div className='row w-100'>
                     <div className='col-12'>
@@ -117,8 +247,10 @@ const AdminPage = (props) => {
             </div>
             {message}
             {user}
+            {posts}
 
         </div>
+
     )
 }
 

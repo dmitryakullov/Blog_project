@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {Link, Redirect} from "react-router-dom";
 
-import AdminPage from '../AdminPage';
 import usersPicture from '../../icons/profile-picture.png';
 import gotTime from '../gotTime/gotTime';
 import gotService from '../gotService/gotService.js';
@@ -49,7 +48,8 @@ class UserPageOwner extends Component {
 
 
     onScrollList = (event) => {
-
+        if(!event.target.scrollingElement) return;
+        
         let scrollBottom = event.target.scrollingElement.scrollTop + 
             event.target.scrollingElement.offsetHeight > event.target.scrollingElement.scrollHeight/100*85;
             
@@ -92,7 +92,7 @@ class UserPageOwner extends Component {
     deleteMessage = (_id) => {
         const data = this.props.data
         
-        this.gotService.deletePost(_id, data._id, data.token)
+        this.gotService.deletePost(_id, data.token, data._id)
         .then(res => {
                 console.log({res})
                 if (res.msg === 'DELETE') {
@@ -116,20 +116,6 @@ class UserPageOwner extends Component {
     }
 
 
-    changeSearch = (e) => {
-        if (e.target.value === '') {
-            this.setState({search: e.target.value, nowSearch: false})
-        } else {
-            this.setState({search: e.target.value})
-        }
-        
-    }
-
-    userSearch = () => {
-        this.gotService.restoreOrDelete(this.state.search)
-            .then(res=> this.setState({msg: res.msg}))
-            .catch(err=> console.log(err));
-    }
 
     componentWillUnmount() {
         window.removeEventListener('scroll', this.onScrollList);
@@ -149,28 +135,11 @@ class UserPageOwner extends Component {
             return <Redirect to="/createpost"/>
         }
 
-        const props = this.props.ownerPage;
 
-        if (this.props.data.admin === true) {
-            return <div className="container">
-                        <Link to="/">
-                            <button
-                                onClick={this.logOut} 
-                                className='btn btn-danger mb-3'>Выйти
-                            </button>
-                        </Link> 
-                        <AdminPage/>
-                </div>
-        }
-
-
-
-
-
-
-        let data = this.props.data;
+        const data = this.props.data;
         const ava = data.avatar === 'false' ? usersPicture : data.avatar;
 
+        const props = this.props.ownerPage;
 
         let context;
         if (props.postsArr) {

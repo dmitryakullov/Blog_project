@@ -42,6 +42,12 @@ const putInfoSearch = (searchInfo) => {
         searchInfo
     }
 }
+const putInfoAdmin = (adminInfo) => {
+    return {
+        type: 'PUT_ADMIN_INFO',
+        adminInfo
+    }
+}
 
 
 
@@ -53,7 +59,8 @@ const mapDispatchToProps = (dispath) => {
                         putUserPageStore,
                         putOwnerPageStore,
                         putInfoPost,
-                        putInfoSearch
+                        putInfoSearch,
+                        putInfoAdmin
                     }, dispath)
 }
 

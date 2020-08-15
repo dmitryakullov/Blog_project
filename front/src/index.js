@@ -38,6 +38,11 @@ const initialState = {
 	search: {
 		postsArr: null,
 		usersArr: null
+	},
+	adminInfo: {
+		skip: 0,
+		user: {},
+		postsArr: []
 	}
 }
 
@@ -63,6 +68,9 @@ const reducer = (state = initialState, action) => {
 	}
 	else if (action.type === 'PUT_SEARCH_INFO'){
 		return  {...state, ...{search: {...state.search, ...action.searchInfo}}}
+	}
+	else if (action.type === 'PUT_ADMIN_INFO'){
+		return  {...state, ...{adminInfo: {...state.adminInfo, ...action.adminInfo}}}
 	}
 	else
 		return state;

@@ -108,10 +108,10 @@ app.post('/user/findposts', function (req, res) {    //Use
             });
 
             
-            let user = await User.findById({_id: userId});
+            const user = await User.findById({_id: userId});
 
             if(user) {
-                let {_id, nick, email, avatar, active, admin} = user;
+                const {_id, nick, email, avatar, active, admin} = user;
 
                 resObj = {...resObj, ...{_id, nick, email, avatar, active, admin}}
                 
@@ -122,13 +122,13 @@ app.post('/user/findposts', function (req, res) {    //Use
 
 
 
-        let posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
+        const posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
         
         if(posts.length !==0) {
             for (let post of posts) {
 
                 const {_id, userId, title, text, active} = post
-                let obj = { _id, userId, title, text, active, time: post._id.getTimestamp() }
+                const obj = { _id, userId, title, text, active, time: _id.getTimestamp() }
                 
                 postsArr.push(obj)
             }
@@ -163,7 +163,7 @@ app.post('/user/restore_delete', function (req, res) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
-        let user = await User.findOne({nick});
+        const user = await User.findOne({nick});
 
         if (user && user.active === true) {
             await User.findOneAndRemove({nick}, async function(err, ok) {
@@ -211,11 +211,11 @@ app.post('/posts&users/find', function (req, res) { //Use
         if (posts.length !==0) {
             for(let post of posts) {
 
-                user = await User.findById({_id: `${post.userId}`});
+                const user = await User.findById({_id: `${post.userId}`});
                 
 
                 if (user.active){
-                    let obj ={
+                    const obj ={
                         _id: post._id,
                         time: post._id.getTimestamp(),
                         title: post.title,
@@ -242,11 +242,11 @@ app.put('/users/:id', function (req, res) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
         
-        let user = await User.findById(_id);
+        const user = await User.findById(_id);
 
         if(user._id) {
 
-            let {_id, nick, email, avatar, active, admin} = user;
+            const {_id, nick, email, avatar, active, admin} = user;
             res.end(JSON.stringify({_id, nick, email, avatar, active, admin}));
 
         } else
@@ -260,26 +260,25 @@ app.put('/users/:id', function (req, res) {
 app.post('/posts/get', function (req, res) {        //Use
     (async()=>{
         const {skip, userId} = req.body;
-        let arr =[], obj={};
+        let arr =[];
 
         if(userId) {
-            let posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
+            const posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
             if(posts.length !==0) {
                 res.end(JSON.stringify({postsArr: posts}));
             }
-        } else {
-            let posts = await Post.find().skip(skip).limit(20).sort({_id:-1});
+        } 
+        else {
+            const posts = await Post.find().skip(skip).limit(20).sort({_id:-1});
             
             if(posts.length !==0) {
-                for(let key in posts) {
-                    let post = posts[key];
-                    
+                for(let post of posts) {
                     
                     if (post.userId){
-                        user = await User.findById({_id: `${post.userId}`});
-                        // console.log(JSON.stringify({r:user.active}, null, 6))
+                        const user = await User.findById({_id: `${post.userId}`});
+
                         if (user.active){
-                            obj ={
+                            const obj ={
                                 _id: post._id,
                                 title: post.title,
                                 text: post.text,
@@ -290,7 +289,7 @@ app.post('/posts/get', function (req, res) {        //Use
 
                                 
                             arr.push(obj);
-                    }
+                        }
                     }
                     
                 }
@@ -302,22 +301,93 @@ app.post('/posts/get', function (req, res) {        //Use
 
 
 
-app.post('/users/findone', function (req, res) {
-    (async()=>{
-        const {nick} = req.body;
 
-        if(!nick || Object.keys(req.body).length !== 1) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/user/find', function (req, res) {        //Use
+    (async()=>{
+        const {skip, token, userId, nickOrEmail} = req.body;
+
+        if(!token) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
-        let user = await User.findOne({nick});
-        if (user.nick) {
-            let {_id, nick, email, avatar, active, admin} = user;
-
-            res.end(JSON.stringify({_id, nick, email, avatar, active, admin}));
-            
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
         }
-        
+        let postsArr = [];
+
+        if (decoded.admin === true) {
+
+            if (skip === 0 && nickOrEmail) {
+                const user = await User.findOne({$or: [{nick: nickOrEmail}, {email: nickOrEmail}], admin: false});
+                if (!user || user.admin) {
+                    res.end(JSON.stringify({msg: 'NOT_FOUND'}));
+                } 
+                else {
+                    const {_id, nick, email, avatar} = user; 
+                    const posts = await Post.find({userId: _id}).skip(skip).limit(20).sort({_id:-1});
+
+                    if (posts.length !== 0) {
+                        for (let post of posts) {
+
+                            const {_id, userId, title, text, active} = post
+                            const obj = { _id, userId, title, text, active, time: _id.getTimestamp() }
+                            
+                            postsArr.push(obj)
+                        }
+                    }
+                    res.end(JSON.stringify({_id, nick, email, avatar, postsArr}));
+                }
+            }
+            else if(skip > 0) {
+
+            }
+
+        } 
+        else {
+            res.end(JSON.stringify({msg: 'NOT_ADMIN'}));
+        }
     })()
 });
 
@@ -424,7 +494,7 @@ app.post('/posts/new', function (req, res) {    //Use
         }
 
         if (decoded._id === userId) {
-            let newPost = await new Post({userId, title, text, active: true});
+            const newPost = await new Post({userId, title, text, active: true});
             await newPost.save(function (err, ans) {
                 if (err) {
                     res.end(JSON.stringify({msg: 'ERROR2'}));
@@ -451,15 +521,15 @@ app.post('/users/new', function (req, res) {        //Use
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
-        let check = await User.find({$or: [{nick}, {email}]});
+        const check = await User.find({$or: [{nick}, {email}]});
 
         if (check.length === 0) {
-            let newUser = await new User({nick, email, password, avatar: 'false', active: true, admin: false});
+            const newUser = await new User({nick, email, password, avatar: 'false', active: true, admin: false});
             await newUser.save(function (err) {
                 if (err) return console.error(err);
             })
 
-            let token = jwt.sign({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false}, config.secret);
+            const token = jwt.sign({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false}, config.secret);
             res.end(JSON.stringify({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false , token}));
         }
 
@@ -478,12 +548,12 @@ app.post('/users/get', function (req, res) {        //Use
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
-        let user = await User.findOne({email, password});
+        const user = await User.findOne({email, password});
 
         if (user && user.active) {
-            let {_id, nick, email, avatar, active, admin} = user;
+            const {_id, nick, email, avatar, active, admin} = user;
 
-            let token = jwt.sign({ _id, nick, email, avatar, active, admin }, config.secret);
+            const token = jwt.sign({ _id, nick, email, avatar, active, admin }, config.secret);
             res.end(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
             
         } else {
@@ -509,9 +579,9 @@ app.post('/', function (req, res) {                 //Use
 
             const {nick, email} = decoded;
             
-            let user = await User.findOne({nick, email});
+    const user = await User.findOne({nick, email});
                 if (user && user.active) {
-                    let {_id, nick, email, avatar, active, admin} = user;
+                    const {_id, nick, email, avatar, active, admin} = user;
 
                     res.end(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
                 }

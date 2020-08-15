@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {Link, Redirect} from "react-router-dom";
 
+import AdminPage from '../AdminPage';
 import usersPicture from '../../icons/profile-picture.png';
 import gotTime from '../gotTime/gotTime';
 import gotService from '../gotService/gotService.js';
@@ -17,9 +18,7 @@ class UserPageOwner extends Component {
 
 
     state = {
-        disabled: false,
         allow: true,
-        search: '',
         toCreatePost: false
     }
 
@@ -154,23 +153,13 @@ class UserPageOwner extends Component {
 
         if (this.props.data.admin === true) {
             return <div className="container">
-                            <Link to="/">
-                                <button disabled={this.state.disabled} 
-                                    onClick={this.logOut} 
-                                    className='btn btn-secondary mb-5'>Выйти</button>
-                            </Link> 
-                <div className="form-inline w-100">
-                <br/>
-                    <div className='row w-100'>
-                        <div className='col-8 col-md-10'>
-                        <input onChange={this.changeSearch} value={this.state.search} className="form-control w-100" placeholder="Поиск" aria-label="Search"/>
-                        </div>
-                        <div className='col-4 col-md-2'>
-                        <button onClick={this.userSearch} className="btn btn-secondary w-100">Найти</button>
-                        </div>
-                    </div>     
-                    </div>
-                    <input value={this.state.msg} className='outside-data'></input>
+                        <Link to="/">
+                            <button
+                                onClick={this.logOut} 
+                                className='btn btn-danger mb-1'>Выйти
+                            </button>
+                        </Link> 
+                        <AdminPage/>
                 </div>
         }
 
@@ -235,7 +224,7 @@ class UserPageOwner extends Component {
                         </Link>
 
                             <Link to="/">
-                                <button disabled={this.state.disabled} 
+                                <button 
                                     onClick={this.logOut} 
                                     className='btn btn-secondary'>Выйти</button>
                             </Link>

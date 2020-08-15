@@ -118,14 +118,14 @@ export default class gotService {
         }
     }
 
-    findUser = async (nick) => {
-        let res = await fetch("/users/findone", {
+    findUser = async (skip, token, userId, nickOrEmail) => {     //Use
+        let res = await fetch("/user/find", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({nick})
+            body: JSON.stringify({skip, token, userId, nickOrEmail})
         })
         
         if (!res.ok) {

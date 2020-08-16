@@ -43,7 +43,7 @@ class MainPage extends Component {
         if(!event.target.scrollingElement) return;
         
         let scrollBottom = event.target.scrollingElement.scrollTop + 
-            event.target.scrollingElement.offsetHeight > event.target.scrollingElement.scrollHeight/100*85;
+            event.target.scrollingElement.offsetHeight > event.target.scrollingElement.scrollHeight/100*92;
             
         if (scrollBottom && this.state.allow) {
             this.setState({allow: false})

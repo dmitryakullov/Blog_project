@@ -40,6 +40,7 @@ const initialState = {
 		usersArr: null
 	},
 	adminInfo: {
+		statistic:{users: 0, posts: 0},
 		status: true,
 		skip: 0,
 		user: {},

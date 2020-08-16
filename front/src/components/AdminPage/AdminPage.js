@@ -23,7 +23,13 @@ const AdminPage = (props) => {
 
         return ()=> {
             window.removeEventListener('scroll', onScrollList);
-            props.putInfoAdmin({skip: 0, user: {}, postsArr: [], amountPosts: null, status: true})
+            props.putInfoAdmin({
+                skip: 0,
+                user: {},
+                postsArr: [],
+                amountPosts: null,
+                status: true,
+                statistic:{users: 0, posts: 0}})
         };
     },[])
 
@@ -33,11 +39,11 @@ const AdminPage = (props) => {
 
             gotService.findUser(0, props.data.token, null, searchText)
                 .then(res=> {
-                    const {_id, nick, email, avatar, amountPosts, postsArr} = res
+                    const {_id, nick, email, avatar, active, amountPosts, postsArr} = res
                     if (_id && nick && email && avatar && postsArr) {
                         props.putInfoAdmin({
                             skip: props.addSkip,
-                            user: {_id, nick, email, avatar},
+                            user: {_id, nick, email, avatar, active},
                             postsArr,
                             amountPosts,
                             status: true
@@ -57,18 +63,20 @@ const AdminPage = (props) => {
         if(!event.target.scrollingElement) return;
 
         let scrollBottom = event.target.scrollingElement.scrollTop + 
-            event.target.scrollingElement.offsetHeight > event.target.scrollingElement.scrollHeight/100*85;
+            event.target.scrollingElement.offsetHeight > event.target.scrollingElement.scrollHeight/100*92;
 
         if (scrollBottom && allow) {
             setAllow(false)
         }
     }
 
+
     useEffect(()=> {
         if (!allow) {
             updateAgain();
         }
     }, [allow])
+
 
     const updateAgain = () => {
         const adminInfo = props.adminInfo;
@@ -87,8 +95,19 @@ const AdminPage = (props) => {
     }
 
 
+
+    useEffect(()=>{
+        console.log(props);
+        if (props.data && props.data.token) {
+            gotService.getStatistics(props.data.token)
+            .then((res)=> props.putInfoAdmin(res))
+            .catch(err=> console.log(err));
+        }
+    }, [props.adminInfo.statistic.users, props.adminInfo.statistic.posts]);
+
+
+
     const deleteMessage = (_id) => {
-        
         gotService.deletePost(_id, props.data.token)
         .then(res => {
                 console.log({res});
@@ -112,10 +131,31 @@ const AdminPage = (props) => {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     if (!props.data) {
-        return <Redirect to="/"/>
+        return null;
     } else if (!props.data.admin) {
-        return <Redirect to="/"/>
+        return null;
+    }
+
+
+    let changeUser;
+    if (props.adminInfo.user._id) {
+        changeUser = props.adminInfo.user.active ? 'Заблокировать' : 'Разблокировать';
+    } else {
+        changeUser = 'Error'
     }
 
 
@@ -139,6 +179,10 @@ const AdminPage = (props) => {
                                     <div>Email: <i>{userProps.user.email}</i></div>
                                     <div>Посты: <b>{userProps.amountPosts}</b></div>
                                 </div>
+                            </div>
+                            <div className='mr-5'>
+                                <button className="btn btn-outline-primary mr-2">{changeUser}</button>
+                                <button className="btn btn-danger">Удалить</button>
                             </div>
                         </div>
                     </div>
@@ -179,9 +223,15 @@ const AdminPage = (props) => {
             <Link to="/">
                 <button
                     onClick={()=> logOut()} 
-                    className='btn btn-danger mb-3'>Выйти
+                    className='btn btn-danger mb-2'>Выйти
                 </button>
-            </Link> 
+            </Link>
+            
+            <div className='statistic-admin mb-3'>
+                <div><b>Статистика: </b></div>
+                <div><b>К-во ользователей: </b> {props.adminInfo.statistic.users} </div>
+                <div><b>К-во постов: </b> {props.adminInfo.statistic.posts} </div>
+            </div>
 
             <div className="form-inline w-100 mb-3">
                 <div className='row w-100'>

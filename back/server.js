@@ -216,7 +216,7 @@ app.post('/posts&users/find', function (req, res) { //Use
                 const user = await User.findById({_id: `${post.userId}`});
                 
 
-                if (user.active){
+                if (user.nick){
                     const obj ={
                         _id: post._id,
                         time: post._id.getTimestamp(),
@@ -279,7 +279,7 @@ app.post('/posts/get', function (req, res) {        //Use
                     if (post.userId){
                         const user = await User.findById({_id: `${post.userId}`});
 
-                        if (user.active){
+                        if (user.nick){
                             const obj ={
                                 _id: post._id,
                                 title: post.title,
@@ -336,10 +336,32 @@ app.post('/posts/get', function (req, res) {        //Use
 
 
 
+app.post('/statistics', function (req, res) {       //Use
+    (async()=>{
+        const {token} = req.body;
 
+        if(!token|| Object.keys(req.body).length !== 1) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+        
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
 
+        if (decoded.admin === true) {
 
+            const users= await User.count();
+            const posts= await Post.count();
 
+            res.end(JSON.stringify({statistic:{users, posts}}));
+        } else {
+            res.end(JSON.stringify({msg: 'NOT_ADMIN'}));
+        }
+    })();
+});
 
 
 
@@ -360,8 +382,6 @@ app.post('/user/find', function (req, res) {        //Use
         }
 
 
-
-
         let postsArr = [];
 
         if (decoded.admin === true) {
@@ -371,9 +391,9 @@ app.post('/user/find', function (req, res) {        //Use
                     res.end(JSON.stringify({msg: 'NOT_FOUND'}));
                 } 
                 else {
-                    const {_id, nick, email, avatar} = user; 
+                    const {_id, nick, email, avatar, active} = user; 
 
-                    let amountPosts= await Post.count({ userId: _id })
+                    const amountPosts= await Post.count({ userId: _id });
 
                     const posts = await Post.find({userId: _id}).skip(skip).limit(20).sort({_id:-1});
 
@@ -386,7 +406,7 @@ app.post('/user/find', function (req, res) {        //Use
                             postsArr.push(obj)
                         }
                     }
-                    res.end(JSON.stringify({_id, nick, email, avatar, amountPosts, postsArr}));
+                    res.end(JSON.stringify({_id, nick, email, avatar, active, amountPosts, postsArr}));
                 }
             }
             else if(skip > 0 && userId) {

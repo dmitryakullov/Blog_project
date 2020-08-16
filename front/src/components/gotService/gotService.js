@@ -220,6 +220,23 @@ export default class gotService {
         }
     }
 
+    getStatistics = async (token) => {      //Use
+        let res = await fetch("/statistics", {
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({token})
+        })
+        
+        if (!res.ok) {
+            throw new Error(`COULD_NOT_GET_DATA`);
+        } else{
+            return await res.json();
+        }
+    }
+
 }
 
 

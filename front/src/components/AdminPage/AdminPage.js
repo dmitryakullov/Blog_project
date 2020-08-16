@@ -97,7 +97,7 @@ const AdminPage = (props) => {
 
 
     useEffect(()=>{
-        console.log(props);
+
         if (props.data && props.data.token) {
             gotService.getStatistics(props.data.token)
             .then((res)=> props.putInfoAdmin(res))
@@ -123,6 +123,26 @@ const AdminPage = (props) => {
                 }
         })
         .catch(err=> console.log(err));
+    }
+
+    const blockUnblock = () => {
+        gotService.blockUnblock(props.adminInfo.user._id, props.data.token)
+            .then(res=> {
+                const u = props.adminInfo.user;
+                if(res.msg === 'BECOME_FALSE') {
+                    props.putInfoAdmin({
+                        user: {...u, ...{active: false}}
+                    })
+                }
+                else if (res.msg === 'BECOME_TRUE') {
+                    props.putInfoAdmin({
+                        user: {...u, ...{active: true}}
+                    })
+                } else {
+                    console.log('ERROR')
+                }
+            })
+            .catch(err=> console.log(err));
     }
 
     const  logOut = () => {
@@ -181,7 +201,7 @@ const AdminPage = (props) => {
                                 </div>
                             </div>
                             <div className='mr-5'>
-                                <button className="btn btn-outline-primary mr-2">{changeUser}</button>
+                                <button onClick={()=> blockUnblock()} className="btn btn-outline-primary mr-2">{changeUser}</button>
                                 <button className="btn btn-danger">Удалить</button>
                             </div>
                         </div>

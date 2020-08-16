@@ -163,7 +163,7 @@ export default class gotService {
     }
     
 
-    findUsersAndPosts = async (find) => {   //Use
+    findUsersAndPosts = async (find) => {           //Use
         let res = await fetch("/posts&users/find", {
             headers: {
             'Accept': 'application/json',
@@ -203,14 +203,14 @@ export default class gotService {
         }
     }
     
-    restoreOrDelete = async (nick) => {
-        let res = await fetch("/user/restore_delete", {
+    delete = async (_id, token) => {        //Use
+        let res = await fetch("/user/delete", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({nick})
+            body: JSON.stringify({_id, token})
         })
         
         if (!res.ok) {
@@ -228,6 +228,22 @@ export default class gotService {
             },
             method: "POST",
             body: JSON.stringify({token})
+        })
+        
+        if (!res.ok) {
+            throw new Error(`COULD_NOT_GET_DATA`);
+        } else{
+            return await res.json();
+        }
+    }
+    blockUnblock = async (_id, token) => {      //Use
+        let res = await fetch("/user/block&unblock", {
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({_id, token})
         })
         
         if (!res.ok) {

@@ -83,7 +83,7 @@ class CreatePost extends Component{
     
     render(){
         if (!this.props.data || !this.props.data.token) {
-            return <Redirect to="/"/>
+            return null;
         }
 
         const propsPost = this.props.post;

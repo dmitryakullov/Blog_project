@@ -157,32 +157,82 @@ app.put('/posts/count', function (req, res) {               //Use
 
 
 
-app.post('/user/restore_delete', function (req, res) {
-    (async()=>{
-        const {nick} = req.body;
 
-        if(!nick|| Object.keys(req.body).length !== 1) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/user/delete', function (req, res) {  //Use
+    (async()=>{
+        const {_id, token} = req.body;
+
+        if(!_id, !token || Object.keys(req.body).length !== 2) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
-        const user = await User.findOne({nick});
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
 
-        if (user && user.active === true) {
-            await User.findOneAndRemove({nick}, async function(err, ok) {
-                if (err){ 
-                    res.end(JSON.stringify({msg: 'ERROR'}));
-                } 
-                else { 
-                    await Post.deleteMany({ 'userId':  ok._id}).then(function(){ 
-                        res.end(JSON.stringify({msg: 'DELETE'}));  
-                    }).catch(function(error){ 
-                        res.end(JSON.stringify({msg: 'ERROR'})); 
-                    }); 
-                } 
-            }) 
-            
-        } else 
-        res.end(JSON.stringify({msg: 'NOT_FOUND'}));
+
+        if (decoded.admin) {
+            const user = await User.findById(_id);
+
+            if (user.admin) {
+                res.end(JSON.stringify({msg: "CAN'T_DELETE"}));
+            }
+
+            else {
+                await User.findOneAndRemove({nick: user.nick}, async function(err, ok) {
+                    if (err){ 
+                        res.end(JSON.stringify({msg: 'ERROR'}));
+                    } 
+                    else { 
+                        await Post.deleteMany({ 'userId':  _id}).then(function(){ 
+                            res.end(JSON.stringify({msg: 'DELETE'}));  
+                        }).catch(function(err){ 
+                            res.end(JSON.stringify({msg: 'ERROR'})); 
+                        }); 
+                    } 
+                }) 
+            }
+        }
+        else {
+            res.end(JSON.stringify({msg: 'NOT_ADMIN'}));
+        }
     })();
 });
 
@@ -303,36 +353,59 @@ app.post('/posts/get', function (req, res) {        //Use
 
 
 
+app.post('/user/block&unblock', function (req, res) {       //Use
+    (async()=>{
+        const {_id, token} = req.body;
 
+        if(!token|| !_id || Object.keys(req.body).length !== 2) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+        
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
 
+        if (decoded.admin === true) {
+            const user = await User.findById(_id);
 
+            if (user.admin) {
+                res.end(JSON.stringify({msg: "CAN'T_BLOCK"}));
+            }
+            else {
+                if(user.active === true) {
+                    User.findByIdAndUpdate(_id, { active: false },
+                        function(err) {
+                            if (err) {
+                                res.end(JSON.stringify({msg: 'ERROR'}));
+                            } else {
+                                res.end(JSON.stringify({msg: 'BECOME_FALSE'}));
+                            }
+                    })
+                }
 
+                else if (user.active === false) {
+                    User.findByIdAndUpdate(_id, { active: true },
+                        function(err) {
+                            if (err) {
+                                res.end(JSON.stringify({msg: 'ERROR'}));
+                            } else {
+                                res.end(JSON.stringify({msg: 'BECOME_TRUE'}));
+                            }
+                    })
+                }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                else {
+                    res.end(JSON.stringify({msg: 'ERROR2'}));
+                }
+            }
+        } else {
+            res.end(JSON.stringify({msg: 'NOT_ADMIN'}));
+        }
+    })();
+});
 
 
 

@@ -17,19 +17,22 @@ const AdminPage = (props) => {
     const [searchText, setSearchText] = useState('');
     const [allow, setAllow] = useState(true);
 
+    const dropping = {
+        skip: 0,
+        user: {},
+        postsArr: [],
+        amountPosts: null,
+        status: true,
+        statistic:{users: 0, posts: 0}
+    }
+
 
     useEffect(()=>{
         window.addEventListener('scroll', onScrollList);
 
         return ()=> {
             window.removeEventListener('scroll', onScrollList);
-            props.putInfoAdmin({
-                skip: 0,
-                user: {},
-                postsArr: [],
-                amountPosts: null,
-                status: true,
-                statistic:{users: 0, posts: 0}})
+            props.putInfoAdmin(dropping)
         };
     },[])
 
@@ -49,9 +52,7 @@ const AdminPage = (props) => {
                             status: true
                         })
                     } else {
-                        props.putInfoAdmin({
-                            skip: 0, user: {}, postsArr: [], amountPosts: null, status: false
-                        })
+                        props.putInfoAdmin({...dropping, ...{status: false}})
                     }
                 }, err=> console.log(err))
         }
@@ -145,18 +146,23 @@ const AdminPage = (props) => {
             .catch(err=> console.log(err));
     }
 
+    const deleteUser = () => {
+        const answ = prompt(`Аккаунт с постами удалиться навсегда и восстановлению подлежать не будет! Для удаления введите "delete"`);
+        if (answ === 'delete') {
+            gotService.deleteUser(props.adminInfo.user._id, props.data.token)
+                .then(res=> {
+                    if (res.msg === 'DELETE') {
+                        props.putInfoAdmin(dropping)
+                    }
+                })
+                .catch(err=> console.log(err));
+        } 
+    }
+
     const  logOut = () => {
         localStorage.removeItem('superJWT_');
         props.cleanStore();
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -202,7 +208,7 @@ const AdminPage = (props) => {
                             </div>
                             <div className='mr-5'>
                                 <button onClick={()=> blockUnblock()} className="btn btn-outline-primary mr-2">{changeUser}</button>
-                                <button className="btn btn-danger">Удалить</button>
+                                <button onClick={()=> deleteUser()} className="btn btn-danger">Удалить</button>
                             </div>
                         </div>
                     </div>

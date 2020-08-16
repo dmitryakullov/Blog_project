@@ -157,41 +157,6 @@ app.put('/posts/count', function (req, res) {               //Use
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.post('/user/delete', function (req, res) {  //Use
     (async()=>{
         const {_id, token} = req.body;
@@ -506,29 +471,7 @@ app.post('/user/find', function (req, res) {        //Use
     })()
 });
 
-app.post('/users/delete', function (req, res) {
-    (async()=>{
-        const {_id} = req.body;
 
-        if(!_id || Object.keys(req.body).length !== 1) {
-            res.end(JSON.stringify({msg: 'ERROR'}));
-        }
-
-        User.findByIdAndUpdate(_id, { active: false },
-            async function(err, result) {
-                if (err) {
-                    res.end(JSON.stringify({msg: 'ERROR'}));
-                } else if (result) {
-
-                    const posts = await Person.updateMany({ userId: _id }, { active: false });
-                    res.end(JSON.stringify({msg: 'DELETE'}));
-
-                } else 
-                res.end(JSON.stringify({msg: 'ERROR'}));
-        })
-        
-    })()
-});
 
 app.delete('/posts/delete', function (req, res) { //Use
     (async()=>{
@@ -592,6 +535,35 @@ app.post('/posts/update', function (req, res) { //Use
 
     })()
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.post('/posts/new', function (req, res) {    //Use
     (async()=>{
@@ -699,9 +671,11 @@ app.post('/', function (req, res) {                 //Use
                     const {_id, nick, email, avatar, active, admin} = user;
 
                     res.end(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
+                } else if (user && user.active === false) {
+                    res.end(JSON.stringify({msg: 'BLOCKED'}));
                 }
         }
-        res.end(JSON.stringify({msg: 'NO_JWT'}));
+        res.end(JSON.stringify({msg: 'NOT_FOUND'}));
     })();
 });
 

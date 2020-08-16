@@ -37,7 +37,14 @@ function App(props) {
 
         if(jwt && !props.data) {
             gotService.getJWT(jwt)
-                .then(res=> props.putStore(res), err=> console.log(err))
+                .then(res=> {
+                    if (res.msg === 'BLOCKED' || res.msg === 'NOT_FOUND') {
+                        localStorage.removeItem('superJWT_');
+                    } else {
+                        props.putStore(res)
+                    }
+                })
+                .catch(err=> console.log(err));
         } 
     })
 

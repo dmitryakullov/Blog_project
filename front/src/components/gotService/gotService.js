@@ -100,23 +100,7 @@ export default class gotService {
         }
     }
 
-    
-    deleteUser = async (_id) => {
-        let res = await fetch("/users/delete", {
-            headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-            },
-            method: "POST",
-            body: JSON.stringify({_id})
-        })
-        
-        if (!res.ok) {
-            throw new Error(`COULD_NOT_GET_DATA`);
-        } else{
-            return await res.json();
-        }
-    }
+
 
     findUser = async (skip, token, userId, nickOrEmail) => {     //Use
         let res = await fetch("/user/find", {
@@ -203,7 +187,7 @@ export default class gotService {
         }
     }
     
-    delete = async (_id, token) => {        //Use
+    deleteUser = async (_id, token) => {        //Use
         let res = await fetch("/user/delete", {
             headers: {
             'Accept': 'application/json',

@@ -64,7 +64,7 @@ class UserPageOwner extends Component {
     updateAgain=()=>{
         const props = this.props.ownerPage;
         
-        if (props.amountPosts - props.skip > (-this.props.addSkip +1)){
+        if (props.amountPosts - props.skip > (-this.props.addSkip)){
 
             this.gotService.findAmountUsersPosts(this.props.data._id, props.skip)
                     .then(res=> {

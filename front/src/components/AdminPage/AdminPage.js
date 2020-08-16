@@ -68,68 +68,20 @@ const AdminPage = (props) => {
         if (!allow) {
             updateAgain();
         }
-    })
+    }, [allow])
 
     const updateAgain = () => {
         const adminInfo = props.adminInfo;
 
-        if (adminInfo.amountPosts - adminInfo.skip > (-props.addSkip +1)){ /////???????????????????????????
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
+        if (adminInfo.amountPosts - adminInfo.skip > (-props.addSkip)){
 
             gotService.findUser(adminInfo.skip, props.data.token, adminInfo.user._id)
-            .then(res=> {
-                console.log(res)
+            .then(res=> 
                 props.putInfoAdmin({
-                    skip: adminInfo.user.skip + props.addSkip,
+                    skip: adminInfo.skip + props.addSkip,
                     postsArr: [...adminInfo.postsArr, ... res.postsArr],
-                });
-                setAllow(true);
-            })
+                }))
+            .then(()=> setAllow(true))
             .catch(err=> console.log(err));
         }
     }

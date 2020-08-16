@@ -54,7 +54,7 @@ class MainPage extends Component {
     updateAgain=()=>{
         const props = this.props.mainPage;
         
-        if (props.amountPosts - props.skip > (-this.props.addSkip +1)){
+        if (props.amountPosts - props.skip > (-this.props.addSkip)){
 
             this.gotService.getPosts(props.skip)
             .then(res=> {

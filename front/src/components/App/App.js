@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Switch,
     Route,
@@ -31,9 +31,10 @@ const mapStateToProps = (store) => ({...store});
 function App(props) {
     const gotService = new gotServices();
 
+    const [myInterval, setMyInterval] = useState(-1);
 
     useEffect(()=>{
-        const jwt = localStorage.getItem('superJWT_')
+        const jwt = localStorage.getItem('superJWT_');
 
         if(jwt && !props.data) {
             gotService.getJWT(jwt)
@@ -41,14 +42,46 @@ function App(props) {
                     if (res.msg === 'BLOCKED' || res.msg === 'NOT_FOUND') {
                         localStorage.removeItem('superJWT_');
                     } else {
-                        props.putStore(res)
+                        return props.putStore(res)
                     }
                 })
                 .catch(err=> console.log(err));
         } 
     })
 
+    // useEffect(()=>{
+    //     const jwt = localStorage.getItem('superJWT_');
+    //     clearInterval(myInterval);
 
+    //     if (jwt && props.data && props.data.token) {
+            
+    //         const intervalMark = setInterval(async ()=>{
+    //             await setMyInterval(intervalMark);
+
+    //             gotService.trackUser(props.data.token)
+    //                 .then(res=> {
+    //                     if (res.msg === 'ALL_OK') {
+
+    //                     } else if (res.msg === 'CLEAN_STORE') {
+
+    //                         clearInterval(myInterval);
+    //                         localStorage.removeItem('superJWT_');
+    //                         props.cleanStore();
+
+    //                     } 
+    //                     else {
+    //                         console.log('Error in trackUser')
+    //                     }
+    //                 })
+    //                 .catch(err=> console.log(err));
+    //         }, 5000)
+    //     }
+    // }, [props.data])
+
+
+    useEffect(()=>{
+        return ()=> clearInterval(myInterval);
+    }, [])
 
     return(
         <>

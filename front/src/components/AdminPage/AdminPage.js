@@ -26,7 +26,6 @@ const AdminPage = (props) => {
         statistic:{users: 0, posts: 0}
     }
 
-
     useEffect(()=>{
         window.addEventListener('scroll', onScrollList);
 
@@ -94,7 +93,6 @@ const AdminPage = (props) => {
             .catch(err=> console.log(err));
         }
     }
-
 
 
     useEffect(()=>{

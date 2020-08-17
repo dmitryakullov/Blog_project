@@ -88,6 +88,35 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
+app.post('/user/track', function (req, res) {       //Use
+    (async()=>{
+        const {token} = req.body;
+
+
+        if(!token|| Object.keys(req.body).length !== 1) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+        
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
+
+        const _id = decoded._id;
+        const userChack= await User.findById(_id);
+
+        if (userChack && userChack.active) {
+            res.end(JSON.stringify({msg: 'ALL_OK'}));
+        } else {
+            res.end(JSON.stringify({msg: 'CLEAN_STORE'}));
+        }
+    })();
+});
+
+
+
 
 app.post('/user/findposts', function (req, res) {    //Use
     (async()=>{
@@ -244,9 +273,9 @@ app.post('/posts&users/find', function (req, res) { //Use
                         postsArr.push(obj);
                 }
             }
+            
         }
         res.end(JSON.stringify({postsArr, usersArr}));
-
     })();
 });
 
@@ -283,9 +312,11 @@ app.post('/posts/get', function (req, res) {        //Use
             const posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
             if(posts.length !==0) {
                 res.end(JSON.stringify({postsArr: posts}));
+            } else {
+                res.end(JSON.stringify({msg: 'ERROR'}));
             }
         } 
-        else {
+        else if (skip === 0 || skip) {
             const posts = await Post.find().skip(skip).limit(20).sort({_id:-1});
             
             if(posts.length !==0) {
@@ -294,7 +325,7 @@ app.post('/posts/get', function (req, res) {        //Use
                     if (post.userId){
                         const user = await User.findById({_id: `${post.userId}`});
 
-                        if (user.nick){
+                        if (user && user.nick){
                             const obj ={
                                 _id: post._id,
                                 title: post.title,
@@ -311,7 +342,11 @@ app.post('/posts/get', function (req, res) {        //Use
                     
                 }
                 res.end(JSON.stringify({postsArr: arr}));
+            } else {
+                res.end(JSON.stringify({msg: 'NOT_FOUND'}));
             }
+        } else {
+            res.end(JSON.stringify({msg: 'ERROR2'}));
         }
     })()
 });
@@ -336,7 +371,10 @@ app.post('/user/block&unblock', function (req, res) {       //Use
         if (decoded.admin === true) {
             const user = await User.findById(_id);
 
-            if (user.admin) {
+            if (!user) {
+                res.end(JSON.stringify({msg: 'USER_NOT_FOUND'}));
+            }
+            else if (user.admin) {
                 res.end(JSON.stringify({msg: "CAN'T_BLOCK"}));
             }
             else {
@@ -520,48 +558,29 @@ app.post('/posts/update', function (req, res) { //Use
         }
 
         if (userId === decoded._id) {
-            Post.findByIdAndUpdate(_id, { title, text },
-                function(err, result) {
-                    if (err) {
-                        res.end(JSON.stringify({msg: 'ERROR1'}));
-                    } else if (result) {
-                        res.end(JSON.stringify({msg: 'SAVE'}));
-                    } else 
-                    res.end(JSON.stringify({msg: 'ERROR2'}));
-            })
+            const userCheck = await User.findById({_id: userId});
+
+            if (userCheck && userCheck.active) {
+
+                Post.findByIdAndUpdate(_id, { title, text },
+                    function(err, result) {
+                        if (err) {
+                            res.end(JSON.stringify({msg: 'ERROR1'}));
+                        } else if (result) {
+                            res.end(JSON.stringify({msg: 'SAVE'}));
+                        } else 
+                        res.end(JSON.stringify({msg: 'ERROR2'}));
+                })
+
+            } else {
+                res.end(JSON.stringify({msg: 'NOT_ACTIVE_OR_DELETED'}));
+            }
         } else {
             res.end(JSON.stringify({msg: 'ERROR3'}));
         }
 
     })()
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -581,15 +600,21 @@ app.post('/posts/new', function (req, res) {    //Use
         }
 
         if (decoded._id === userId) {
-            const newPost = await new Post({userId, title, text, active: true});
-            await newPost.save(function (err, ans) {
-                if (err) {
-                    res.end(JSON.stringify({msg: 'ERROR2'}));
-                    console.log('Error2')
-                } else {
-                    res.end(JSON.stringify({msg: 'SAVE'}));
-                }
-            })
+            const userCheck = await User.findById({_id: userId});
+            if (userCheck && userCheck.active) {
+
+                const newPost = await new Post({userId, title, text, active: true});
+                await newPost.save(function (err, ans) {
+                    if (err) {
+                        res.end(JSON.stringify({msg: 'ERROR2'}));
+                        console.log('Error2')
+                    } else {
+                        res.end(JSON.stringify({msg: 'SAVE'}));
+                    }
+                })
+            } else {
+                res.end(JSON.stringify({msg: 'NOT_ACTIVE_OR_DELETED'}));
+            }
         } else {
             res.end(JSON.stringify({msg: 'ERROR3'}));
         }
@@ -637,14 +662,19 @@ app.post('/users/get', function (req, res) {        //Use
 
         const user = await User.findOne({email, password});
 
-        if (user && user.active) {
+        if (!user) {
+            res.end(JSON.stringify({msg: 'USER_NOT_FOUND'}));
+        }
+        else if (user.active === true) {
             const {_id, nick, email, avatar, active, admin} = user;
 
             const token = jwt.sign({ _id, nick, email, avatar, active, admin }, config.secret);
             res.end(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
             
+        } else if (user.active === false) {
+            res.end(JSON.stringify({msg: 'USER_BLOCKED'}));
         } else {
-            res.end(JSON.stringify({msg: 'SOMETHING_WRONG'}));
+            res.end(JSON.stringify({msg: 'ERROR2'}));
         }
     })()
 });
@@ -666,23 +696,30 @@ app.post('/', function (req, res) {                 //Use
 
             const {nick, email} = decoded;
             
-    const user = await User.findOne({nick, email});
-                if (user && user.active) {
+            const user = await User.findOne({nick, email});
+
+                if (!user) {
+                    res.end(JSON.stringify({msg: 'NOT_FOUND'}));
+                }
+                else if (user && user.active === true) {
                     const {_id, nick, email, avatar, active, admin} = user;
 
                     res.end(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
-                } else if (user && user.active === false) {
+                } 
+                else if (user && user.active === false) {
                     res.end(JSON.stringify({msg: 'BLOCKED'}));
+                } else {
+                    res.end(JSON.stringify({msg: 'ERROR2'}));
                 }
         }
-        res.end(JSON.stringify({msg: 'NOT_FOUND'}));
+        res.end(JSON.stringify({msg: "HAVEN'T_TOKEN"}));
     })();
 });
 
 
-// app.get('/', function (req, res) {
-//     res.end('Hello World!');
-// });
+
+
+
 
 app.listen(4000, function () {
     console.log('Example app listening on port 4000!');

@@ -237,6 +237,23 @@ export default class gotService {
         }
     }
 
+    trackUser = async (token) => {      //Use
+        let res = await fetch("/user/track", {
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({token})
+        })
+        
+        if (!res.ok) {
+            throw new Error(`COULD_NOT_GET_DATA`);
+        } else{
+            return await res.json();
+        }
+    }
+
 }
 
 

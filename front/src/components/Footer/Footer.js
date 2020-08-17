@@ -19,7 +19,9 @@ export default function Footer() {
                     </div>
                 </div>
                 <div className="col-6 col-md-6">
-                    <div className='footer-middle'>© 2020 ProBird. Все права защищены.</div>
+                    <div className='footer-middle'>
+                        © 2020 ProBird. Все права защищены.
+                    </div>
                 </div>
                 <div className="col-6 col-md-3">
                     <div className='footer-right'>

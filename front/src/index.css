@@ -26,12 +26,16 @@ textarea {
 footer { 
     margin-top: 10px;
     flex-shrink: 0; 
-    min-height: 50px; 
+    min-height: 70px; 
     background-color: rgb(255, 255, 255);
     border-top: 3px solid rgb(75, 75, 75);
 }
 
-
+.main-message {
+    font-family: 'Marck Script', cursive;
+    color: #8b8782;
+    font-size: 32px;
+}
 
 
 .main-background {
@@ -44,7 +48,7 @@ footer {
 }
 
 .main-part{
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 80px);
 }
 
 .nav-bar {

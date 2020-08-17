@@ -48,6 +48,8 @@ export default class Nav extends Component {
                             </div>
                             <span className='nav-logo-text'>ProBird</span>
                         </Link>
+
+                        <div className='main-message'>Tell your story ...</div>
                         
                         <div className='d-flex'>
                             <Link  to='/searching' className='react-Link'>

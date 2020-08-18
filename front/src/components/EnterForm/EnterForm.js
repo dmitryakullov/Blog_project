@@ -36,7 +36,7 @@ class EnterForm extends Component {
     registerUser =() => {
         
         
-        var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        const reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
         if (this.state.password.length >= 4 && reg.test(this.state.email)) {
             this.setState({disabled: true})
@@ -120,6 +120,16 @@ class EnterForm extends Component {
             </div>
         )
     }
+}
+
+function chackNick(str) {
+    const arr = str.split('');
+    for (let item of arr) {
+        let i = item.charCodeAt();
+        if (i===95 || (i>47 && i<58) || (i>63 && i<91) || (i>96 && i<123)) {}
+        else return false;
+    }
+    return true;
 }
 
 export default connect( mapStateToProps, mapDispatchToProps )(EnterForm);

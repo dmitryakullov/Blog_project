@@ -146,4 +146,14 @@ class CheckInForm extends Component {
     }
 }
 
+function chackNick(str) {
+    const arr = str.split('');
+    for (let item of arr) {
+        let i = item.charCodeAt();
+        if (i===95 || (i>47 && i<58) || (i>63 && i<91) || (i>96 && i<123)) {}
+        else return false;
+    }
+    return true;
+}
+
 export default connect( null, mapDispatchToProps )(CheckInForm);

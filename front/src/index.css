@@ -311,9 +311,7 @@ body .super-text-style img{
 .user-page {
     padding: 20px 30px 15px;
 }
-.edit-profile {
-    padding: 20px;
-}
+
 
 .user-page-img {
     display: flex;
@@ -334,6 +332,90 @@ body .super-text-style img{
 }
 .user-page-info button {
     height: 40px;
+}
+
+.edit-profile {
+    display: flex;
+    justify-content: space-between;
+    padding: 30px;
+}
+
+.edit-profile-wrap {
+    display: flex;
+}
+
+.edit-profile-form {
+    margin: 30px 0 0 50px;
+}
+
+.edit-profile-form label {
+    width: 200px;
+    margin-bottom: 16px;
+    font-size: 18px;
+}
+.edit-profile-form input {
+    margin: 10px 8px;
+    padding: 3px;
+    width: 270px;
+}
+
+.edit-profile-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+    border-radius: 10px;
+    border: 2px solid black;
+    overflow: hidden;
+}
+.edit-profile-picture button {
+    margin: 20px 10px;
+}
+
+.edit-password {
+    margin-left: 200px;
+}
+
+.edit-password span {
+    display: block;
+    font-style: italic;
+    font-size: 14px;
+    color: rgb(124, 123, 123);
+    margin-bottom: 10px;
+}
+
+.edit-password label {
+    display: block;
+}
+
+
+.edit-password input {
+    display: block;
+    padding: 3px;
+    width: 300px;
+}
+
+.edit-password-msg {
+    font-weight: bold;
+    font-size: 22px;
+    margin: 20px 0 10px;
+}
+
+.edit-profile-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 250px;
+    overflow: hidden;
+    border-bottom: 2px solid black;
+}
+
+.warn1 {
+    display: inline-block;
+    border: 2px solid rgb(255, 0, 0);
+    padding: 5px 10px;
+    text-align: center;
 }
 
 .admin-page {

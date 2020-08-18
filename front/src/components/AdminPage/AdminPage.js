@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import {Link, Redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import usersPicture from '../../icons/profile-picture.png';
 import gotTime from '../gotTime/gotTime';

@@ -33,7 +33,7 @@ footer {
 
 .main-message {
     font-family: 'Marck Script', cursive;
-    color: #8b8782;
+    color: #626262;
     font-size: 32px;
 }
 
@@ -204,6 +204,14 @@ body .super-text-style img{
     min-width: 24%;
 }
 
+.btn-edit-profile {
+    margin-top: 9px;
+    font-size: 13px !important;
+    font-weight: bold !important;
+    height: 31px !important;
+    padding: 5px !important;
+}
+
 .my-enter-form {
     width: 400px;
     height: 472px;
@@ -301,7 +309,10 @@ body .super-text-style img{
 }
 
 .user-page {
-    padding: 20px 30px;
+    padding: 20px 30px 15px;
+}
+.edit-profile {
+    padding: 20px;
 }
 
 .user-page-img {

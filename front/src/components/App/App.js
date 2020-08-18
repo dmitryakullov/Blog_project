@@ -16,6 +16,7 @@ import UserPageOwner from '../UserPageOwner';
 import CreatePost from '../CreatePost';
 import SearchInfo from '../SearchInfo';
 import AdminPage from '../AdminPage';
+import EditProfile from '../EditProfile';
 
 import mapDispatchToProps from '../actionsRedux';
 import gotServices from '../gotService/gotService.js';
@@ -49,34 +50,34 @@ function App(props) {
         } 
     })
 
-    // useEffect(()=>{
-    //     const jwt = localStorage.getItem('superJWT_');
-    //     clearInterval(myInterval);
+    useEffect(()=>{
+        const jwt = localStorage.getItem('superJWT_');
+        clearInterval(myInterval);
 
-    //     if (jwt && props.data && props.data.token) {
+        if (jwt && props.data && props.data.token) {
             
-    //         const intervalMark = setInterval(async ()=>{
-    //             await setMyInterval(intervalMark);
+            const intervalMark = setInterval(async ()=>{
+                await setMyInterval(intervalMark);
 
-    //             gotService.trackUser(props.data.token)
-    //                 .then(res=> {
-    //                     if (res.msg === 'ALL_OK') {
+                gotService.trackUser(props.data.token)
+                    .then(res=> {
+                        if (res.msg === 'ALL_OK') {
 
-    //                     } else if (res.msg === 'CLEAN_STORE') {
+                        } else if (res.msg === 'CLEAN_STORE') {
 
-    //                         clearInterval(myInterval);
-    //                         localStorage.removeItem('superJWT_');
-    //                         props.cleanStore();
+                            clearInterval(myInterval);
+                            localStorage.removeItem('superJWT_');
+                            props.cleanStore();
 
-    //                     } 
-    //                     else {
-    //                         console.log('Error in trackUser')
-    //                     }
-    //                 })
-    //                 .catch(err=> console.log(err));
-    //         }, 5000)
-    //     }
-    // }, [props.data])
+                        } 
+                        else {
+                            console.log('Error in trackUser')
+                        }
+                    })
+                    .catch(err=> console.log(err));
+            }, 5000)
+        }
+    }, [props.data])
 
 
     useEffect(()=>{
@@ -95,6 +96,10 @@ function App(props) {
 
                         <Route exact path='/'>
                             <MainPage/>
+                        </Route>
+
+                        <Route exact path='/user/editprofile'>
+                            <EditProfile/>
                         </Route>
 
                         <Route exact path='/searching'>

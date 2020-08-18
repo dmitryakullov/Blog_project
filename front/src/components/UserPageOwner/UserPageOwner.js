@@ -184,6 +184,11 @@ class UserPageOwner extends Component {
                                 <h4 className="mt-0">{data.nick}</h4>
                                 <div>Email: <i>{data.email}</i></div>
                                 <div>Посты: <b>{props.amountPosts}</b></div>
+
+                                <Link to="/user/editprofile">
+                                    <button className="btn btn-outline-dark btn-edit-profile">Редактировать профиль</button>
+                                </Link>
+                                
                             </div>
                             
                         </div>

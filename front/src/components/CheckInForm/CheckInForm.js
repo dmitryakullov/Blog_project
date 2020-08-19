@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 
 import mapDispatchToProps from '../actionsRedux';
 import gotService from '../gotService/gotService.js';
-import WarnMessage from '../WarnMessage';
-
 
 
 
@@ -17,32 +15,28 @@ class CheckInForm extends Component {
         email: '',
         password: '',
         nick: '',
-        validate: true,
-        disabled: false,
-        haveExistYet: false
+        validate: 1,
+        disabled: false
     }
 
     inputEmailChange = (event) => {
         this.setState({
             email: event.target.value,
-            validate: true,
-            haveExistYet: false
+            validate: 1,
         });
     }
 
     inputNickChange = (event) => {
         this.setState({
             nick: event.target.value,
-            validate: true,
-            haveExistYet: false
+            validate: 1,
         });
     }
     
     inputPasswordChange = (event) => {
         this.setState({
             password: event.target.value,
-            validate: true,
-            haveExistYet: false
+            validate: 1,
         });
     }
 
@@ -50,30 +44,44 @@ class CheckInForm extends Component {
 
     registerUser =() => {
         var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        const s = this.state;
 
-        if (this.state.password.length >= 4 && 
-            reg.test(this.state.email) &&
-            this.state.nick.length > 0) 
-            
-            {
-            this.setState({disabled: true})
+        if (s.email==='' || s.password==='' || s.nick==='') {
+            this.setState({ validate: 2 });
+        }
+        else if (!reg.test(s.email)) {
+            this.setState({ validate: 3 });
+        }
+        else if (!chackNick(s.nick)) {
+            this.setState({ validate: 4 });
+        }
+        else if (s.password.length < 4 || s.password.length > 30) {
+            console.log('gjutfjf')
+            this.setState({ validate: 5 });
+        }
+        else {
+            this.setState({disabled: true});
 
-            this.gotService.makeCheckIn( this.state.nick, this.state.email.toLocaleLowerCase(), this.state.password)
-                .then(res=> {
-                    if (res.msg === 'USER_OR_EMAIL_EXIST'){
-                        this.setState({disabled: false, haveExistYet: true , validate: false})
+            this.gotService.makeCheckIn( s.nick, s.email.toLocaleLowerCase(), s.password)
+                .then(res=>{
+                    if (res.msg === 'NICK_EXIST'){
+                        this.setState({disabled: false, validate: 6})
 
-                    } else {
+                    } 
+                    else if(res.msg === 'EMAIL_EXIST') {
+                        this.setState({disabled: false, validate: 7})
+                    }
+                    else if(res._id){
                         localStorage.setItem('superJWT_', res.token);
                         
                         this.props.putStore(res)
                         window.location = "/";
                     }
+                    else {
+                        this.setState({disabled: false, validate: 8})
+                    }
                 })
                 .catch(err=> console.log(err))
-
-        } else {
-            this.setState({validate: false})
         }
     }
 
@@ -82,7 +90,47 @@ class CheckInForm extends Component {
 
     render() {
 
-        let msg = this.state.haveExistYet ? 'Юзер с таким ником или эмейлом уже существует!' : 'Некоректный пароль, email или Ник';
+        if (this.props.data) {
+            return null;
+        }
+
+
+        const s = this.state;
+        let save;
+
+
+        if (s.disabled) {
+            save = <button disabled className="btn btn-success form-btn">Зарегистрироваться</button>
+        }
+        else {
+            switch(s.validate) {
+                case 1:
+                    save = <button onClick={this.registerUser} className="btn btn-success form-btn">Зарегистрироваться</button>;
+                    break;
+                case 2:
+                    save = <button disabled className="btn btn-outline-danger form-btn">Поля не должны быть пустыми</button>;
+                    break;
+                case 3:
+                    save = <button disabled className="btn btn-outline-danger form-btn">Некоректный E-mail</button>;
+                    break;
+                case 4:
+                    save = <button disabled className="btn btn-outline-danger form-btn">Nick должен содержать только: A-Za-z0-9._</button>;
+                    break;
+                case 5:
+                    save = <button disabled className="btn btn-outline-danger form-btn">Пароль должен содержать 4-30 символов</button>;
+                    break;
+                case 6:
+                    save = <button disabled className="btn btn-outline-danger form-btn">Такой Ник уже существует</button>;
+                    break;
+                case 7:
+                    save = <button disabled className="btn btn-outline-danger form-btn">Такой E-mail уже существует</button>;
+                    break;
+                case 8:
+                    save = <button disabled className="btn btn-outline-danger form-btn">Ошибка!</button>;
+                    break;
+    }
+        }
+
 
         return (
             <div className='enter-form-bg'>
@@ -124,19 +172,12 @@ class CheckInForm extends Component {
                                 type="password" className="form-control" 
                                 id="inputPassword2"
                                 />
-                        <span className='form-hint'>Пароль должен содержать минимум 4 символа</span>
+                        <span className='form-hint'>Пароль должен содержать 4-30 символов</span>
                     </div>
 
                     <div className='form-wrap-btn'>
 
-                        {this.state.validate ? 
-                                    <button 
-                                        disabled={this.state.disabled} 
-                                        onClick={this.registerUser} 
-                                        className="btn btn-success form-btn">Зарегистрироваться</button>
-                                                :
-                                <WarnMessage msg={msg}/>
-                        }
+                        {save}
                         
                     </div>
 
@@ -147,6 +188,9 @@ class CheckInForm extends Component {
 }
 
 function chackNick(str) {
+    if (str.length > 30) {
+        return false
+    }
     const arr = str.split('');
     for (let item of arr) {
         let i = item.charCodeAt();

@@ -256,7 +256,7 @@ body .super-text-style img{
 }
 .form-btn {
     display: block;
-    width: 200px;
+    min-width: 200px;
     margin-top: 14px;
     margin-bottom: 14px;
 }

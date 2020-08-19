@@ -122,6 +122,9 @@ function EditProfile(props) {
         if (oldPass==='' || newPass1==='' || newPass2==='') {
             setWarnMsg2(2);
         }
+        else if (oldPass<4 && oldPass>30 && newPass1<4 && newPass1>30 && newPass2<4 && newPass2>30) {
+            setWarnMsg2(2);
+        }
         else if (newPass1 !== newPass2) {
             setWarnMsg2(3);
         } else {

@@ -64,6 +64,10 @@ class EnterForm extends Component {
 
     render() {
 
+        if (this.props.data) {
+            return null;
+        }
+
 
         return (
             <div className='enter-form-bg'>

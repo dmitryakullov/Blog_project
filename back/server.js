@@ -735,9 +735,17 @@ app.post('/users/new', function (req, res) {        //Use
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
-        const check = await User.find({$or: [{nick}, {email}]});
+        const check1 = await User.find({nick});
+        const check2 = await User.find({email});
 
-        if (check.length === 0) {
+        if (check1.length !==0) {
+            res.end(JSON.stringify({msg: 'NICK_EXIST'}));
+        }
+        else if (check2.length !==0){
+            res.end(JSON.stringify({msg: 'EMAIL_EXIST'}));
+        }
+        else if (check1.length ===0 && check2.length ===0) {
+
             const newUser = await new User({nick, email, password, avatar: 'false', active: true, admin: false});
             await newUser.save(function (err) {
                 if (err) return console.error(err);
@@ -746,10 +754,11 @@ app.post('/users/new', function (req, res) {        //Use
             const token = jwt.sign({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false}, config.secret);
             res.end(JSON.stringify({_id: newUser._id, nick, email, avatar: 'false', active: true, admin: false , token}));
         }
-
         else {
-            res.end(JSON.stringify({msg: 'USER_OR_EMAIL_EXIST'}));
+            res.end(JSON.stringify({msg: 'ERROR2'}));
         }
+
+
     })()
 });
 

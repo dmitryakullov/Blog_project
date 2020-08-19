@@ -237,7 +237,7 @@ export default class gotService {
         }
     }
 
-    trackUser = async (token) => {      //Use
+    trackUser = async (token) => {              //Use
         let res = await fetch("/user/track", {
             headers: {
             'Accept': 'application/json',
@@ -255,13 +255,29 @@ export default class gotService {
     }
 
     changeNickEmail = async (nick, email, token) => {      //Use
-        let res = await fetch("/user/track", {
+        let res = await fetch("/user/changenickemail", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
             method: "POST",
             body: JSON.stringify({nick, email, token})
+        })
+        
+        if (!res.ok) {
+            throw new Error(`COULD_NOT_GET_DATA`);
+        } else{
+            return await res.json();
+        }
+    }
+    changePassword = async (oldPass, NewPass, token) => {      //Use
+        let res = await fetch("/user/changepassword", {
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({oldPass, NewPass, token})
         })
         
         if (!res.ok) {

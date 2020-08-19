@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import {Link, Redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import usersPicture from '../../icons/profile-picture.png';
 import gotServices from '../gotService/gotService.js';
@@ -23,6 +23,7 @@ function EditProfile(props) {
     const [newPass2, setNewPass2] = useState('');
 
     const [warnMsg1, setWarnMsg1] = useState(1);
+    const [warnMsg2, setWarnMsg2] = useState(1);
 
     useEffect(()=>{
         (async()=>{
@@ -45,6 +46,9 @@ function EditProfile(props) {
 
 
     const saveNickEmail = () => {
+        if (!props.data) {
+            return
+        }
         const reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
         if (nick === '' || email === '') {
@@ -59,6 +63,7 @@ function EditProfile(props) {
                             setWarnMsg1(6);
                         } else {
                             (async()=>{
+                                localStorage.setItem('superJWT_', res.token);
                                 await props.putStore(res);
                                 setWarnMsg1(3);
                             })();
@@ -73,10 +78,12 @@ function EditProfile(props) {
             if (chackNick(nick)) {
                 gotService.changeNickEmail(nick, null, props.data.token)
                     .then(res=> {
+                        console.log(res)
                         if (res.msg) {
                             setWarnMsg1(7);
                         } else {
                             (async()=>{
+                                localStorage.setItem('superJWT_', res.token);
                                 await props.putStore(res);
                                 setWarnMsg1(3);
                             })();
@@ -89,12 +96,13 @@ function EditProfile(props) {
         }
         else {
             if (reg.test(email) && chackNick(nick)) {
-                gotService.changeNickEmail(nick, email)
+                gotService.changeNickEmail(nick, email, props.data.token)
                     .then(res=> {
                         if (res.msg) {
                             setWarnMsg1(9);
                         } else {
                             (async()=>{
+                                localStorage.setItem('superJWT_', res.token);
                                 await props.putStore(res);
                                 setWarnMsg1(3);
                             })();
@@ -108,6 +116,38 @@ function EditProfile(props) {
     }
 
     const saveNewPassword = () => {
+        if (!props.data) {
+            return
+        }
+        if (oldPass==='' || newPass1==='' || newPass2==='') {
+            setWarnMsg2(2);
+        }
+        else if (newPass1 !== newPass2) {
+            setWarnMsg2(3);
+        } else {
+            gotService.changePassword(oldPass, newPass2, props.data.token)
+                .then(res => {
+                    if (res.msg) {
+                        if (res.msg === 'WRONG') {
+                            setWarnMsg2(5);
+                        } else if(res.msg === 'OK') {
+                            (async()=>{
+                                await setWarnMsg2(6);
+                                await setOldPass('');
+                                await setNewPass1('')
+                                await setNewPass2('')
+                            })();
+                            
+                        } else {
+                            setWarnMsg2(4);
+                        }
+                    }
+                    else {
+                        setWarnMsg2(4);
+                    }
+                })
+                .catch(err=> console.log(err));
+        }
 
     }
 
@@ -120,34 +160,58 @@ function EditProfile(props) {
     const deleteIMG = data.avatar === 'false' ? null: (<button className="btn btn-outline-danger">Удалить</button>);
     const btnPassword = changePass ? 'Отмена' : 'Изменить пароль';
 
+
     let save1;
     switch(warnMsg1) {
         case 1:
-            save1 = (<button onClick={()=> saveNickEmail()} className="btn btn-success ml-2">Сохранить</button>)
+            save1 = <button onClick={()=> saveNickEmail()} className="btn btn-success ml-2">Сохранить</button>
             break;
         case 2:
-            save1 = (<div className='warn1 ml-2'>Поля не должны быть пустыми</div>)
+            save1 = <button disabled className='btn btn-outline-danger ml-2'>Поля не должны быть пустыми</button>
             break;
         case 3: 
-            save1 = (<button onClick={()=> saveNickEmail()} className="btn btn-success ml-2">Изменения сохранены!</button>)
+            save1 = <button onClick={()=> saveNickEmail()} className="btn btn-success ml-2">Изменения сохранены!</button>
             break;
         case 4:
-            save1 = (<div className='warn1 ml-2'>Некоректный E-mail</div>)
+            save1 = <button disabled className='btn btn-outline-danger ml-2'>Некоректный E-mail</button>
             break;
         case 5:
-            save1 = (<div className='warn1 ml-2'>Nick должен содержать только: A-Za-z0-9._</div>)
+            save1 = <button disabled className='btn btn-outline-danger ml-2'>Nick должен содержать только: A-Za-z0-9._</button>
             break;
         case 6:
-            save1 = (<div className='warn1 ml-2'>Такой E-mail уже существует</div>)
+            save1 = <button disabled className='btn btn-outline-danger ml-2'>Такой E-mail уже существует</button>
             break;
         case 7:
-            save1 = (<div className='warn1 ml-2'>Такой Nick уже существует</div>)
+            save1 = <button disabled className='btn btn-outline-danger ml-2'>Такой Nick уже существует</button>
             break;
         case 8:
-            save1 = (<div className='warn1 ml-2'>Некоректный Nick или Email<br/> Nick должен содержать только: A-Za-z0-9._</div>)
+            save1 = <button disabled className='btn btn-outline-danger ml-2'>Некоректный Nick или Email</button>
             break;
         case 9:
-            save1 = (<div className='warn1 ml-2'>Nick или E-mail уже существует</div>)
+            save1 = <button disabled className='btn btn-outline-danger ml-2'>Nick или E-mail уже существует</button>
+            break;
+    }
+
+
+    let save2;
+    switch (warnMsg2) {
+        case 1:
+            save2 = <button onClick={()=> saveNewPassword()} className="btn btn-success mb-5 mt-3">Сохранить</button>;
+            break;
+        case 2: 
+            save2 = <button disabled className='btn btn-outline-danger mb-5 mt-3'>Пароль должен содержать 4-30 символов</button>
+            break;
+        case 3: 
+            save2 = <button disabled className='btn btn-outline-danger mb-5 mt-3'>Новые пароли несовпадают</button>
+            break;
+        case 4: 
+            save2 = <button disabled className='btn btn-outline-danger mb-5 mt-3'>Ошибка</button>
+            break;
+        case 5: 
+            save2 = <button disabled className='btn btn-outline-danger mb-5 mt-3'>Неправильный старый пароль</button>
+            break;
+        case 6: 
+            save2 = <button className='btn btn-success mb-5 mt-3'>Пароль изменен!</button>
             break;
     }
 
@@ -157,15 +221,17 @@ function EditProfile(props) {
                             <div className='edit-password-msg'>Изменение пароля</div>
                             <span>Минимальная длина - 4 символа</span>
                             <label> Старый пароль:
-                                <input onChange={(e)=> setOldPass(e.target.value)} value={oldPass}></input>
+                                <input onChange={(e)=> {setOldPass(e.target.value); setWarnMsg2(1)}} value={oldPass}></input>
                             </label>
                             <label> Новый пароль:
-                                <input onChange={(e)=> setNewPass1(e.target.value)} value={newPass1}></input>
+                                <input onChange={(e)=> {setNewPass1(e.target.value); setWarnMsg2(1)}} value={newPass1}></input>
                             </label>
                             <label> Повторите новый пароль:
-                                <input onChange={(e)=> setNewPass2(e.target.value)} value={newPass2}></input>
+                                <input onChange={(e)=> {setNewPass2(e.target.value); setWarnMsg2(1)}} value={newPass2}></input>
                             </label>
-                            <button className="btn btn-success mb-5 mt-3">Сохранить</button>
+
+                            {save2}
+
                         </div>
                     </>)
 
@@ -218,6 +284,9 @@ function EditProfile(props) {
 }
 
 function chackNick(str) {
+    if (str.length > 30) {
+        return false
+    }
     const arr = str.split('');
     for (let item of arr) {
         let i = item.charCodeAt();

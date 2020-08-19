@@ -85,6 +85,85 @@ var Post = mongoose.model('Post', postSchema);
 // })
 
 
+// app.post('/user/changepassword', function (req, res) {       //Use
+//     (async()=>{
+//         const {oldPass, NewPass, token} = req.body;
+
+
+//         if(!token|| Object.keys(req.body).length !== 1) {
+//             res.end(JSON.stringify({msg: 'ERROR'}));
+//         }
+        
+//         let decoded;
+//         try {
+//             decoded = jwt.verify(token, config.secret);
+//         } catch(err) {
+//             res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+//         }
+
+
+//     })();
+// });
+
+app.post('/user/changenickemail', function (req, res) {       //Use
+    (async()=>{
+        const {nick, email, token} = req.body;
+
+        if(!token) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+        
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
+        const _id = decoded._id;
+        const userCheck = await User.findById(_id);
+
+        if (userCheck && userCheck.active) {
+            let changeObj;
+            if( !nick && ! email){
+                res.end(JSON.stringify({msg: 'ERROR1'}));
+            }
+
+            else if (nick === null && email) {
+                changeObj = {email};
+            }
+            else if (nick && email === null) {
+                changeObj = {nick};
+            }
+            else if (nick && email) {
+                changeObj = {nick, email};
+            }
+
+
+            User.findByIdAndUpdate(_id, changeObj,
+                async function(err, result) {
+                    if (err) {
+                        res.end(JSON.stringify({msg: 'ERROR2'}));
+                    } else {
+                        const user = await User.findById(_id);
+                        if (user && user._id) {
+                            const {_id, nick, email, avatar, active, admin} = user;
+
+                            const token = jwt.sign({ _id, nick, email, avatar, active, admin }, config.secret);
+                            res.end(JSON.stringify({_id, nick, email, avatar, active, admin, token}));
+                        }
+                        else {
+                            res.end(JSON.stringify({msg: 'ERROR3'}));
+                        }
+                    } 
+            })
+        } else {
+            res.end(JSON.stringify({msg: 'USER_NOT_FOUND'}));
+        }
+
+    })();
+});
+
+
 
 
 

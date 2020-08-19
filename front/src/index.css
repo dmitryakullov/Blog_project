@@ -411,12 +411,12 @@ body .super-text-style img{
     border-bottom: 2px solid black;
 }
 
-.warn1 {
+/* .warn1 {
     display: inline-block;
     border: 2px solid rgb(255, 0, 0);
     padding: 5px 10px;
     text-align: center;
-}
+} */
 
 .admin-page {
     padding: 20px;

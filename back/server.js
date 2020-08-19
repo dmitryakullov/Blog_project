@@ -135,7 +135,7 @@ app.post('/user/changenickemail', function (req, res) {       //Use
                 changeObj = {nick};
             }
             else if (nick && email) {
-                changeObj = {nick, email};
+                changeObj = {nick, email}; 
             }
 
 

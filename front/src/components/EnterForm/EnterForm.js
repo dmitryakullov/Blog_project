@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import mapDispatchToProps from '../actionsRedux';
 import gotService from '../gotService/gotService.js';
-import WarnMessage from '../WarnMessage';
 
 
 const mapStateToProps = (store) => ({...store});
@@ -113,7 +112,7 @@ class EnterForm extends Component {
                         {this.state.validate ? 
                                 <button disabled={this.state.disabled} onClick={this.registerUser} className="btn btn-primary form-btn">Войти</button>
                                             :
-                            <WarnMessage msg='Некоректный пароль или email'/>
+                                <button disabled className="btn btn-outline-danger form-btn">Некоректный пароль или email</button>
                         }
 
                         <Link to='/users/new' className='react-Link'>

@@ -422,15 +422,6 @@ body .super-text-style img{
     padding: 20px;
 }
 
-.warn-msg-card {
-    margin: 14px 0;
-    max-height: 200px;
-    padding: 6px 8px;
-
-    border: 1px solid rgb(238, 9, 9);
-    color: rgb(238, 9, 9);
-}
-
 
 .form-hint {
     color: rgb(98, 98, 98);

@@ -14,6 +14,7 @@ try {
 } catch (error) {
     handleError(error);
 }
+
 var Schema = mongoose.Schema;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -51,24 +52,33 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
-// app.post('/deletePicture', (req, res) => {
-//     (async ()=>{
-//         const _id = req.body._id;
-//         if(!_id) {
-//             res.end(JSON.stringify({msg: 'ERROR'}));
-//         }
+app.post('/deletepicture', (req, res) => {
+    (async ()=>{
+        const {token} = req.body;
 
-//         User.findByIdAndUpdate(_id, { avatar: 'false' },
-//             function(err, result) {
-//                 if (err) {
-//                     res.end(JSON.stringify({msg: 'ERROR'}));
-//                 } else if (result) {
-//                     res.end(JSON.stringify({msg: 'DELETE'}));
-//                 } else 
-//                 res.end(JSON.stringify({msg: 'ERROR'}));
-//         })
-//     })();
-// }) 
+        if(!token || Object.keys(req.body).length !== 1) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
+
+        const _id = decoded._id
+
+        User.findByIdAndUpdate(_id, { avatar: 'false' },
+            function(err) {
+                if (err) {
+                    res.end(JSON.stringify({msg: 'ERROR'}));
+                } else {
+                    res.end(JSON.stringify({msg: 'DELETE'}));
+                }
+        })
+    })();
+}) 
 
 // app.post('/uploadPicture/:id', (req, res) => {
 //     (async ()=>{
@@ -85,12 +95,12 @@ var Post = mongoose.model('Post', postSchema);
 // })
 
 
-app.post('/user/changepassword', function (req, res) {       //Use
+app.post('/user/changepassword', function (req, res) {
     (async()=>{
         const {oldPass, NewPass, token} = req.body;
 
 
-        if(!oldPass || ! NewPass || !token|| Object.keys(req.body).length !== 3) {
+        if(!oldPass || ! NewPass || !token || Object.keys(req.body).length !== 3) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
         
@@ -128,7 +138,7 @@ app.post('/user/changepassword', function (req, res) {       //Use
 });
 
 
-app.post('/user/changenickemail', function (req, res) {       //Use
+app.post('/user/changenickemail', function (req, res) {
     (async()=>{
         const {nick, email, token} = req.body;
 
@@ -190,7 +200,7 @@ app.post('/user/changenickemail', function (req, res) {       //Use
 
 
 
-app.post('/user/track', function (req, res) {       //Use
+app.post('/user/track', function (req, res) {
     (async()=>{
         const {token} = req.body;
 
@@ -220,7 +230,7 @@ app.post('/user/track', function (req, res) {       //Use
 
 
 
-app.post('/user/findposts', function (req, res) {    //Use
+app.post('/user/findposts', function (req, res) {
     (async()=>{
 
         const {userId, skip, firstTime} = req.body;
@@ -273,7 +283,7 @@ app.post('/user/findposts', function (req, res) {    //Use
 });
 
 
-app.put('/posts/count', function (req, res) {               //Use
+app.put('/posts/count', function (req, res) {
     (async()=>{
         Post.count({ active: true }, function (err, count) {
             if (err) {
@@ -288,7 +298,7 @@ app.put('/posts/count', function (req, res) {               //Use
 
 
 
-app.post('/user/delete', function (req, res) {  //Use
+app.post('/user/delete', function (req, res) {
     (async()=>{
         const {_id, token} = req.body;
 
@@ -335,7 +345,7 @@ app.post('/user/delete', function (req, res) {  //Use
 
 
 
-app.post('/posts&users/find', function (req, res) { //Use
+app.post('/posts&users/find', function (req, res) {
     (async()=>{
         const {find} = req.body;
         let postsArr = [], usersArr = [];
@@ -382,30 +392,8 @@ app.post('/posts&users/find', function (req, res) { //Use
 });
 
 
-app.put('/users/:id', function (req, res) {
-    (async ()=>{
-        const _id = req.params.id;
 
-        if(!_id) {
-            res.end(JSON.stringify({msg: 'ERROR'}));
-        }
-        
-        const user = await User.findById(_id);
-
-        if(user._id) {
-
-            const {_id, nick, email, avatar, active, admin} = user;
-            res.end(JSON.stringify({_id, nick, email, avatar, active, admin}));
-
-        } else
-        res.end(JSON.stringify({msg: 'ERROR'}));
-
-    })();
-});
-
-
-
-app.post('/posts/get', function (req, res) {        //Use
+app.post('/posts/get', function (req, res) {
     (async()=>{
         const {skip, userId} = req.body;
         let arr =[];
@@ -455,7 +443,7 @@ app.post('/posts/get', function (req, res) {        //Use
 
 
 
-app.post('/user/block&unblock', function (req, res) {       //Use
+app.post('/user/block&unblock', function (req, res) {
     (async()=>{
         const {_id, token} = req.body;
 
@@ -514,7 +502,7 @@ app.post('/user/block&unblock', function (req, res) {       //Use
 
 
 
-app.post('/statistics', function (req, res) {       //Use
+app.post('/statistics', function (req, res) {
     (async()=>{
         const {token} = req.body;
 
@@ -543,7 +531,7 @@ app.post('/statistics', function (req, res) {       //Use
 
 
 
-app.post('/user/find', function (req, res) {        //Use
+app.post('/user/find', function (req, res) {
     (async()=>{
         const {skip, token, userId, nickOrEmail} = req.body;
 
@@ -613,7 +601,7 @@ app.post('/user/find', function (req, res) {        //Use
 
 
 
-app.delete('/posts/delete', function (req, res) { //Use
+app.delete('/posts/delete', function (req, res) {
     (async()=>{
         const {_id, token, userId} = req.body;
 
@@ -644,7 +632,7 @@ app.delete('/posts/delete', function (req, res) { //Use
 });
 
 
-app.post('/posts/update', function (req, res) { //Use
+app.post('/posts/update', function (req, res) {
     (async()=>{
         const {token, userId, _id, title, text} = req.body;
 
@@ -686,7 +674,7 @@ app.post('/posts/update', function (req, res) { //Use
 
 
 
-app.post('/posts/new', function (req, res) {    //Use
+app.post('/posts/new', function (req, res) {
     (async()=>{
         const {token, userId, title, text} = req.body;
 
@@ -727,7 +715,7 @@ app.post('/posts/new', function (req, res) {    //Use
 });
 
 
-app.post('/users/new', function (req, res) {        //Use
+app.post('/users/new', function (req, res) {
     (async()=>{
         const {nick, email, password} = req.body;
 
@@ -763,7 +751,7 @@ app.post('/users/new', function (req, res) {        //Use
 });
 
 
-app.post('/users/get', function (req, res) {        //Use
+app.post('/users/get', function (req, res) {
     (async()=>{
         const {email, password} = req.body;
 
@@ -792,7 +780,7 @@ app.post('/users/get', function (req, res) {        //Use
 
 
 
-app.post('/', function (req, res) {                 //Use
+app.post('/', function (req, res) {
     (async ()=>{
         if (req.headers.authorization) {
             const token = req.headers.authorization.slice('Bearer '.length);
@@ -828,13 +816,13 @@ app.post('/', function (req, res) {                 //Use
 });
 
 
-
-
-
-
 app.listen(4000, function () {
     console.log('Example app listening on port 4000!');
 });
+
+
+
+
 
 
 

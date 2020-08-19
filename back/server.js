@@ -85,25 +85,48 @@ var Post = mongoose.model('Post', postSchema);
 // })
 
 
-// app.post('/user/changepassword', function (req, res) {       //Use
-//     (async()=>{
-//         const {oldPass, NewPass, token} = req.body;
+app.post('/user/changepassword', function (req, res) {       //Use
+    (async()=>{
+        const {oldPass, NewPass, token} = req.body;
 
 
-//         if(!token|| Object.keys(req.body).length !== 1) {
-//             res.end(JSON.stringify({msg: 'ERROR'}));
-//         }
+        if(!oldPass || ! NewPass || !token|| Object.keys(req.body).length !== 3) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
         
-//         let decoded;
-//         try {
-//             decoded = jwt.verify(token, config.secret);
-//         } catch(err) {
-//             res.end(JSON.stringify({msg: 'WRONG_JWT'}));
-//         }
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
 
+        const _id = decoded._id;
+        const userCheck = await User.findById(_id);
 
-//     })();
-// });
+        if (userCheck && userCheck.active) {
+            if (userCheck.password === oldPass) {
+
+                User.findByIdAndUpdate(_id, { password: NewPass },
+                    function(err, result) {
+                        if (err) {
+                            res.end(JSON.stringify({msg: 'ERROR'}));
+                        } else {
+                            res.end(JSON.stringify({msg: 'CHANGED'}));
+                        }
+                })
+                
+            }
+            else {
+                res.end(JSON.stringify({msg: 'WRONG'}));
+            }
+        } 
+        else {
+            res.end(JSON.stringify({msg: 'USER_NOT_FOUND'}));
+        }
+    })();
+});
+
 
 app.post('/user/changenickemail', function (req, res) {       //Use
     (async()=>{

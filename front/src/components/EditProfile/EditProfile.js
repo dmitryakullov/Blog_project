@@ -130,7 +130,7 @@ function EditProfile(props) {
                     if (res.msg) {
                         if (res.msg === 'WRONG') {
                             setWarnMsg2(5);
-                        } else if(res.msg === 'OK') {
+                        } else if(res.msg === 'CHANGED') {
                             (async()=>{
                                 await setWarnMsg2(6);
                                 await setOldPass('');
@@ -221,13 +221,13 @@ function EditProfile(props) {
                             <div className='edit-password-msg'>Изменение пароля</div>
                             <span>Минимальная длина - 4 символа</span>
                             <label> Старый пароль:
-                                <input onChange={(e)=> {setOldPass(e.target.value); setWarnMsg2(1)}} value={oldPass}></input>
+                                <input type='password' onChange={(e)=> {setOldPass(e.target.value); setWarnMsg2(1)}} value={oldPass}></input>
                             </label>
                             <label> Новый пароль:
-                                <input onChange={(e)=> {setNewPass1(e.target.value); setWarnMsg2(1)}} value={newPass1}></input>
+                                <input type='password' onChange={(e)=> {setNewPass1(e.target.value); setWarnMsg2(1)}} value={newPass1}></input>
                             </label>
                             <label> Повторите новый пароль:
-                                <input onChange={(e)=> {setNewPass2(e.target.value); setWarnMsg2(1)}} value={newPass2}></input>
+                                <input type='password' onChange={(e)=> {setNewPass2(e.target.value); setWarnMsg2(1)}} value={newPass2}></input>
                             </label>
 
                             {save2}

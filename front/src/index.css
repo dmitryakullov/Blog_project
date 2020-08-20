@@ -475,3 +475,17 @@ body .super-text-style img{
     align-items: center;
     padding: 3px;
 }
+
+.form-file {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-file label {
+    margin: 12px 0 0;
+}
+.form-file button {
+    margin: 15px;
+}

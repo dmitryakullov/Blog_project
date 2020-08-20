@@ -24,6 +24,9 @@ function EditProfile(props) {
 
     const [warnMsg1, setWarnMsg1] = useState(1);
     const [warnMsg2, setWarnMsg2] = useState(1);
+    const [warnMsg3, setWarnMsg3] = useState(1);
+
+    let fileInput = React.createRef();
 
     useEffect(()=>{
         (async()=>{
@@ -154,6 +157,21 @@ function EditProfile(props) {
 
     }
 
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const file = fileInput.current.files[0];
+        console.log(file)
+        if(!file) {
+            setWarnMsg3(2);
+        }
+        else if(file.size > 10485760) {
+            setWarnMsg3(3);
+        }
+        // console.log(JSON.stringify(fileInput, null, 4))
+    } 
+
+
     if (!props.data) {
         return null;
     }
@@ -162,6 +180,7 @@ function EditProfile(props) {
     const ava = data.avatar === 'false' ? usersPicture : data.avatar;
     const deleteIMG = data.avatar === 'false' ? null: (<button className="btn btn-outline-danger">Удалить</button>);
     const btnPassword = changePass ? 'Отмена' : 'Изменить пароль';
+
 
 
     let save1;
@@ -218,6 +237,20 @@ function EditProfile(props) {
             break;
     }
 
+
+    let save3;
+    switch(warnMsg3) {
+        case 1:
+            save3 = <button type="submit" className='btn btn-success'>Сохранить</button>;
+            break;
+        case 2:
+            save3 = <button disabled className='btn btn-outline-danger ml-2'>Файл не выбран</button>
+            break;
+        case 3:
+            save3 = <button disabled className='btn btn-outline-danger ml-2'>Макс-размер 10Мб</button>
+            break;
+    }
+
     const passwordField = !changePass ? null : 
                     (<>
                         <div className='edit-password'>
@@ -248,7 +281,15 @@ function EditProfile(props) {
                             <div className='edit-profile-img'>
                                 <img src={ava} alt='avatar'/>
                             </div>
-                            <button type="button" className="btn btn-outline-primary">Загрузить фото</button>
+                            <form className='form-file' onSubmit={(e)=>handleSubmit(e)}>
+                                <label onClick={()=> setWarnMsg3(1)} className='btn btn-primary'>
+                                    
+                                    Загрузить картинку:
+                                    <input className='d-none' type="file" ref={fileInput} />
+
+                                </label>
+                                {save3}
+                            </form>
                             {deleteIMG}
                         </div>
                     </div>

@@ -249,4 +249,6 @@ export default class gotService {
         if (!res.ok) throw new Error(`COULD_NOT_GET_DATA`);
         else return await res.json();
     }
+
+    header = {};
 }

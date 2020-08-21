@@ -52,6 +52,23 @@ var Post = mongoose.model('Post', postSchema);
 
 
 
+
+
+app.post('/uploadPicture/:id', (req, res) => {
+    (async ()=>{
+        const _id = req.params.id;
+        let fileName = Math.random().toString('36')
+        fileName     = `upload/${fileName}`
+        let fileStream = fs.createWriteStream('public/' + fileName);
+        req.pipe(fileStream)
+
+        // req.on('end', () =>{
+        //     res.end(fileName)
+        // })
+    })();
+})
+
+
 app.post('/deletepicture', (req, res) => {
     (async ()=>{
         const {token} = req.body;
@@ -79,21 +96,6 @@ app.post('/deletepicture', (req, res) => {
         })
     })();
 }) 
-
-// app.post('/uploadPicture/:id', (req, res) => {
-//     (async ()=>{
-//         const _id = req.params.id;
-//         let fileName = Math.random().toString('36')
-//         fileName     = `upload/${fileName}`
-//         let fileStream = fs.createWriteStream('public/' + fileName);
-//         req.pipe(fileStream)
-
-//         // req.on('end', () =>{
-//         //     res.end(fileName)
-//         // })
-//     })();
-// })
-
 
 app.post('/user/changepassword', function (req, res) {
     (async()=>{

@@ -55,6 +55,7 @@ const Post = mongoose.model('Post', postSchema);
 
 
 
+
 const upload = multer({
     dest:"./public/uploads",
     fileFilter: function (req, file, cb) {
@@ -162,6 +163,10 @@ app.post('/deletepicture', (req, res) => {
                 if (err) {
                     res.end(JSON.stringify({msg: 'ERROR'}));
                 } else {
+                    fs.unlink('./public' + decoded.avatar, function(err) {
+                        if (err) {console.log(err)};
+                    });
+                    
                     const {_id, nick, email, active, admin} = decoded;
                     const token = jwt.sign({ _id, nick, email, avatar: 'false', active, admin }, config.secret);
                     res.end(JSON.stringify({_id, nick, email, avatar: 'false', active, admin, token}));

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import logo from '../../icons/logo.png'
 import searchIcon from '../../icons/search.png';
-import usersPicture from '../../icons/profile-picture.png';
+import getAvatar from '../getAvatar';
 
 
 
@@ -18,20 +18,14 @@ export default class Nav extends Component {
                     </Link>;
 
         } else if (data.admin) {
-            const ava = data.avatar === 'false' ? usersPicture : data.avatar;
 
             content = <Link to='/adminpage' className='react-Link'>
-                        <div className='nav-profile'>
-                            <img src={ava} alt='Profile icon'/>
-                        </div>
+                        <div className='nav-profile' style={getAvatar(data.avatar)}></div>
                     </Link>
         } else if (data._id) {
-            const ava = data.avatar === 'false' ? usersPicture : data.avatar;
 
             content = <Link to='/owner' className='react-Link'>
-                        <div className='nav-profile'>
-                            <img src={ava} alt='Profile icon'/>
-                        </div>
+                        <div className='nav-profile' style={getAvatar(data.avatar)}></div>
                     </Link>
         } else {
             content = null;

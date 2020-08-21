@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {Link} from "react-router-dom";
 
-import usersPicture from '../../icons/profile-picture.png';
+import getAvatar from '../getAvatar';
 import gotServices from '../gotService/gotService.js';
 import mapDispatchToProps from '../actionsRedux';
 
@@ -25,6 +25,7 @@ function EditProfile(props) {
     const [warnMsg1, setWarnMsg1] = useState(1);
     const [warnMsg2, setWarnMsg2] = useState(1);
     const [warnMsg3, setWarnMsg3] = useState(1);
+    const [choosePicture, setChoosePicture]= useState(false);
 
     let fileInput = React.createRef();
 
@@ -186,12 +187,22 @@ function EditProfile(props) {
                             localStorage.setItem('superJWT_', res.token);
                             fileInput.value='';
                             await props.putStore(res);
+                            setChoosePicture(false);
                         })();
                     }
                 })
                 .catch(err=> console.log(err));
         }
     } 
+
+    function setFileInputInfo() {
+
+        if (fileInput.files[0]) {
+            setChoosePicture(true);
+        } else {
+            setChoosePicture(false);
+        }
+    }
 
 
     function deletePicture() {
@@ -216,7 +227,6 @@ function EditProfile(props) {
     }
 
     const data = props.data;
-    const ava = data.avatar === 'false' ? usersPicture : data.avatar;
     const deleteIMG = data.avatar === 'false' ? null: (<button onClick={()=> deletePicture()} className="btn btn-outline-danger">Удалить</button>);
     const btnPassword = changePass ? 'Отмена' : 'Изменить пароль';
 
@@ -296,6 +306,8 @@ function EditProfile(props) {
             break;
     }
 
+    const fileInputMSG = choosePicture ? 'Картинка выбрана!' : 'Выбрать картинку';
+
     const passwordField = !changePass ? null : 
                     (<>
                         <div className='edit-password'>
@@ -316,6 +328,8 @@ function EditProfile(props) {
                         </div>
                     </>)
 
+
+
     return (
         <>
         <div className='container bg-white'>
@@ -323,13 +337,11 @@ function EditProfile(props) {
                 <div className='edit-profile-wrap'>
                     <div>
                         <div className='edit-profile-picture'>
-                            <div className='edit-profile-img'>
-                                <img src={ava} alt='avatar'/>
-                            </div>
+                            <div className='edit-profile-img' style={getAvatar(data.avatar)}></div>
                             <form className='form-file' encType="multipart/form-data" onSubmit={(e)=>handleSubmit(e)}> 
-                                <label onClick={()=> setWarnMsg3(1)} className='btn btn-primary'>
+                                <label onChange={()=>setFileInputInfo()} onClick={()=> setWarnMsg3(1)} className='btn btn-primary'>
                                     
-                                    Загрузить картинку:
+                                    {fileInputMSG}
                                     <input className='d-none' type="file" ref={ref => {fileInput = ref}} />
 
                                 </label>

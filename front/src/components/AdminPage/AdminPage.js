@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {Link} from "react-router-dom";
 
-import usersPicture from '../../icons/profile-picture.png';
+import getAvatar from '../getAvatar';
 import gotTime from '../gotTime/gotTime';
 import gotServices from '../gotService/gotService.js';
 import mapDispatchToProps from '../actionsRedux';
@@ -157,6 +157,12 @@ const AdminPage = (props) => {
         } 
     }
 
+    const deleteAvatar = () => {
+        if (props.adminInfo.user.avatar !== 'false') {
+            
+        }
+    }
+
     const  logOut = () => {
         localStorage.removeItem('superJWT_');
         props.cleanStore();
@@ -190,14 +196,11 @@ const AdminPage = (props) => {
         user = null;
 
     } else {
-        const ava = userProps.user.avatar === 'false' ? usersPicture : userProps.user.avatar;
         user = (<>
                     <div className="d-flex flex-column bg-white w_100">
                         <div className="user-page-info d-flex justify-content-between">
                             <div className='d-flex'>
-                                <div className='user-page-img'>
-                                    <img src={ava} alt="User's profole"/>
-                                </div>
+                                <div className='user-page-img' style={getAvatar(userProps.user.avatar)}></div>
                                 <div>
                                     <h4 className="mt-0">{userProps.user.nick}</h4>
                                     <div>Email: <i>{userProps.user.email}</i></div>
@@ -205,6 +208,7 @@ const AdminPage = (props) => {
                                 </div>
                             </div>
                             <div className='mr-5'>
+                                <button onClick={()=> deleteAvatar()} className="btn btn-outline-danger">Удалить Аватарку</button>
                                 <button onClick={()=> blockUnblock()} className="btn btn-outline-primary mr-2">{changeUser}</button>
                                 <button onClick={()=> deleteUser()} className="btn btn-danger">Удалить</button>
                             </div>

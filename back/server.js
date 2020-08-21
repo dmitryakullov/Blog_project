@@ -124,6 +124,11 @@ app.post('/addpicture', (req, res) => {
                             if (err) {
                                 res.end(JSON.stringify({msg: 'ERROR2'}));
                             } else {
+                                if(decoded.avatar !== 'false') {
+                                    fs.unlink('./public' + decoded.avatar, function(err) {
+                                        if (err) {console.log(err)};
+                                    });
+                                }
                                 const {_id, nick, email, active, admin} = userCheck;
                                 const token = jwt.sign({ _id, nick, email, avatar: path, active, admin }, config.secret);
                                 res.end(JSON.stringify({_id, nick, email, avatar: path, active, admin, token}));
@@ -166,7 +171,7 @@ app.post('/deletepicture', (req, res) => {
                     fs.unlink('./public' + decoded.avatar, function(err) {
                         if (err) {console.log(err)};
                     });
-                    
+
                     const {_id, nick, email, active, admin} = decoded;
                     const token = jwt.sign({ _id, nick, email, avatar: 'false', active, admin }, config.secret);
                     res.end(JSON.stringify({_id, nick, email, avatar: 'false', active, admin, token}));

@@ -277,8 +277,8 @@ body .super-text-style img{
 .page-posts-ava {
     border-radius: 100%;
     border: 1px solid black;
-    height: 52px;
-    width: 52px;
+    width: 60px;
+    height: 60px;
 }
 
 .page-posts-user {
@@ -292,13 +292,7 @@ body .super-text-style img{
     float: right;
 }
 
-.page-posts-ava div {
-    max-width: 50px;
-    height: 50px;
-    border-radius: 100%;
-    border: 2px solid rgb(255, 255, 255);
-    overflow: hidden;
-}
+
 
 
 .page-posts-nick {
@@ -314,14 +308,11 @@ body .super-text-style img{
 
 .user-page-img {
     display: flex;
-    justify-content: center;
-    align-items: center;
     max-width: 80px;
     min-width: 80px;
     height: 80px;
     border-radius: 100%;
-    overflow: hidden;
-    border: 1px solid #000000;
+    border: 1px solid black;
     margin-right: 20px;
 }
 

@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {Link, Redirect} from "react-router-dom";
 
-import usersPicture from '../../icons/profile-picture.png';
+import getAvatar from '../getAvatar';
 import gotTime from '../gotTime/gotTime';
 import gotService from '../gotService/gotService.js';
 import mapDispatchToProps from '../actionsRedux';
@@ -137,8 +137,6 @@ class UserPageOwner extends Component {
 
 
         const data = this.props.data;
-        const ava = data.avatar === 'false' ? usersPicture : data.avatar;
-
         const props = this.props.ownerPage;
 
         let context;
@@ -177,9 +175,7 @@ class UserPageOwner extends Component {
                     
                     <div className="user-page-info d-flex justify-content-between">
                         <div className='d-flex'>
-                            <div className='user-page-img'>
-                                <img src={ava} alt="User's profole"/>
-                            </div>
+                            <div className='user-page-img' style={getAvatar(data.avatar)}></div>
                             <div>
                                 <h4 className="mt-0">{data.nick}</h4>
                                 <div>Email: <i>{data.email}</i></div>

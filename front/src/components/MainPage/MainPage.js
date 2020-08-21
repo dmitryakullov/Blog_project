@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import { connect } from 'react-redux';
 
-import usersPicture from '../../icons/profile-picture.png';
+import getAvatar from '../getAvatar'
 import gotService from '../gotService/gotService.js';
 import gotTime from '../gotTime/gotTime'
 import mapDispatchToProps from '../actionsRedux';
@@ -87,17 +87,13 @@ class MainPage extends Component {
         if (!props.postsArr) {return null}
 
         let context = props.postsArr.map(i => {
-
             return <ListItem key={getSuperId()}>
                     <div className='page-posts'>
                         <div className='d-flex justify-content-between'>
                         <Link to={`/user/${i.userId}`} className='react-Link'>
                             <div className='page-posts-user'>
-                                <div className='page-posts-ava'>
-                                    <div>
-                                        <img src={i.avatar === 'false'? usersPicture : i.avatar} alt="User's pictures" />
-                                    </div>
-                                </div>
+                                <div className='page-posts-ava' style={getAvatar(i.avatar)}></div>
+                                
                                 <span className='page-posts-nick'>{i.nick}</span>
                             </div>
                         </Link>
@@ -128,18 +124,12 @@ class MainPage extends Component {
 }
 
 
-
-
-
-
 const ListItem = (p) => <>{p.children}</>;
 
 
 function getSuperId() {
     return ''+ Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
 }
-
-
 
 
 export default connect( mapStateToProps, mapDispatchToProps )(MainPage);

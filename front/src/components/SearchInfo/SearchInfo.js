@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {Link} from "react-router-dom";
 
 import gotServices from '../gotService/gotService.js';
-import usersPicture from '../../icons/profile-picture.png';
+import getAvatar from '../getAvatar';
 import gotTime from '../gotTime/gotTime'
 import mapDispatchToProps from '../actionsRedux';
 
@@ -68,11 +68,8 @@ function SearchInfo (props) {
                             <div className='d-flex justify-content-between'>
                             <Link to={`/user/${i.userId}`} className='react-Link'>
                                 <div className='page-posts-user'>
-                                    <div className='page-posts-ava'>
-                                        <div>
-                                            <img src={i.avatar === 'false'? usersPicture : i.avatar} alt="User's pictures" />
-                                        </div>
-                                    </div>
+                                    <div className='page-posts-ava' style={getAvatar(i.avatar)}></div>
+
                                     <span className='page-posts-nick'>{i.nick}</span>
                                 </div>
                             </Link>
@@ -96,11 +93,8 @@ function SearchInfo (props) {
                     <div className='d-flex justify-content-between'>
                     <Link to={`/user/${i._id}`} className='react-Link'>
                         <div className='page-posts-user'>
-                            <div className='page-posts-ava'>
-                                <div>
-                                    <img src={i.avatar === 'false'? usersPicture : i.avatar} alt="User's pictures" />
-                                </div>
-                            </div>
+                            <div className='page-posts-ava' style={getAvatar(i.avatar)}></div>
+
                             <span className='page-posts-nick'>{i.nick}</span>
                         </div>
                     </Link>

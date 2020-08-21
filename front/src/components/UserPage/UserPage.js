@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
-import usersPicture from '../../icons/profile-picture.png';
+import getAvatar from '../getAvatar';
 import gotService from '../gotService/gotService.js';
 import gotTime from '../gotTime/gotTime';
 import mapDispatchToProps from '../actionsRedux';
@@ -90,7 +90,6 @@ class UserPage extends Component {
         }
 
         const user = props.user;
-        const ava = user.avatar === 'false' ? usersPicture : user.avatar;
 
         let context = props.postsArr.map(i => {
             return <ListItem key={getSuperId()}>
@@ -118,9 +117,7 @@ class UserPage extends Component {
                         
                         <div className="user-page-info d-flex justify-content-between">
                             <div className='d-flex'>
-                                <div className='user-page-img'>
-                                    <img src={ava} alt="User's profole"/>
-                                </div>
+                                <div className='user-page-img' style={getAvatar(user.avatar)}></div>
                                 <div>
                                     <h4 className="mt-0">{user.nick}</h4>
                                     <div>Email: <i>{user.email}</i></div>

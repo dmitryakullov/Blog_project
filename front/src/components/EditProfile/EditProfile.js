@@ -160,8 +160,10 @@ function EditProfile(props) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        const file = fileInput.current.files[0];
-        console.log(file)
+
+        const file = fileInput.files[0];
+
+
         if(!file) {
             setWarnMsg3(2);
         }
@@ -175,10 +177,38 @@ function EditProfile(props) {
             let formData = new FormData();
             formData.append('file', file);
             gotService.addPicture(formData, props.data.token)
-                .then(res=>console.log(res))
+                .then(res=> {
+                    if (res.msg) {
+                        setWarnMsg3(5);
+                    }
+                    else {
+                        (async()=>{
+                            localStorage.setItem('superJWT_', res.token);
+                            fileInput.value='';
+                            await props.putStore(res);
+                        })();
+                    }
+                })
+                .catch(err=> console.log(err));
         }
-        // console.log(JSON.stringify(fileInput, null, 4))
     } 
+
+
+    function deletePicture() {
+        gotService.deletePicture(props.data.token)
+            .then(res=>{
+                if (res.msg) {
+                    console.log(res.msg);
+                } else {
+                    localStorage.setItem('superJWT_', res.token);
+                    props.putStore(res);
+                }
+            })
+            .catch(err=> console.log(err));
+    }
+
+
+
 
 
     if (!props.data) {
@@ -187,7 +217,7 @@ function EditProfile(props) {
 
     const data = props.data;
     const ava = data.avatar === 'false' ? usersPicture : data.avatar;
-    const deleteIMG = data.avatar === 'false' ? null: (<button className="btn btn-outline-danger">Удалить</button>);
+    const deleteIMG = data.avatar === 'false' ? null: (<button onClick={()=> deletePicture()} className="btn btn-outline-danger">Удалить</button>);
     const btnPassword = changePass ? 'Отмена' : 'Изменить пароль';
 
 
@@ -253,13 +283,16 @@ function EditProfile(props) {
             save3 = <button type="submit" className='btn btn-success'>Сохранить</button>;
             break;
         case 2:
-            save3 = <button disabled className='btn btn-outline-danger ml-2'>Файл не выбран</button>
+            save3 = <button disabled className='btn btn-outline-danger'>Файл не выбран</button>
             break;
         case 3:
-            save3 = <button disabled className='btn btn-outline-danger ml-2'>Макс-размер 10Мб</button>
+            save3 = <button disabled className='btn btn-outline-danger'>Макс-размер 10Мб</button>
             break;
         case 4:
-            save3 = <button disabled className='btn btn-outline-danger ml-2'>Только .png, .jpg, .jpeg</button>
+            save3 = <button disabled className='btn btn-outline-danger'>Только .png, .jpg, .jpeg</button>
+            break;
+        case 5:
+            save3 = <button disabled className='btn btn-outline-danger'>Ошибка</button>
             break;
     }
 
@@ -297,7 +330,7 @@ function EditProfile(props) {
                                 <label onClick={()=> setWarnMsg3(1)} className='btn btn-primary'>
                                     
                                     Загрузить картинку:
-                                    <input className='d-none' type="file" ref={fileInput} />
+                                    <input className='d-none' type="file" ref={ref => {fileInput = ref}} />
 
                                 </label>
                                 {save3}

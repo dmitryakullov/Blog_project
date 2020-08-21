@@ -29,26 +29,7 @@ const config = {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
-const upload = multer({
-    dest:"./public/uploads",
-    fileFilter: function (req, file, cb) {
-        console.log(req)
-        if(file.mimetype === "image/png" || 
-            file.mimetype === "image/jpg"|| 
-            file.mimetype === "image/jpeg"){
-        cb(null, true);
-        }
-        else{
-            cb(null, false);
-        }
-    },
-    limits: {
-        fileSize : 1024*1024*10,
-        files: 1,
-        parts: 1,
-        fields: 0
-    }
-});
+
 
 
 const userSchema = new Schema({
@@ -74,29 +55,88 @@ const Post = mongoose.model('Post', postSchema);
 
 
 
-app.post('/addpicture', upload.single("file"), (req, res) => {
-    (async ()=>{
-        const filedata = req.file;
-        if(!filedata) {
-            res.end(JSON.stringify({msg: "HAVEN'T_TOKEN"}));
-        }
-        else if (req.headers.authorization) {
+const upload = multer({
+    dest:"./public/uploads",
+    fileFilter: function (req, file, cb) {
+
+        if(req.headers.authorization) {
             const token = req.headers.authorization.slice('Bearer '.length);
-
-            let decoded;
             try {
-                decoded = jwt.verify(token, config.secret);
+                jwt.verify(token, config.secret);
             } catch(err) {
-                res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+                cb(null, false);
             }
-            
-            
 
-            
-        } else {
-            res.end(JSON.stringify({msg: "HAVEN'T_TOKEN"}));
+            const t = file.mimetype;
+            if(t==="image/png" || t==="image/jpg" || t==="image/jpeg"){
+                cb(null, true);
+            }
+            else {
+                cb(null, false);
+            }
         }
-    })();
+        else{
+            cb(null, false);
+        }
+    },
+    limits: {
+        fileSize : 1024*1024*10,
+        files: 1,
+        parts: 1,
+        fields: 0
+    }
+}).single("file");
+
+
+
+app.post('/addpicture', (req, res) => {
+    
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+
+        } else {
+            (async ()=>{
+
+                const filedata = req.file;
+                if(!filedata) {
+                    res.end(JSON.stringify({msg: "ERROR1"}));
+                }
+                else {
+                    const token = req.headers.authorization.slice('Bearer '.length);
+        
+                    let decoded;
+                    try {
+                        decoded = jwt.verify(token, config.secret);
+                    } catch(err) {
+                        res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+                    }
+                    
+                    const _id = decoded._id;
+                    const userCheck = await User.findById(_id);
+                    if (userCheck && userCheck.active) {
+
+                        const path = `/uploads/` + filedata.filename;
+
+                        User.findByIdAndUpdate(_id, { avatar: path },
+                        function(err) {
+                            if (err) {
+                                res.end(JSON.stringify({msg: 'ERROR2'}));
+                            } else {
+                                const {_id, nick, email, active, admin} = userCheck;
+                                const token = jwt.sign({ _id, nick, email, avatar: path, active, admin }, config.secret);
+                                res.end(JSON.stringify({_id, nick, email, avatar: path, active, admin, token}));
+                            }
+                    })
+        
+                    } 
+                    else {
+                        res.end(JSON.stringify({msg: 'USER_NOT_FOUND'}));
+                    }
+                }
+            })();
+        }
+    })
 })
 
 
@@ -122,7 +162,9 @@ app.post('/deletepicture', (req, res) => {
                 if (err) {
                     res.end(JSON.stringify({msg: 'ERROR'}));
                 } else {
-                    res.end(JSON.stringify({msg: 'DELETE'}));
+                    const {_id, nick, email, active, admin} = decoded;
+                    const token = jwt.sign({ _id, nick, email, avatar: 'false', active, admin }, config.secret);
+                    res.end(JSON.stringify({_id, nick, email, avatar: 'false', active, admin, token}));
                 }
         })
     })();

@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import { connect } from 'react-redux';
 
+import arrow from '../../icons/arrow.png'
 import getAvatar from '../getAvatar'
 import gotService from '../gotService/gotService.js';
 import gotTime from '../gotTime/gotTime'
@@ -114,6 +115,10 @@ class MainPage extends Component {
         return (
             <div className='container'>
                 <div onScroll={event => this.onScrollList(event)} className='d-flex flex-column align-items-center'>
+                    <div className='main-page-msg'>
+                        <h1>Здесь может быть твой пост</h1>
+                        <img className='main-page-arrow' src={arrow} alt='arrow'/>
+                    </div>
 
                     {context}
 

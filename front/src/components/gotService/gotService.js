@@ -262,4 +262,18 @@ export default class gotService {
         if (!res.ok) throw new Error(`COULD_NOT_GET_DATA`);
         else return await res.json();
     }
+
+    deletePictureAdmin = async (userId, avatar, token) => {
+        let res = await fetch("/deletepictureadmin", {
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({userId, avatar, token})
+        })
+        
+        if (!res.ok) throw new Error(`COULD_NOT_GET_DATA`);
+        else return await res.json();
+    }
 }

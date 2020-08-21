@@ -158,8 +158,18 @@ const AdminPage = (props) => {
     }
 
     const deleteAvatar = () => {
-        if (props.adminInfo.user.avatar !== 'false') {
-            
+        const p = props.adminInfo;
+        if (p.user.avatar !== 'false') {
+            gotService.deletePictureAdmin(p.user._id, p.user.avatar, props.data.token)
+            .then(res=> {
+                if (res.msg && res.msg === 'DELETE') {
+                    props.putInfoAdmin({...p, ...{user: {...p.user, ...{avatar: 'false'}}}})
+                }
+                else {
+                    console.log(res.msg)
+                }
+            })
+            .catch(err=> console.log(err));
         }
     }
 
@@ -207,9 +217,9 @@ const AdminPage = (props) => {
                                     <div>Посты: <b>{userProps.amountPosts}</b></div>
                                 </div>
                             </div>
-                            <div className='mr-5'>
-                                <button onClick={()=> deleteAvatar()} className="btn btn-outline-danger">Удалить Аватарку</button>
-                                <button onClick={()=> blockUnblock()} className="btn btn-outline-primary mr-2">{changeUser}</button>
+                            <div className='admin-btns'>
+                                <button onClick={()=> deleteAvatar()} className="btn btn-outline-danger">Удалить Аву</button>
+                                <button onClick={()=> blockUnblock()} className="btn btn-outline-primary">{changeUser}</button>
                                 <button onClick={()=> deleteUser()} className="btn btn-danger">Удалить</button>
                             </div>
                         </div>

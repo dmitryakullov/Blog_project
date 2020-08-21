@@ -145,6 +145,42 @@ app.post('/addpicture', (req, res) => {
     })
 })
 
+app.post('/deletepictureadmin', (req, res) => {
+    (async ()=>{
+        const {userId, avatar, token} = req.body;
+
+        if(!token || !avatar || !userId || Object.keys(req.body).length !== 3) {
+            res.end(JSON.stringify({msg: 'ERROR'}));
+        }
+
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.secret);
+        } catch(err) {
+            res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+        }
+
+
+
+        if (decoded.admin) {
+            User.findByIdAndUpdate(userId, { avatar: 'false' },
+            function(err) {
+                if (err) {
+                    res.end(JSON.stringify({msg: 'ERROR'}));
+                } else {
+                    fs.unlink('./public' + avatar, function(err) {
+                        if (err) {console.log(err)};
+                    });
+
+                    res.end(JSON.stringify({msg: 'DELETE'}));
+                }
+            })
+        } else {
+            res.end(JSON.stringify({msg: 'NOT_ADMIT'}));
+        }
+    })();
+})
+
 
 app.post('/deletepicture', (req, res) => {
     (async ()=>{

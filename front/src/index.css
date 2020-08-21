@@ -33,8 +33,8 @@ footer {
 
 .main-message {
     font-family: 'Marck Script', cursive;
-    color: #626262;
-    font-size: 32px;
+    color: #4d5d6c;
+    font-size: 25px;
 }
 
 
@@ -120,6 +120,31 @@ body .super-text-style img{
 
 
 
+.main-page-msg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+    width: 100%;
+    background-color: #545e68;
+    height: 140px;
+    border-radius: 20px 20px 0 0;
+}
+.main-page-msg h1 {
+    display: block;
+    color: #eeeeee;
+    font-size: 30px;
+}
+
+.main-page-arrow {
+    display: block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    top: 11px;
+    transform: rotate(-138deg);
+}
 
 .search-icon {
     width: 50px;
@@ -410,6 +435,12 @@ body .super-text-style img{
 
 .admin-page {
     padding: 20px;
+}
+.admin-btns {
+    margin-right: 30px;
+}
+.admin-btns button {
+    margin-right: 5px;
 }
 
 

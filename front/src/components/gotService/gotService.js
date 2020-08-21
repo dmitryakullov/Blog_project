@@ -237,13 +237,26 @@ export default class gotService {
     }
 
     deletePicture = async (token) => {
-        let res = await fetch("/user/changepassword", {
+        let res = await fetch("/deletepicture", {
             headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
             },
             method: "POST",
             body: JSON.stringify({token})
+        })
+        
+        if (!res.ok) throw new Error(`COULD_NOT_GET_DATA`);
+        else return await res.json();
+    }
+
+    addPicture = async (formData, token) => {
+        let res = await fetch("/addpicture", {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            method: "POST",
+            body: formData
         })
         
         if (!res.ok) throw new Error(`COULD_NOT_GET_DATA`);

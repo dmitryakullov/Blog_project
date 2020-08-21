@@ -165,11 +165,17 @@ function EditProfile(props) {
         if(!file) {
             setWarnMsg3(2);
         }
-        else if(file.size > 10485760) {
+        else if(file.size > 1024*1024*10) {
             setWarnMsg3(3);
         }
         else if (file.type!=='image/jpeg' && file.type!=='image/png') {
             setWarnMsg3(4);
+        } 
+        else {
+            let formData = new FormData();
+            formData.append('file', file);
+            gotService.addPicture(formData, props.data.token)
+                .then(res=>console.log(res))
         }
         // console.log(JSON.stringify(fileInput, null, 4))
     } 
@@ -287,8 +293,7 @@ function EditProfile(props) {
                             <div className='edit-profile-img'>
                                 <img src={ava} alt='avatar'/>
                             </div>
-                            <form className='form-file' onSubmit={(e)=>handleSubmit(e)}> 
-                            {/* encType="multipart/form-data" */}
+                            <form className='form-file' encType="multipart/form-data" onSubmit={(e)=>handleSubmit(e)}> 
                                 <label onClick={()=> setWarnMsg3(1)} className='btn btn-primary'>
                                     
                                     Загрузить картинку:

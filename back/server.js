@@ -1,10 +1,11 @@
 
-var express = require('express');
-var app = express();
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-var jwt = require('jsonwebtoken');
-// var fs = require('fs');
+const express = require('express');
+const app = express();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+const multer  = require("multer");
+const fs = require('fs');
 
 mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
 
@@ -15,7 +16,7 @@ try {
     handleError(error);
 }
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 
@@ -24,12 +25,33 @@ const config = {
 }
 
 
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
+const upload = multer({
+    dest:"./public/uploads",
+    fileFilter: function (req, file, cb) {
+        console.log(req)
+        if(file.mimetype === "image/png" || 
+            file.mimetype === "image/jpg"|| 
+            file.mimetype === "image/jpeg"){
+        cb(null, true);
+        }
+        else{
+            cb(null, false);
+        }
+    },
+    limits: {
+        fileSize : 1024*1024*10,
+        files: 1,
+        parts: 1,
+        fields: 0
+    }
+});
 
 
-var userSchema = new Schema({
+const userSchema = new Schema({
     nick:  String,
     email: String,
     password: String,
@@ -38,33 +60,42 @@ var userSchema = new Schema({
     admin: Boolean
     }
 );
-var User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 
-var postSchema = new Schema({
+const postSchema = new Schema({
     userId:  String,
     title: String,
     text: String,
     active: Boolean
     }
 );
-var Post = mongoose.model('Post', postSchema);
+const Post = mongoose.model('Post', postSchema);
 
 
 
-
-
-app.post('/uploadPicture/:id', (req, res) => {
+app.post('/addpicture', upload.single("file"), (req, res) => {
     (async ()=>{
-        const _id = req.params.id;
-        let fileName = Math.random().toString('36')
-        fileName     = `upload/${fileName}`
-        let fileStream = fs.createWriteStream('public/' + fileName);
-        req.pipe(fileStream)
+        const filedata = req.file;
+        if(!filedata) {
+            res.end(JSON.stringify({msg: "HAVEN'T_TOKEN"}));
+        }
+        else if (req.headers.authorization) {
+            const token = req.headers.authorization.slice('Bearer '.length);
 
-        // req.on('end', () =>{
-        //     res.end(fileName)
-        // })
+            let decoded;
+            try {
+                decoded = jwt.verify(token, config.secret);
+            } catch(err) {
+                res.end(JSON.stringify({msg: 'WRONG_JWT'}));
+            }
+            
+            
+
+            
+        } else {
+            res.end(JSON.stringify({msg: "HAVEN'T_TOKEN"}));
+        }
     })();
 })
 
@@ -812,8 +843,8 @@ app.post('/', function (req, res) {
                 } else {
                     res.end(JSON.stringify({msg: 'ERROR2'}));
                 }
-        }
-        res.end(JSON.stringify({msg: "HAVEN'T_TOKEN"}));
+        } else 
+            res.end(JSON.stringify({msg: "HAVEN'T_TOKEN"}));
     })();
 });
 

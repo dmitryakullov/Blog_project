@@ -13,7 +13,7 @@ import { Provider } from 'react-redux';
 
 const initialState = {
 	data: null,
-	addSkip: 20,
+	addSkip: 10,
 	mainPage: {
 		postsArr: [],
         skip: 0,

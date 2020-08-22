@@ -7,11 +7,17 @@ const jwt = require('jsonwebtoken');
 const multer  = require("multer");
 const fs = require('fs'); 
 
-mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
+// mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
 
+
+// try {
+//     mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
+// } catch (error) {
+//     handleError(error);
+// }
 
 try {
-    mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
+    mongoose.connect('mongodb+srv://dimaggio224xz:asdf12344321@cluster0-lbam2.mongodb.net/project', {useNewUrlParser: true});
 } catch (error) {
     handleError(error);
 }
@@ -24,7 +30,7 @@ const config = {
     secret: `Dj=yr456_m9+F.rMM65_-.eug20864G*$sv#&hWQ-^:;&8328649cDR`
 }
 
-
+const superLimit = 10;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -87,6 +93,33 @@ const upload = multer({
         fields: 0
     }
 }).single("file");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -386,7 +419,7 @@ app.post('/user/findposts', function (req, res) {
 
 
 
-        const posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
+        const posts = await Post.find({userId}).skip(skip).limit(superLimit).sort({_id:-1});
         
         if(posts.length !==0) {
             for (let post of posts) {
@@ -475,7 +508,7 @@ app.post('/posts&users/find', function (req, res) {
             res.end(JSON.stringify({msg: 'ERROR'}));
         }
 
-        const users = await User.find({nick: new RegExp(find, 'i'), admin: false}).limit(50);
+        const users = await User.find({nick: new RegExp(find, 'i'), admin: false}).limit(40);
         if (users.length !== 0) {
             for (let user of users) {
                 const {_id, nick, avatar} = user;
@@ -486,7 +519,7 @@ app.post('/posts&users/find', function (req, res) {
         const posts = await Post.find({$or: [
                                             {title: new RegExp(find, 'i')},
                                             {text: new RegExp(find, 'i')}
-                                        ]}).sort({_id:-1}).limit(60);
+                                        ]}).sort({_id:-1}).limit(40);
         if (posts.length !==0) {
             for(let post of posts) {
 
@@ -520,7 +553,7 @@ app.post('/posts/get', function (req, res) {
         let arr =[];
 
         if(userId) {
-            const posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
+            const posts = await Post.find({userId}).skip(skip).limit(superLimit).sort({_id:-1});
             if(posts.length !==0) {
                 res.end(JSON.stringify({postsArr: posts}));
             } else {
@@ -528,7 +561,7 @@ app.post('/posts/get', function (req, res) {
             }
         } 
         else if (skip === 0 || skip) {
-            const posts = await Post.find().skip(skip).limit(20).sort({_id:-1});
+            const posts = await Post.find().skip(skip).limit(superLimit).sort({_id:-1});
             
             if(posts.length !==0) {
                 for(let post of posts) {
@@ -682,7 +715,7 @@ app.post('/user/find', function (req, res) {
 
                     const amountPosts= await Post.count({ userId: _id });
 
-                    const posts = await Post.find({userId: _id}).skip(skip).limit(20).sort({_id:-1});
+                    const posts = await Post.find({userId: _id}).skip(skip).limit(superLimit).sort({_id:-1});
 
                     if (posts.length !== 0) {
                         for (let post of posts) {
@@ -697,7 +730,7 @@ app.post('/user/find', function (req, res) {
                 }
             }
             else if(skip > 0 && userId) {
-                const posts = await Post.find({userId}).skip(skip).limit(20).sort({_id:-1});
+                const posts = await Post.find({userId}).skip(skip).limit(superLimit).sort({_id:-1});
 
                 if (posts.length !== 0) {
                     for (let post of posts) {
@@ -914,9 +947,13 @@ app.post('/', function (req, res) {
             }
             
 
-            const {nick, email} = decoded;
             
-            const user = await User.findOne({nick, email});
+
+            if (!decoded.nick || ! decoded.email) {
+                res.end(JSON.stringify({msg: 'ERROR'}));
+            } else {
+                const {nick, email} = decoded;
+                const user = await User.findOne({nick, email});
 
                 if (!user) {
                     res.end(JSON.stringify({msg: 'NOT_FOUND'}));
@@ -931,6 +968,9 @@ app.post('/', function (req, res) {
                 } else {
                     res.end(JSON.stringify({msg: 'ERROR2'}));
                 }
+            }
+            
+
         } else 
             res.end(JSON.stringify({msg: "HAVEN'T_TOKEN"}));
     })();
@@ -950,6 +990,36 @@ app.listen(4000, function () {
 
 
 
+// (async ()=>{
+//     let ansr = await new User({nick: 'admin1', email: 'admin1@gmail.com', password: 'a1d2m3i4n5', avatar: 'false', active: true, admin: true})
+//         await ansr.save();
+//     let ans = await new User({nick: 'admin2', email: 'admin2@gmail.com', password: 'a1d2m3i4n5', avatar: 'false', active: true, admin: true})
+//         await ans.save();
+//     let ans1 = await new User({nick: 'Wolf', email: 'wolf@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans1.save();
+//     let ans2 = await new User({nick: 'Fox', email: 'fox@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans2.save();
+//     let ans3 = await new User({nick: 'pAnDa', email: 'panda@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans3.save();
+//    // panda
+//     let ans5 = await new User({nick: 'OWL', email: 'owl@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans5.save();
+//     let ans6 = await new User({nick: 'duck', email: 'duck@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans6.save();
+//     let ans7 = await new User({nick: 'tiger', email: 'tiger@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans7.save();
+//     let ans8 = await new User({nick: 'dog_11', email: 'dog11@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans8.save();
+//     let ans9 = await new User({nick: 'dog_12', email: 'dog12@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans9.save();
+//     let ans10 = await new User({nick: 'cat.123', email: 'cat123@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans10.save();
+//     let ans11 = await new User({nick: 'CAT.223', email: 'cat223@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans11.save();
+//     let ans12 = await new User({nick: 'CAT', email: 'cat@gmail.com', password: 'a1234', avatar: 'false', active: true, admin: false})
+//         await ans12.save();
+        
+// })();
 
 
 

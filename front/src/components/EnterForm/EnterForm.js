@@ -42,7 +42,7 @@ class EnterForm extends Component {
 
             this.gotService.makeEnter(this.state.email, this.state.password)
                 .then(res=> {
-                    if (res.msg === 'SOMETHING_WRONG'){
+                    if (res.msg){
                         this.setState({disabled: false, validate: false})
                     } else {
                         localStorage.setItem('superJWT_', res.token);

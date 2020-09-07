@@ -247,7 +247,7 @@ function EditProfile(props) {
             save1 = <button disabled className='btn btn-outline-danger ml-2'>Некоректный E-mail</button>
             break;
         case 5:
-            save1 = <button disabled className='btn btn-outline-danger ml-2'>Nick должен содержать только: A-Za-z0-9._</button>
+            save1 = <button disabled className='btn btn-outline-danger ml-2'>Nick должен содержать только: A-Za-z0-9_</button>
             break;
         case 6:
             save1 = <button disabled className='btn btn-outline-danger ml-2'>Такой E-mail уже существует</button>

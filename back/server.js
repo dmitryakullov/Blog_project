@@ -10,17 +10,17 @@ const fs = require('fs');
 // mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
 
 
-// try {
-//     mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
-// } catch (error) {
-//     handleError(error);
-// }
-
 try {
-    mongoose.connect('mongodb+srv://dimaggio224xz:asdf12344321@cluster0-lbam2.mongodb.net/project', {useNewUrlParser: true});
+    mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
 } catch (error) {
     handleError(error);
 }
+
+// try {
+//     mongoose.connect('mongodb+srv://dimaggio224xz:asdf12344321@cluster0-lbam2.mongodb.net/project', {useNewUrlParser: true});
+// } catch (error) {
+//     handleError(error);
+// }
 
 const Schema = mongoose.Schema;
 const db = mongoose.connection;
@@ -93,33 +93,6 @@ const upload = multer({
         fields: 0
     }
 }).single("file");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

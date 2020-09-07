@@ -114,7 +114,7 @@ class CheckInForm extends Component {
                     save = <button disabled className="btn btn-outline-danger form-btn">Некоректный E-mail</button>;
                     break;
                 case 4:
-                    save = <button disabled className="btn btn-outline-danger form-btn">Nick должен содержать только: A-Za-z0-9._</button>;
+                    save = <button disabled className="btn btn-outline-danger form-btn">Nick должен содержать только: A-Za-z0-9_</button>;
                     break;
                 case 5:
                     save = <button disabled className="btn btn-outline-danger form-btn">Пароль должен содержать 4-30 символов</button>;

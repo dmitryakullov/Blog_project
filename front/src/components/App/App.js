@@ -28,6 +28,14 @@ const mapStateToProps = (store) => ({...store});
 
 
 
+// AUTH_LOGIN - приходит токен
+// редьюсер его парсит, возвращает это в хранилище
+// +локалсторедж
+// AUTH_LOGOUT - empty {}, localStorage.removeItem
+
+// on load (just in global scope, below createStore(..))
+// if localstorage contains token, dispatch AUTH_LOGIN with localstorage token
+
 
 function App(props) {
     const gotService = new gotServices();

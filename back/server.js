@@ -108,6 +108,7 @@ app.post('/addpicture', (req, res) => {
                 const filedata = req.file;
                 if(!filedata) {
                     res.end(JSON.stringify({msg: "ERROR1"}));
+                    return;
                 }
                 else {
                     const token = req.headers.authorization.slice('Bearer '.length);
@@ -157,6 +158,7 @@ app.post('/deletepictureadmin', (req, res) => {
 
         if(!token || !avatar || !userId || Object.keys(req.body).length !== 3) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
         let decoded;
@@ -194,6 +196,7 @@ app.post('/deletepicture', (req, res) => {
 
         if(!token || Object.keys(req.body).length !== 1) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
         let decoded;
@@ -229,6 +232,7 @@ app.post('/user/changepassword', function (req, res) {
 
         if(!oldPass || ! NewPass || !token || Object.keys(req.body).length !== 3) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
         
         let decoded;
@@ -271,6 +275,7 @@ app.post('/user/changenickemail', function (req, res) {
 
         if(!token) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
         
         let decoded;
@@ -279,6 +284,8 @@ app.post('/user/changenickemail', function (req, res) {
         } catch(err) {
             res.end(JSON.stringify({msg: 'WRONG_JWT'}));
         }
+
+
         const _id = decoded._id;
         const userCheck = await User.findById(_id);
 
@@ -286,6 +293,7 @@ app.post('/user/changenickemail', function (req, res) {
             let changeObj;
             if( !nick && ! email){
                 res.end(JSON.stringify({msg: 'ERROR1'}));
+                return;
             }
 
             else if (nick === null && email) {
@@ -334,6 +342,7 @@ app.post('/user/track', function (req, res) {
 
         if(!token|| Object.keys(req.body).length !== 1) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
         
         let decoded;
@@ -366,12 +375,14 @@ app.post('/user/findposts', function (req, res) {
 
         if(!userId) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
         if(firstTime === true){
             await Post.count({ userId }, function (err, count) {
                 if (err) {
                     res.end(JSON.stringify({msg: 'ERROR2'}));
+                    return;
                 } else {
                     resObj ={...{count}}
                 }
@@ -431,6 +442,7 @@ app.post('/user/delete', function (req, res) {
 
         if(!_id, !token || Object.keys(req.body).length !== 2) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
         let decoded;
@@ -479,6 +491,7 @@ app.post('/posts&users/find', function (req, res) {
 
         if(!find || Object.keys(req.body).length !== 1) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
         const users = await User.find({nick: new RegExp(find, 'i'), admin: false}).limit(40);
@@ -576,6 +589,7 @@ app.post('/user/block&unblock', function (req, res) {
 
         if(!token|| !_id || Object.keys(req.body).length !== 2) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
         
         let decoded;
@@ -635,6 +649,7 @@ app.post('/statistics', function (req, res) {
 
         if(!token|| Object.keys(req.body).length !== 1) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
         
         let decoded;
@@ -664,6 +679,7 @@ app.post('/user/find', function (req, res) {
 
         if(!token) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
 
@@ -734,6 +750,7 @@ app.delete('/posts/delete', function (req, res) {
 
         if(!_id || !token) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
         let decoded;
@@ -765,6 +782,7 @@ app.post('/posts/update', function (req, res) {
 
         if(!userId || !token || !_id || !title || !text || Object.keys(req.body).length !== 5) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
         let decoded;
@@ -807,6 +825,7 @@ app.post('/posts/new', function (req, res) {
 
         if(!token || !userId || !title || !text || Object.keys(req.body).length !== 4) {
             res.end(JSON.stringify({msg: 'ERROR1'}));
+            return;
         }
 
         let decoded;
@@ -848,6 +867,7 @@ app.post('/users/new', function (req, res) {
 
         if(!nick || !email || !password || Object.keys(req.body).length !== 3) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
         const check1 = await User.find({nick});
@@ -884,6 +904,7 @@ app.post('/users/get', function (req, res) {
 
         if(!email || !password || Object.keys(req.body).length !== 2) {
             res.end(JSON.stringify({msg: 'ERROR'}));
+            return;
         }
 
         const user = await User.findOne({email, password});

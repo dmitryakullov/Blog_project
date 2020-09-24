@@ -7,8 +7,6 @@ const jwt = require('jsonwebtoken');
 const multer  = require("multer");
 const fs = require('fs'); 
 
-// mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
-
 
 try {
     mongoose.connect('mongodb://localhost/project', {useNewUrlParser: true});
@@ -16,11 +14,13 @@ try {
     handleError(error);
 }
 
-// try {
-//     mongoose.connect('mongodb+srv://dimaggio224xz:asdf12344321@cluster0-lbam2.mongodb.net/project', {useNewUrlParser: true});
-// } catch (error) {
-//     handleError(error);
-// }
+
+                
+try {
+    mongoose.connect('mongodb+srv://dimaggio224xz:224225226227@cluster0.lbam2.mongodb.net/project?retryWrites=true&w=majority', {useNewUrlParser: true});
+} catch (error) {
+    handleError(error);
+}
 
 const Schema = mongoose.Schema;
 const db = mongoose.connection;
